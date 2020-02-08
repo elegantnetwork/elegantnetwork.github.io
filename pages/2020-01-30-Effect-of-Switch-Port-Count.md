@@ -9,7 +9,7 @@ The shift to Clos topology as the network topology underlies everything that’s
 
 # A Terse Introduction to Clos
 
-![Classical 2-Tier Clos Topology](assets/images/2020-01-30-clos-topo.png)
+![Classical 2-Tier Clos Topology](../assets/images/2020-01-30-clos-topo.png)
 
 To most network operators, the Clos topology is the leaf-spine topology, consisting of two layers of switches, one layer called the leaf and the other the spine. The next level up in sophistication is the three-tier Clos topology where a number of 2-tier Clos networks are connected together via another layer of switches. For a handful of networks in the world that are beyond this scale, the Clos topology essentially becomes a fractal, each two-tier of switches providing connectivity to the next level of two-tier switches. In other words, with a four-tier Clos topology, the leaf-spine network at the top provides connectivity to n leaf-spine networks at the bottom.
 
@@ -19,7 +19,7 @@ The current generation of data centers are standardizing 25GbE links towards the
 
 The leaf switch (also called **ToR** for Top of Rack), the layer of switches to which servers are connected, has ports with two different link speeds: one set devoted to connecting servers, and the other set is for interconnecting switches. **Power typically dictates how many servers are in a rack**. 40 servers per rack is common in hyperscalars while 20 ports per rack is more common in the enterprise data centers. I have also encountered dense 96 server racks. **The number of uplink ports is determined by the oversubscription ratio**. 40 server-facing ports of 25GbE is 1 Tbps of input bandwidth. Assuming an uplink speed of 100GbE, we need 10 uplink ports for a non-oversubscribed switch. Thus, we have 40+10 ports as the ideal switch port for such deployments.
 
-![Primary factor determining switch port count](assets/images/2020-01-30-clos-determinant.png)
+![Primary factor determining switch port count](../assets/images/2020-01-30-clos-determinant.png)
 
 In case of the 96 server rack, 96 ports of 25G gives a bandwidth of 2.4Tbps (25\*96). A non-oversubscribed switch needs 2.4Tbps of uplink bandwidth or 24 ports of 100GbE. A 4.8 Tbps switch would be very good for most data centers. Its also well known that except for the hyperscalars, most data center switches run empty a lot of the time. 4.8Tbps is 48 ports of 100GbE. Some racks are dedicated to storage and may push higher bandwidths such as 32 storage facing ports of 100GbE and use an oversubscription ratio of 1:1 and thus desire 32 ports of 100GbE as uplink ports. In such a case, a leaf switch needs to support at least 6.4 Tbps for a non-oversubscribed model.
 
