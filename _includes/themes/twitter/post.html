@@ -7,10 +7,7 @@
 <div class="row-fluid post-full">
   <div class="span12">
     <div class="date">
-      <span>{{ page.date | date_to_long_string }}</span>
-    </div>
-    <div class="author">
-      <span>{{ page.author }}</span>
+	    <span>{{ page.date | date_to_long_string }}<p ALIGN=RIGHT>{{ page.author.name }}</span>
     </div>
     <div class="content">
       {{ content }}
