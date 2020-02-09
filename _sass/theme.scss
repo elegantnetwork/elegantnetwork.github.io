@@ -45,7 +45,7 @@ h1 {
 
 h2 {
 	font-weight: bold;
-	@include fluidType(28px, 32px);
+	@include fluidType(26px, 22px);
 }
 
 h4 {
@@ -61,7 +61,7 @@ figcaption {
 
 header {
 	// background-size: cover;
-	padding: 120px 0;
+	padding: 10px 0;
 	color: #fff;
 	overflow: hidden;
 	h2 {
