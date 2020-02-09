@@ -2,8 +2,9 @@
 layout: page
 title: About Us
 ---
-## About Us
+This blog is on the authors' perspectives on network infrastructure design and practice. The authors experience is in data center networks, and the primary focus will therefore be the data center. This blog also serves as a companion to a book written by one of the authors, [Cloud Native Data Center Networking](https://www.amazon.com/Cloud-Native-Data-Center-Networking/dp/1492045608/). The posts cover everything from musings to code on various aspects of network infrastructure, from network design to routers to Kubernetes networking to open source tools such as routing suites and observability and troubleshooting tools. You can also follow us on Medium at [The Elegant Network](https://medium.com/the-elegant-network) publication.
 
+## The Authors
 The two main authors of the blog posts under The Elegant Network moniker are Dinesh G Dutt and Justin Pietsch. We come together from backgrounds of operations and vendor. But we are more mixed than that. As Chief Scientist at Cumulus Networks, Dinesh worked on customer deployments which guided his thinking, for example, in implementing novel features in FRR to simplify network operations. Justin has spent a lot of time designing networks to be more operatable, and manageable, and written some key management software at Amazon. It greatly influenced the way he thinks about network design.
 
 **Justin Pietsch** was most recently a Principal Network Engineer at AWS. Justin's experience is largely based on this time at Amazon, 17 years (16 years, 11 months and 21 days, actually.) He focused mostly on datacenter networking and helped architect some of the largest and most scalable datacenter networks in the world. When he first started at Amazon it had a small but complicated network, over time it changes to simpler, but much larger; yet never simple enough :). He cares deeply about software systems for network engineers so that they can design, build, and operate networks well. 
