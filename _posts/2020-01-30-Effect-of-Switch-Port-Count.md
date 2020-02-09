@@ -1,7 +1,7 @@
 ---
 layout: post
 comments: true
-author: ddutt
+author: Dinesh G Dutt
 title: The Effect of Switch Port Count in Clos Topology
 excerpt: In this post, we’ll consider the effects of a high switch port count chip such as Tomahawk 4 on the Clos topology
 tagline: Is there a sweet spot for switch port count in a Clos topology?
