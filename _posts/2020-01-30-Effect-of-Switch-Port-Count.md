@@ -4,7 +4,7 @@ comments: true
 author: ddutt
 title: The Effect of Switch Port Count in Clos Topology
 excerpt: In this post, we’ll consider the effects of a high switch port count chip such as Tomahawk 4 on the Clos topology
-tagline: Is there a sweet spot for switch port count in a Clos topology
+tagline: Is there a sweet spot for switch port count in a Clos topology?
 ---
 The Clos topology allows you to build very large networks using relatively small building blocks. When the ascent of the hyperscalars began, I’ve heard Google started building networks with 24-port switches, though I can’t be certain as I wasn’t at Google. Around the start of the previous decade, the hyperscalars had moved to using Broadcom’s Trident chip with 64 10GbE ports as the building block. By the end of that decade, Broadcom had started shipping Tomahawk 4 to select customers. **Tomahawk 4** is a single packet switching chip that supports 256 ports of 100GbE. Not so long ago, that was an almost mythical number for a single switching ASIC.
 
