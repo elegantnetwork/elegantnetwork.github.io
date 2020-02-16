@@ -26,7 +26,7 @@ texture:
     twitter: 
     github: 
     linkedIn: 
-    rss: 
+    rss: /feed.xml
  
 
 # If you want to link only specific pages in your header, uncomment
@@ -39,4 +39,4 @@ texture:
 
 plugins:
   - jekyll-seo-tag
-#  - jekyll-feed
+  - jekyll-feed
