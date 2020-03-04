@@ -2,7 +2,7 @@
 layout: post
 comments: true
 author: Dinesh G Dutt
-title: Kubernetes for the Enterprise Network Operator
+title: Kubernetes and the Enterprise Network
 excerpt: If you're a network operator faced with Kubernetes arrayed on the other side, what do you do?
 description: 
 ---
