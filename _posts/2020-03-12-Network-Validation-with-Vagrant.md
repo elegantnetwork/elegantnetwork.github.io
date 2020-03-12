@@ -28,7 +28,7 @@ Engineering is the art of making trade-offs. Network simulation is no different.
 
 I wish there was a good open source platform for network simulation. Simulation can be complicated. You want a system that simulates the network software, but also you want a way to generate different configuration ideas as well as a set of tools to test that the design behaves well. We don’t have all those pieces. While the ones that exist are lacking in many ways, they’re good enough to be useful.
 
-**I’m going to focus on [Vagrant](https://www.vagrantup.com/) for device simulation. **Vagrant is fairly simple and focuses on packaging and running Virtual Machines. This means it has good flexibility and that we can run fairly large simulations.
+**I’m going to focus on [Vagrant](https://www.vagrantup.com/) for device simulation.** Vagrant is fairly simple and focuses on packaging and running Virtual Machines. This means it has good flexibility and that we can run fairly large simulations.
 
 There other simulation platforms that might also be interesting. Microsoft has an internal network simulation that they have been working to open source: [https://www.microsoft.com/en-us/research/wp-content/uploads/2017/10/p599-liu.pdf](https://www.microsoft.com/en-us/research/wp-content/uploads/2017/10/p599-liu.pdf), and [https://www.facebook.com/atscaleevents/videos/networking-scale-2019-preventing-network-changes-from-becoming-network-outages/370479100557737/](https://www.facebook.com/atscaleevents/videos/networking-scale-2019-preventing-network-changes-from-becoming-network-outages/370479100557737/). As far as I can tell, this still hasn’t been open sourced or released to the public yet.
 
