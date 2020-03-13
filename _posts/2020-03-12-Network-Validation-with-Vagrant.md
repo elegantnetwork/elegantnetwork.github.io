@@ -186,4 +186,4 @@ The EC2 instances is way more hardware than this simulation needs and the Azure 
 
 **Limitations of this approach**? The biggest limitation is that **not every vendor provides VMs of their network OS**. Cumulus Linux is the most featured. Arista used to release a Vagrant box, but has since stopped and switched to a container-only model; both were limited. Cisco doesn’t have a VM image as far as I know. Juniper also releases a Vagrant image. The other constraint with all the vendors except Cumulus is that the image is quite restricted, for example allowing only a handful of interfaces, and with phenomenally poor packet forwarding rates (a few Mbps instead of whatever the processor can handle). This approach from the vendors does not make it easy to use network simulation.
 
-Use the discussion format or email me if you know of anything that would make this better. Tips or tricks, software, etc?
+Use the discussion format or email me if you know of anything that would make this better. Tips or tricks, software, etc? thenetworkelegant@gmail.com
