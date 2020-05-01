@@ -173,4 +173,4 @@ Nope. Suzieq can’t do that yet. I’ve created [an issue](https://github.com/n
 
 ## Conclusion
 
-Hopefully this has show you how to use Suzieq to explore your network. This focused mostly on using summarize and unique to get an overview and then to dive in. It also demonstrated some other filtering that can be done for you to understand your network. I didn’t cover all the things you can do with Suzieq, for instance we didn’t explore any of the OSPF or EVPN commands, and I didn’t cover asserts. We’ll be covering more of that in upcoming blog posts.
+Hopefully this has shown you how to use Suzieq to explore your network. This focused mostly on using summarize and unique to get an overview and then to dive in. It also demonstrated some other filtering that can be done for you to understand your network. I didn’t cover all the things you can do with Suzieq, for instance we didn’t explore any of the OSPF or EVPN commands, and I didn’t cover asserts. We’ll be covering more of that in upcoming blog posts.
