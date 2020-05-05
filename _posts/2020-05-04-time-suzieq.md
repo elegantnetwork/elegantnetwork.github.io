@@ -4,9 +4,8 @@ comments: true
 author: Dinesh G Dutt
 title: Time in Suzieq
 excerpt: In this post we discuss how Suzieq handles time
-description: Time, time, time, see what's become of me
+description: How Suzieq handles time
 ---
-
 Time, time, time, see what's become of me, while I looked around for my possibilities
                                                                 - *Simon & Garfunkel*
 
@@ -44,15 +43,15 @@ As highlighted in the figure, interface swp1 shows three records, of a transitio
 |:--:|
 | Figure 3: Timeline to illustrate Use of Time |
 
-When we executed the command above, at the time marked "now" in Figure 1, we expected to see everything as of that time. This is what happened when we executed the command without the view=all option. It showed the state of swp1 as of time "now". The last change to swp1 happened at time t2. t2 for the output we're discussing is the time "2020-04-29 11:48:41.119", As we'll see in the next section, Suzieq only stores data when there is a change to the previous state. When we used view=all, the output showed all the changes to swp1: the initial record at t0, the link down at t1 and the link up at t2. 
+When we executed the first command above, at the time marked "now" in Figure 1, we expected to see the state of all interfaces as of that time. The last change to swp1 happened at time t2. t2 for the output we're discussing is the time "2020-04-29 11:48:41.119". So this is what the output in Figure 1 showed. But swp2 had no change since time t0, which is "2020-04-29 11:46:21.176" in the figure. So, the state of swp2 was as shown at time t0. Thus, we note that Suzieq only stores data when there is a change to the previous state. When we used view=all, the output showed all the changes to swp1: the initial record at t0, the link down at t1 and the link up at t2. 
 
-The next thing you can do is provide a time for which you want the snapshot. Specifying an end-time of '2020-04-29 11:48:00' results in the display shown in Figure 4. We see that the interface shows up as being down, because that was the final state of the interface as of time 11:48:00. Suzieq only accepts time in the format of "YYYY-MM-DD hh:mm:ss" today. We'll be adding support for time expressed in more human terms such as "10 min ago" or "10 pm last night" in the next release.
+The next thing you can do in Suzieq w.r.t. time is to provide a time at which you want the snapshot. Specifying an end-time of '2020-04-29 11:48:00' results in the display shown in Figure 4. We see that the interface shows up as being down, because that was the final state of the interface as of time 11:48:00. This output is what happens when we ask for the state as of a time between t1 and t2. In our case, we used the time "2020-04-29 11:48:00" which is before time t2. The output indicates that interface swp1 was down at this time. 
 
 |![](/assets/images/2020-05-04/time-Fig4.png)
 |:--:|
 | Figure 4: Interface Listing, Snapshot with Specific Time |
 
-This output is what happens when we ask for the state as of a time between t1 and t2. In our case, we used the time "2020-04-29 11:48:00" which is before time t2. The output indicated that interface swp1 was down. 
+Suzieq only accepts time in the format of "YYYY-MM-DD hh:mm:ss" today. We'll be adding support for time expressed in more human terms such as "10 min ago" or "10 pm last night" in the next release.
 
 As before, for the same snapshot, using view=all shows all the changes upto the point specified by end-time. This output is shown in Fig 5.
 
