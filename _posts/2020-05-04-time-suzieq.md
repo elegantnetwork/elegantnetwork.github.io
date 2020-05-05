@@ -59,7 +59,7 @@ As before, for the same snapshot, using view=all shows all the changes upto the 
 |:--:|
 | Figure 5: Interface Listing, View All Records Upto Snapshot Time |
 
-Next, to only see the records that changed in a time window, use both start-time and end-time. For the same command, the command `interface show namespace=ibgp-evpn hostname=leaf02 start-time='2020-04-29 11:47:00' end-time='2020-04-29 11:48:00' produces the output shown in Figure 5.
+Next, to only see the records that changed in a time window, use both start-time and end-time. For the same command, the command `interface show namespace=ibgp-evpn hostname=leaf02 start-time='2020-04-29 11:47:00' end-time='2020-04-29 11:48:00' produces the output shown in Figure 6.
 
 |![](/assets/images/2020-05-04/time-Fig6.png)
 |:--:|
