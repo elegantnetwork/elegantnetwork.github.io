@@ -7,20 +7,25 @@ excerpt: In this post we look at an example of simulation in another field and t
 description: Why do we need better tools so that we can more easily gain intuition in networking?
 ---
 I care a lot about network design. I think **it's too hard to design networks well**
-and I think the tools to do it well don't exit. At least I haven't seen them. 
-The lack of tools affects the 
+and I think that all the tools necessary to do it well don't exit. 
+At least I haven't seen them. The lack of tools affects the 
 biggest networks, but it affects all networks. I am especially 
 concerned about how to design networks that are operatable, which requires 
 a network that is understandable.
 
-There is an interaction between tools and better abstractions. I don't think we
-have the abstractions to think about networks holistically.
+What do I mean by network design? I mean all the decisions that you need to make to 
+create a network. Picking the topology, the routing protocols, the router OS, 
+the hardware, etc. There are so many different decisions 
+that you need to make, and they interact. How do can I get a better intuition 
+about what decisions are important and how different decisions interact?
+
 
 [![youtube video of Stephen Wolfram](https://img.youtube.com/vi/kC6LHAv_lx0/hqdefault.jpg)](https://www.youtube.com/watch?v=kC6LHAv_lx0).
 
-In this video, Stephen Wolfram is learning Epidemiology so that he can 
-model Covid-19 infection rate. If you don't know who he is,
-[Stephen Wolfram](https://en.wikipedia.org/wiki/Stephen_Wolfram)
+I like to learn from other engineering disciplines. 
+In this video, [Stephen Wolfram](https://en.wikipedia.org/wiki/Stephen_Wolfram)
+is learning Epidemiology so that he can 
+model Covid-19 infection rate. If you don't know who he is, he
 got a PhD from Caltech in Physics at age 20. He created Wolfram Research which produces 
 Mathematica and he has been the CEO for more than 30 years. 
 
@@ -32,9 +37,7 @@ He starts with a very simple mental model of how to understand the problem. He t
 in a small equation, then he does another equation which models a small worlds network, etc. 
 From these small experiments which don't take very long he gains some important intuition
 about the problem, including that the initial conditions change the results significantly.
-These problems lend themselves to 
-math; he's been working on how to model physics and other science processes in 
-languages most of his life. I have no idea if he understands how to model Covid-19 
+I have no idea if he understands how to model Covid-19 
 infection well, that's not the point, the point is about **how he easily uses his tools to
 try out different models** to learn how to think about the problem.
 
@@ -44,6 +47,10 @@ intuition about how to design networks. I'm not sure we can ever get to the
 speed that Wolfram tries out ideas in this video.
 However, I'd love it if we could get to one day from ideas to trial. 
 And then one hour and then maybe 10 minutes? I don't know. Just always getting better.
+Wolfram's problems lend themselves to 
+math; he's been working on how to model physics and other science processes in 
+languages most of his life, so he has some advantages, but that doesn't mean we
+should give up before we start.
 
 
 Here are some examples of experiments I'd like to be able to try: 
@@ -58,6 +65,9 @@ Let's image how this might look. I want to compare OSPF vs eBGP in a 2 tier Clos
 with 8 spines and 32 leaves. I type a command to create the topology. Then I add IP addresses rules.
 Then I add OPSF to the topology. Finally I add a series of tests to stress the topology 
 and tell me stats about how it converges. I then do all that again, but instead with eBGP.
+I'd also like to be able to pick from a catalog of different design options so that I
+don't have to define everything myself. Wolfram gets to easily pull different networks
+and different models from a pre-existing catalog.
 
 
 While the GUI is important, Wolfram is using a computer language to describe 
@@ -78,17 +88,30 @@ a couple expressions on a nice GUI, but even writing YAML and running a command 
 Then if I could spin up network simulation and getting running instances of these topologies.
 Finally, I'd need some kind of test suite to stress the topology and give me those stats.
 
-
-There are some pieces to this puzzle that exist. Using vagrant or (gn3 or eve-ng) to emulate 
+There are some pieces to this puzzle that exist. Using vagrant or (GNS3 or Eve-NG) to emulate 
 networks (https://elegantnetwork.github.io/posts/Network-Validation-with-Vagrant/)
-is an important piece. Using ansible (or salt or normir) to push automation configuration. 
+is an important piece. Using Ansible (or salt or Normir) to push automation configuration. 
 There is no way that I know of that will allow me to easily describe whole network configurations that I want
  
-Tools like [suzieq](https://github.com/netenglabs/suzieq) ([suzieq](https://elegantnetwork.github.io/posts/10ish_ways_to_explore_your_network_with_Suzieq/)) 
-all you to understand what your simulation
-is doing in a really understandable way.
+Tools like [Suzieq](https://github.com/netenglabs/suzieq) ([Suzieq](https://elegantnetwork.github.io/posts/10ish_ways_to_explore_your_network_with_Suzieq/)) 
+allow you to understand what your simulation
+is doing in a easy way. One of the problems with trying to 
+different network designs is that networking is a distributed problem and it's 
+hard to get your mind around what is going on. Understanding your network in 
+a holistic way is the point of Suzieq. Try it out. 
 
 
+While there's not directly a catalog of options like Wolfram, my partner Dinesh
+has started with some useful topologies to try out. He wrote a book, 
+[Cloud Native Data Center Networking](https://www.amazon.com/Cloud-Native-Data-Center-Networking/dp/1492045608) 
+and has a [github repository](https://github.com/ddutt/cloud-native-data-center-networking) 
+in which you can download vagrant 
+files to try out 18 different scenarios from the book. This is a great way 
+to start getting and understanding of these concepts. Dinesh has been also 
+consulting over the last 18 months. For most of his 
+clients he builds them a vagrant network to simulate the ideas that he is 
+presenting to them. These are successful, the clients like being able to understand
+and try out the concepts that Dinesh is talking about.
  
 Another approach to simulation and verification is to use 
 tools like [Batfish](https://www.batfish.org/) simulate and check
@@ -103,26 +126,12 @@ that a network is working. (I was calling this intent based networking,
 but that's not how the industry is using that term, I need something else.)
 
 
-We can start trying out new ideas and building intition now. 
+We can start trying out new ideas and building intuition now. 
 It's not nearly as effortless as Wolfram
 using Mathematica in the video, but it is it's possible and it's a very important
-way to navigate complex fields like networking.
+way to navigate complex fields like networking. I think that every 
+network engineer could gain from having easy ways to gain insight about networks. 
 
-
-I think that every network engineer could gain from having 
-easy ways to gain insight about networks. My partner Dinesh wrote a book 
-[Cloud Native Data Center Networking](https://www.amazon.com/Cloud-Native-Data-Center-Networking/dp/1492045608) 
-and has a [github repository](https://github.com/ddutt/cloud-native-data-center-networking) 
-in which you can download vagrant 
-files to try out 18 different scenarios from the book. This is a great way 
-to start getting and understanding of these concepts. Dinesh has been also 
-consulting over the last 18 months. For most of his 
-clients he builds them a vagrant network to simulate the ideas that he is 
-presenting to them. These are successful, the clients like being able to understand
-and try out the concepts that Dinesh is talking about.
-
-
-Between vagrant, suzieq, and tools like batfish you can get things going already.
 
 I hope readers try these tools out and then let us know what things what make 
 it more useful. You might have an idea that we could bring about in hours, 
