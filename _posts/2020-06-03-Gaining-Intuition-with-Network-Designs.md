@@ -7,10 +7,10 @@ excerpt: In this post we look at an example of simulation in another field and t
 description: Why do we need better tools so that we can more easily gain intuition in networking?
 ---
 I care a lot about network design. I think **it's too hard to design networks well**
-and I think that all the tools necessary to do it well don't exit. 
+and I think that all the tools necessary to do it well don't exist. 
 At least I haven't seen them. The lack of tools affects the 
 biggest networks, but it affects all networks. I am especially 
-concerned about how to design networks that are operatable, which requires 
+concerned about how to design networks that are easy and safe to operate, which requires 
 a network that is understandable.
 
 What do I mean by network design? I mean all the decisions that you need to make to 
