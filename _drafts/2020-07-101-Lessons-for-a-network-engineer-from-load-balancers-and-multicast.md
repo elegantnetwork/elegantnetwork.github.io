@@ -3,8 +3,8 @@ layout: post
 comments: true
 author: Justin Pietsch
 title: Lessons for network engineers from load balancers and multicast
-excerpt: In this post we look at an example of simulation in another field and think about how we can apply that to networking.
-description: Why do we need better tools so that we can more easily gain intuition in networking?
+excerpt: In general I dislike load balancers and IP multicast ... But they've been very important for my career.
+description: Supporting load balancing and multicast helps understand the applications and services on the network.
 ---
 
 In general I dislike load balancers and IP multicast: I'm a network engineer. They are very complicated, have a 
