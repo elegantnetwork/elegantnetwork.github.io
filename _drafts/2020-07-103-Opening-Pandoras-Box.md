@@ -3,17 +3,22 @@ layout: post
 comments: true
 author: Justin Pietsch
 title: Opening Pandora's Box -- Why Network Engineers Should Write Code
-excerpt: 
+excerpt: I want to talk about why writing code can help you be a better network engineer. And why our industry needs us to write code to be better engineers.
 description: Network Engineers are told to write code, but why? How important is it?
 ---
+# what do I want to say here
+* it's important for network engineers to write code
+* why?
+  * to solve problems
+  * to think in terms of abstraction, testing, clean code, ci/cd
+    * I should probably demonstrate those things
 
 The topic of writing code can be a controversial topic for network engineers. 
 Network Engineers already have to learn and know so many technologies, and 
 it’s not fun to find out that your ideas about 
 your career that you’ve worked very hard for are threatened by something 
 else. I want to talk about why writing code can help you be a better 
-network engineer. And also why our 
-industry needs us to write code to be better engineers.
+network engineer. And why our industry needs us to write code to be better engineers.
 
 The usual argument starts with "Automate all the Things!". This is obvious, 
 and it's important, but not the most important.  If you start automating 
@@ -40,7 +45,7 @@ and then in a year, each of those will grow, but at different rates. If
 you don't think in software, these networks will be mostly the same, 
 but not quite. Depending exactly on when you get what switch, or need 
 what feature, you might not have them all cabled exactly the same. 
-In datacenter 3, switch 7, interface is connected to switch 9, and in 
+In datacenter 3, switch 7, interface 4 is connected to switch 9, and in 
 datacenter 2 it's connected to switch 8. Not quite the same. If there's 
 just one thing different, no big deal, but there's never just one thing 
 different. Each of those differences adds up, sometimes they even multiply, 
@@ -94,8 +99,8 @@ Python. As you gain your footing, be sure to not focus only on how to automate
 what you already know how to do, though that is the place to start.  Learn how 
 to think in abstractions and algorithms.
 
-https://nrelabs.io/ looks like a great place to learn automating networking.
-
+<https://nrelabs.io/> looks like a great place to learn automating networking.
+* clean code
 
 Languages do change the way we think. Try learning Python and think about 
 how to change the way you do your job. Even when not writing code, it can 
