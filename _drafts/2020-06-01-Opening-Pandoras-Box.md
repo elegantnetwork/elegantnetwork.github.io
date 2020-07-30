@@ -19,8 +19,8 @@ The usual argument starts with "Automate all the Things!". This is obvious,
 and it's important, but not the most important.  If you start automating 
 the work you already do, you gain super powers. You can write tools to help 
 you debug, or look at data more helpfully. 
-Maybe you automate Tcpdump collection, or you automate collecting data 
-just as pings at certain intervals. Or maybe you take data from several 
+Maybe you automate Tcpdump collection, or you automate collecting ping data 
+at certain intervals. Or maybe you take data from several 
 devices and combine them together to debug a problem. All of these are 
 useful. Good engineers make tools for themselves. There are a 
 lot of paper cut issues in network engineering, pick one and fix it.
