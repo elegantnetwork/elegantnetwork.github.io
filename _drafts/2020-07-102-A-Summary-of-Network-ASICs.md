@@ -71,6 +71,8 @@ Another important piece of pipelines in the last half-decade is how programmable
 
 As far as I'm concerned this does not matter. It sounds fantastic to have a programmable pipeline, but it's not actually useful. I worked in Amazon/AWS Networking for 17 years and we neither wanted nor could make use of this functionality. I have not seen anybody actually use this functionality to do something useful. But it sounds cool. [In this article about Xplaint](https://www.sdxcentral.com/articles/news/marvell-nixes-the-programmable-xpliant-chip-it-inherited-from-cavium/2018/08/) which also had a programmable pipeline, they talk about none of the hyperscalers find value in programmable pipelines. These Xpliant/Cavium/Marvell chips are no longer made. 
 
+I did watch a presentation in which the claim was that in service provider and enterprise networks programmable pipelines were needed. I still doubt it, but I'm not as familiar with those networks as I am with datacenters.
+
 All of these chips are more flexible than the chips available 10 years ago. It used to be that there were fixed buckets for the different tables necessary, like IPv4 LPM, host table, MAC table, ACL table, etc. Now many of them have shared table space that can be carved up as appropriate for the application. So if you do very little L2, you have a lot more space for LPM table.
 
 * <https://bm-switch.com/index.php/blog/whitebox_basics_programmable_fixed_asics/>
