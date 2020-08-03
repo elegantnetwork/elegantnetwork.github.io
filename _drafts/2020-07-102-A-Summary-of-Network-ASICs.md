@@ -123,7 +123,8 @@ Broadcom is like Intel in the CPU space. They go in waves in which they are the 
 
 ![Tomahawk lineup](https://3s81si1s5ygj3mzby34dq6qf-wpengine.netdna-ssl.com/wp-content/uploads/2019/12/broadcom-tomahawk-roadmap.jpg)
 
-* <https://www.nextplatform.com/2019/12/12/broadcom-launches-another-tomahawk-into-the-datacenter/>
+* <https://www.youtube.com/watch?v=n9bUEb1v0pU> Jericho 2
+*  <https://www.nextplatform.com/2019/12/12/broadcom-launches-another-tomahawk-into-the-datacenter/>
 * <https://www.broadcom.com/products/ethernet-connectivity/switching/strataxgs>
 * <https://www.broadcom.com/news/product-releases/broadcom-ships-jericho2>
 * <https://www.broadcom.com/company/news/product-releases/52196>
