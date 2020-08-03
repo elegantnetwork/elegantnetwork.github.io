@@ -111,7 +111,9 @@ Broadcom is the giant here, the king, the 800 pound gorilla. Broadcom was bought
 
 Broadcom has two important families of chips in this space. One is the Strata XGS, the other is Strata DNX which was from a company Broadcom purchased called Dune. The XGS are the single ASIC type that we've been talking about in this article. The Dune chipset can be used for chassis devices or in fixed-form-factor if you need large tables. The Jericho 2 is the chip that can be used standalone or with a fabric chip, which is called the [FE9600](https://www.broadcom.com/products/ethernet-connectivity/switching/stratadnx/bcm88790)
 
-Even in the XGS line there are several sub-species. The one the hyperscalers focus on is Tomahawk, which focused on speed. The Trident line can more features, I think they call this an edge services line. They have even more chips ethernet chips, but we aren't be concerned about them for this article
+Even in the XGS line there are several sub-species. The one the hyperscalers focus on is Tomahawk, which focused on speed. The Trident line can more features, I think they call this an edge services line. They have even more chips ethernet chips, but we aren't be concerned about them for this article. 
+
+In general, Tomahawk is focused on hyperscalers, Trident is focused on Enterprise, and Jericho/Dune is focused on Services Providers.
 
 Broadcom is a **very** aggressive company. They are not always fun to be a partner with. However, they are the biggest so you have to always be keeping track of them. Since [Ian Cox](https://techfieldday.com/appearance/broadcom-presents-at-networking-field-day-22/) is back at Broadcom they seem to have gotten themselves back in shape! :)
 
@@ -176,9 +178,22 @@ The number of ports you have available can effect your design. @Dinesh wrote abo
 It's also interesting to see how the industry moves. The more competition for Broadcom (and Cisco) the better for all of us.
 
 
+## Other topics
+There are a lot more topics that can be covered around these chips, but I'm not covering them here.
+* SERDES / analog speeds
+* Instrumentation -- This chips have added a lot of very sophisticated monitoring on chip
+* Pipelines and packet processing -- what is the effect of multiple pipelines and what is the impact
+* The effect of multiple memories on these chips and what that means for fairness
+* optics
+
+As networks get large, the cost of the network is drivee by the cost of the optics. The real money saving is not when you get a faster chip, but when the chip supports higher throughput SERDES.
+
 ## Other resources
 
 I've included links to resources throughout the post. I'd recommend the <http://www.nextplatform.com> specifically, they have a wealth of information and are generally fantastic.
+
+You should probably just watch this video from Ian Cox talking about Tomahawk 4.[![Ian Cox talking about Tomahawk 4](https://img.youtube.com/vi/B-COGMbaUg4/hqdefault.jpg)](https://www.youtube.com/watch?v=B-COGMbaUg4). 
+It's based on Broadcom, where he works, but gives you a lot of the same information I have here, but in a different slant.
 
 
 * <https://www.nextplatform.com/2018/04/30/feeding-the-insatiable-bandwidth-beast/>
