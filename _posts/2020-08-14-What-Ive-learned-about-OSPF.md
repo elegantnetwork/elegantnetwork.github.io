@@ -17,7 +17,7 @@ When we did this we were using CPUs from 2003 and we were using a lesser known O
 Others agree with me, <https://www.youtube.com/watch?v=Qmvg2mnbcPg>, even though they are mostly focusing on smaller networks than I was working on. But either way, OSPF can be made to work just fine on very large (or small) Clos networks.
 
 As an example of the scale, this is a generic 24 port 3-tier Clos. It is possible to make OSPF work on this. This is smaller than what we were working on in 2012.
-![24 port 3-tier clos](/assets/images/24port-3tier-clos.svg)
+![24 port 3-tier clos](/assets/images/24port-3tier-clos-resize.png)
 
 To understand and then mitigate the risks an unknown OSPF stack, at scale, is why I started building a configuration management system and started [simulating our network design](https://elegantnetwork.github.io/posts/Network-Validation-with-Vagrant/). We needed to understand how any OSPF protocol stack would work. Could we make the protocol scale at all? We needed to see what would actually happen with a real OSPF implementation. **I cannot stress enough how important this simulation was.** We did not understand the problem of flooding and we did not understand the solution until we had tried it out in simulation.
 
