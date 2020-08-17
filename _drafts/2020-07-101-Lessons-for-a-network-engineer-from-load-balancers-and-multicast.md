@@ -70,7 +70,7 @@ I met so many interesting people and projects. LBs are how I met many of the peo
 * Make things simple including separate out services into their own domain. i.e., don't run every service on the same server or the same router. Separate things out for blast radius and for ease of understanding.
 * Capacity management is critical and if/when you fail, you will often introduce congestion collapse and make things much worse than you could image.
    * Work really hard to understand all the different resources that are constrained. 
-* Do everything you can to avoid congestion collapse, on ever level. Think about control plane protocols, and Load Balancers, multicasts, even databases.
+* Do everything you can to avoid congestion collapse, on every level. Think about control plane protocols, and Load Balancers, multicasts, even databases.
 * Be careful what you ask vendors for, they might give it to you, and it might cause you unending problems.
 * Better vendors give you better access to their product teams. In load balancers this was the most important aspect in evaluating a vendor. It's very hard to test for, but you can ask around to see what other people think
 * Get your research paper out of my network, I have real customers and real problems. cough cough p4.
@@ -85,7 +85,7 @@ I think networking is very interesting field; that’s why I’m still in it. Bu
 You might notice all my stories are 10+ years ago, there are several reasons for that: 
 1. I haven't owned operations on load balancers for that long. 
 2. Unrelated to #1, Amazon is a lot better at operating load balancers than it used to be. :)
-1. We stopped production multicast more than a decade ago.
+1. Amazon stopped production multicast more than a decade ago.
 3. The stories are old enough I can't get in too much trouble.
 4. The most important: These are still many of the most important lessons of my career.
 
