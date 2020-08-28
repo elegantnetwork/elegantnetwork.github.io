@@ -27,7 +27,7 @@ Just as SQL (Structured Query Language) is used to write queries to retrieve the
 
 I wanted to implement the LPM logic in [Suzieq](https://github.com/netenglabs/suzieq) using pandas. A full Internet routing table is 800K routes at the time of this writing. This could easily run into millions of entries with multiple routers in Suzieq's database. My first attempt was to see if I could make IP networks a first class data type in Pandas. I had hoped that would make the performance better than if I tried it by iteratively applying the logic to each entry. 
 
-A naive implementation would do follow a logic that looks something like this (though it has to preserve :
+LPM in simple pseudocode that is independent of any underlying data structure looks roughly as follows:
 ```
 selected_entry = None
 for each row in the route table
@@ -36,8 +36,23 @@ for each row in the route table
 	     selected_entry = row
 return selected_entry
 ```
+Typically the routing table in most packet forwarding software such as the Linux kernel or in software routers is implemented using a [Patricia Tree](https://en.wikipedia.org/wiki/Radix_tree#PATRICIA). Lots of papers have explored alternate data structures to implement a faster LPM. Their goal is to forward packets as fast as possible. In packet switching ASICs, the LPM is typically implemented using a [TCAM (Ternary CAM)](https://en.wikipedia.org/wiki/Content-addressable_memory#Ternary_CAMs). In Suzieq, I'm not forwarding packets, I just need the algorithm to be fast enough to not bore the human using it or be fast enough for other programs to use it. 
 
-But this results in a terrible performance. I chanced upon a library called [cyberpandas](https://github.com/ContinuumIO/cyberpandas) which made an IP address a basic data type in pandas. I extended this to make IP networks a basic data type in pandas. This resulted in code that looked as follows:
+There is no data structure besides the DataFrame in pandas. I could have tried to suck the data out of pandas and stuffed it into a Patricia Trie like data structure to query. But this would've resulted in too much time to build the Patricia Trie. In addition, in Suzieq its possible to perform the LPM from the point of view of multiple routers in a network in a single query. I needed the ability to support this as well. Constructing multiple Patricia Tries or using a new data structure with modifications to support all the additional requirements seemed too onerous. In any analysis, getting the data into the right structures for analysis consume a significant portion of the time. Caching really helps here, but since the underlying data can change at any time, I wanted to avoid caching the route table in a different data structure. Lots of other possibilities exist, but all involved doing something outside the methods available in Pandas. 
+
+To stick with Pandas, the most naive implementation, one that appears most immediately to a programmer schooled in C, is the one that follows the pseudocode shown above.
+```python
+dstip = ip_network('dstaddr')
+selected_entry = []
+selected_plen = -1
+for index, row in route_table.iterrows():
+    rtentry = ip_network(row['prefix'])
+	if dstip.subnet_of(rtentry) and rtentry.prefixlen > selected_plen:
+	   selected_entry = row
+```
+But this results in a terrible performance, said every thing I'd ever read about programming in Pandas. I had read this enough to not even try to implement this to see what the numbers would be. My reading led me to think that the trick had to be to somehow make it a part of pandas natural style of working with data. Maybe implementing IP network as a basic data type in pandas was the right approach.
+
+Pandas allows users to define new extended data types. I chanced upon a library called [cyberpandas](https://github.com/ContinuumIO/cyberpandas) which made an IP address a basic data type in pandas. I extended this to make IP networks a basic data type in pandas. This resulted in code that looked as follows:
 ```python
 route_df['prefix'] = route_df['prefix'].astype('ipnetwork')
 result = route_df[['namespace', 'hostname', 'vrf', 'prefix']] \
@@ -49,9 +64,9 @@ result = route_df[['namespace', 'hostname', 'vrf', 'prefix']] \
 result_df = result.merge(route_df)
 return result_df
 ```
-The third line elegantly captures the checking if the prefix contains the address, and the fifth picks the entry with the longest prefix length.
+The third line elegantly captures the checking if the prefix contains the address, and the fifth picks the entry with the longest prefix length. The same logic as the naive implementation, but this ought to perform better, I hoped. This also led to other benefits in basic route filtering, and so this was the model that was released with Suzieq.
 
-This model looks more like pandas data pipeline code ought to look, no iterating with for loops explicitly over the entire route table. It all worked well, until it ran into the full Internet routing table. Donald Sharp, one of the key maintainers of the open source routing suite, had Suzieq collect the data from a router receiving the full Internet feed and provided me a copy of this data. The second fragment of code took close to 3 minutes to perform an lpm!
+This model looks more like pandas data pipeline code ought to look, no iterating with for loops explicitly over the entire route table. It all worked well. Until it ran into the full Internet routing table. Donald Sharp, one of the key maintainers of the open source routing suite, had Suzieq collect the data from a router receiving the full Internet feed and provided me a copy of this data. This algorithm took close to 3 minutes to perform the LPM!
 
 Investigating the code, I determined that the time taken was caused by two things: converting 800K prefixes into the IP network data type, and then searching through the entire 800K prefixes to find the longest prefix match. pandas had a different model for iterating over all the rows that was faster than manually iterating over the rows as shown in the pseudo code of the first fragment. That was to use the apply function. This code looked as follows:
 ```python
@@ -63,7 +78,7 @@ rslt_df = route_df.loc[match] \
 return rslt_df
 ```
 
-This reduced the time window from almost 3 minutes to 1 minute 40 seconds. Better, but still way too long. 
+The same logic as the naive code, but without the elegance of the second solution. However, this reduced the time window from almost 3 minutes to 1 minute 40 seconds. Better, but still way too long. 
 
 Python is not known for being particularly fast, but almost no other language has libraries such as pandas for data analysis. So, stuck with python I was. I had read that the trick to the best performance with pandas was to vectorize the operations. By vectorizing an operation, we'd be reducing it to something that another library, numpy, could perform. In our case, we'd have to reduce the longest prefix match to a set of bit operations that numpy could be used for. The longest prefix match can be reduced to:
 ```
