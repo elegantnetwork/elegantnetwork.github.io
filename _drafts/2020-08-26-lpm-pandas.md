@@ -43,12 +43,13 @@ There is no data structure besides the DataFrame in pandas. I could have tried t
 To stick with Pandas, the most naive implementation, one that appears most immediately to a programmer schooled in C, is the one that follows the pseudocode shown above.
 ```python
 dstip = ip_network('dstaddr')
-selected_entry = []
+result = []
 selected_plen = -1
 for index, row in route_table.iterrows():
     rtentry = ip_network(row['prefix'])
 	if dstip.subnet_of(rtentry) and rtentry.prefixlen > selected_plen:
-	   selected_entry = row
+	   result = row
+return result
 ```
 But this results in a terrible performance, said every thing I'd ever read about programming in Pandas. I had read this enough to not even try to implement this to see what the numbers would be. My reading led me to think that the trick had to be to somehow make it a part of pandas natural style of working with data. Maybe implementing IP network as a basic data type in pandas was the right approach.
 
