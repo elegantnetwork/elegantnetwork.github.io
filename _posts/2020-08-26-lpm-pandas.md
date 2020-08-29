@@ -6,7 +6,7 @@ title: Implementing IP's Longest Prefix Match in Pandas
 excerpt: An evaluation of different approaches to perform IP's longest prefix match in pandas.
 description: An evaluation of different approaches to perform IP's longest prefix match in pandas.
 ---
-Longest Prefix Match (LPM) is the algorithm used in IP networks to forward packets. The algorithm is used to select the one entry in the routing table (for those that know, I really mean the FIB--forwarding information base--here when I say routing table) that best matches the destination address in the IP packet that the router is forwarding. I am an old school systems programmer, used to programming in C or even Python, not the new style method chaining model used in the popular Python data analysis package, [pandas](https://pandas.pydata.org/pandas-docs/stable/user_guide/index.html). This post is a description of my experiments in implementing LPM in pandas. The goal obviously is to ensure that LPM completed as fast as possible on the full Internet feed, but potentially much larger.
+**Longest Prefix Match (LPM)** is the algorithm used in IP networks to forward packets. The algorithm is used to select the one entry in the routing table (for those that know, I really mean the FIB--forwarding information base--here when I say routing table) that best matches the destination address in the IP packet that the router is forwarding. I am an old school systems programmer, used to programming in C or even Python, not the new style method chaining model used in the popular Python data analysis package, [Pandas](https://pandas.pydata.org/pandas-docs/stable/user_guide/index.html). **This post is a description of my experiments in implementing LPM in Pandas**. The goal obviously is to ensure that LPM completed as fast as possible on the full Internet feed, but potentially much larger.
 
 ## Longest Prefix Match
 
@@ -88,7 +88,7 @@ In python with pandas, this ended up looking as follows:
 ```python
 intaddr = route_df.prefix.str.split('/').str[0] \
 			      .map(lambda y: int(''.join(['%02x' % int(x)
-				  						      for x in y.split('.')]), 16))
+				  	   for x in y.split('.')]), 16))
 netmask = route_df.prefixlen \
             .map(lambda x: (0xffffffff << (32 - x)) & 0xffffffff)
 match = (dstip._ip & netmask) == (intaddr & netmask)
@@ -97,9 +97,9 @@ result_df = route_df.loc[match.loc[match].index] \
   	                .drop_duplicates(['vrf'])
 ```
 
-Essentially, the apply line has been reduced to the first 3 lines in the code fragment above. Even though it looks like intaddr. netmask and match are operating on a single value, they're actually operating on all the rows of the route table. To someone used to standard programming techniques, this code looks a bit strange. But with this change, LPM was reduced to 2 seconds! 
+Essentially, the apply line has been reduced to the first 3 lines in the code fragment above. Even though it looks like intaddr. netmask and match are operating on a single value, they're actually operating on all the rows of the route table. To someone used to standard programming techniques, this code looks a bit strange. But with this change, **LPM was reduced to 2 seconds!** 
 
-Thus, we systematically reduced the LPM performance from close to 3 minutes to 2s for a full Internet routing table. Doing LPM over 6.5 million rows went from over 6 minutes to 4 seconds!
+Thus, we systematically reduced the LPM performance from close to 3 minutes to 2s for a full Internet routing table. **Doing LPM over 6.5 million rows went from over 6 minutes to 4 seconds!**
 
 ## Lessons Learned
 
@@ -135,7 +135,6 @@ for row in route_table.itertuples():
 
 result_df = pd.DataFrame(list(result.values()))
 ```
-
 This was a surprisingly fast 9.76 seconds. Much faster than the apply method, and the next best solution to the vectorized answer. This goes against the grain of accepted wisdom, even if you assume that my attempt to make IP network a native data type in pandas was flawed maybe by my implementation. 
 
 "Premature optimization is the root of all evil" is a well-known maxim in software programming circles, a quote attributed to Sir Tony Hoare (the man behind the quicksort algorithm and communication sequential processes among other things). However, I'm also aware of the other famous quote on life by Will Rogers, "There are three kinds of men. The ones that learn by reading. The few who learn by observation.
