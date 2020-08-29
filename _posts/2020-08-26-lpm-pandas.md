@@ -31,7 +31,7 @@ selected_entry = None
 for each row in the route table
    if the given address is a subnet of the prefix
       if the prefix length of the prefix is larger than the existing prefix length
-	     selected_entry = row
+         selected_entry = row
 return selected_entry
 ```
 Typically the routing table in most packet forwarding software such as the Linux kernel or in software routers is implemented using a [Patricia Trie](https://en.wikipedia.org/wiki/Radix_tree#PATRICIA). Lots of papers have explored alternate data structures to implement a faster LPM. Their goal is to forward packets as fast as possible. In packet switching ASICs, the LPM is typically implemented using a [TCAM (Ternary CAM)](https://en.wikipedia.org/wiki/Content-addressable_memory#Ternary_CAMs). In Suzieq, I'm not forwarding packets, I just need the algorithm to be fast enough to not bore the human using it or be fast enough for other programs to use it. 
@@ -45,8 +45,8 @@ result = []
 selected_plen = -1
 for index, row in route_table.iterrows():
     rtentry = ip_network(row['prefix'])
-	if dstip.subnet_of(rtentry) and rtentry.prefixlen > selected_plen:
-	   result = row
+    if dstip.subnet_of(rtentry) and rtentry.prefixlen > selected_plen:
+       result = row
 result_df = pd.concat(result)
 ```
 But this results in a terrible performance, said every thing I'd ever read about programming in Pandas ([see this as an example](https://stackoverflow.com/questions/24870953/does-pandas-iterrows-have-performance-issues)). I had read this enough in multiple places to not even try to implement this to see what the numbers would be. My reading led me to think that the trick had to be to somehow make it a part of pandas natural style of working with data. Maybe implementing IP network as a basic data type in pandas was the right approach.
@@ -56,10 +56,10 @@ Pandas allows users to define new extended data types. I chanced upon a library 
 route_df['prefix'] = route_df['prefix'].astype('ipnetwork')
 result = route_df[['vrf', 'prefix']] \
          .query("prefix.ipnet.supernet_of('{}')".format(dstaddr)) \
-		 .groupby(by=['vrf']) \
-		 .max() \
-		 .dropna() \
-		 .reset_index()
+         .groupby(by=['vrf']) \
+         .max() \
+         .dropna() \
+         .reset_index()
 result_df = result.merge(route_df)
 ```
 The third line elegantly captures the checking if the prefix contains the address, and the fifth picks the entry with the longest prefix length. The same logic as the naive implementation, but this ought to perform better, I hoped. This also provides the LPM per VRF (think of VRF as a logical routing instance, sort of like a VLAN for IP). This model looks more like Pandas data pipeline code ought to look, no iterating with for loops explicitly over the entire route table. This also led to other benefits in basic route filtering and other IP address operations. So, we released Suzieq with this implementation.
@@ -72,7 +72,7 @@ route_df['prefixlen'] = int_df.prefix.str.split('/').str[1]
 match = route_df.apply(lambda x, dstip: dstip.subnet_of(ip_network(x['prefix'])), args=(dstip, ), axis=1)
 result_df = route_df.loc[match] \
                     .sort_values('prefixlen', ascending=False) \
-		            .drop_duplicates(['vrf'])
+                    .drop_duplicates(['vrf'])
 ```
 
 The same logic as the naive code, but more in line with how Pandas best practices recommended. The fourth and fifth lines implement the equivalent of picking the longest prefix entry over all the selected ones. However, this reduced the time window from two and a half minutes to 1 minute 40 seconds. Better, but still way too long. 
@@ -87,14 +87,14 @@ if (addr & netmask) == (prefix & netmask), then the address is a subnet of the p
 In python with pandas, this ended up looking as follows:
 ```python
 intaddr = route_df.prefix.str.split('/').str[0] \
-			      .map(lambda y: int(''.join(['%02x' % int(x)
-				  	   for x in y.split('.')]), 16))
+                  .map(lambda y: int(''.join(['%02x' % int(x)
+                       for x in y.split('.')]), 16))
 netmask = route_df.prefixlen \
             .map(lambda x: (0xffffffff << (32 - x)) & 0xffffffff)
 match = (dstip._ip & netmask) == (intaddr & netmask)
 result_df = route_df.loc[match.loc[match].index] \
                     .sort_values('prefixlen', ascending=False) \
-  	                .drop_duplicates(['vrf'])
+                    .drop_duplicates(['vrf'])
 ```
 
 Essentially, the apply line has been reduced to the first 3 lines in the code fragment above. Even though it looks like intaddr. netmask and match are operating on a single value, they're actually operating on all the rows of the route table. To someone used to standard programming techniques, this code looks a bit strange. But with this change, **LPM was reduced to 2 seconds!** 
@@ -110,11 +110,11 @@ result = {}
 max_plens = defaultdict(int)
 for index, row in route_table.iterrows():
     rtentry = ip_network(row['prefix'])
-	if dstip.subnet_of(rtentry):
-	   key = row["vrf"]
-	   if rtentry.prefixlen > max_plens[key]:
-	      result[key] = row
-		  max_plens[key] = rtentry.prefixlen
+    if dstip.subnet_of(rtentry):
+       key = row["vrf"]
+       if rtentry.prefixlen > max_plens[key]:
+          result[key] = row
+          max_plens[key] = rtentry.prefixlen
 
 result_df = pd.concat(list(result.values()), axis=1)
 ```
@@ -127,11 +127,11 @@ result = {}
 max_plens = defaultdict(int)
 for row in route_table.itertuples():
     rtentry = ip_network(row.prefix)
-	if dstip.subnet_of(rtentry):
-	   key = row.vrf
-	   if rtentry.prefixlen > max_plens[key]:
-	      result[key] = row
-		  max_plens[key] = rtentry.prefixlen
+    if dstip.subnet_of(rtentry):
+       key = row.vrf
+       if rtentry.prefixlen > max_plens[key]:
+          result[key] = row
+          max_plens[key] = rtentry.prefixlen
 
 result_df = pd.DataFrame(list(result.values()))
 ```
