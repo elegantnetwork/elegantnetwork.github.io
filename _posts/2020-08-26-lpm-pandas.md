@@ -69,21 +69,21 @@ It all worked well. Until it ran into the full Internet routing table. Donald Sh
 Investigating the code, I determined that the time taken was caused by two things: converting 800K prefixes into the IP network data type, and then searching through the entire 800K prefixes to find the longest prefix match. pandas had a different model for iterating over all the rows that was faster than manually iterating over the rows as shown in the pseudo code of the first fragment. That was to use the apply function. This code looked as follows:
 ```python
 route_df['prefixlen'] = int_df.prefix.str.split('/').str[1]
-match = route_df.apply(lambda x, dstip: dstip.subnet_of(ip_network(x['prefix'])), args=(dstip, ), axis=1)
+match = route_df.apply(lambda x, dstip: dstip.subnet_of(ip_network(x['prefix'])), 
+                       args=(dstip, ), axis=1)
 result_df = route_df.loc[match] \
                     .sort_values('prefixlen', ascending=False) \
                     .drop_duplicates(['vrf'])
 ```
-
-The same logic as the naive code, but more in line with how Pandas best practices recommended. The fourth and fifth lines implement the equivalent of picking the longest prefix entry over all the selected ones. However, this reduced the time window from two and a half minutes to 1 minute 40 seconds. Better, but still way too long. 
+The same logic as the naive code, but more in line with how Pandas best practices recommended. The fifth and sixth lines implement the equivalent of picking the longest prefix entry over all the selected ones. However, this reduced the time window from two and a half minutes to 1 minute 40 seconds. Better, but still way too long. 
 
 Python is not known for being particularly fast, but almost no other language has libraries such as pandas for data analysis. So, stuck with python I was. I had read that the trick to the best performance with pandas was to vectorize the operations. By vectorizing an operation, we'd be reducing it to something that another library, numpy, could perform. In our case, we'd have to reduce the longest prefix match to a set of bit operations that numpy could be used for. The longest prefix match can be reduced to:
 ```
 convert the IP network address to a number 
 construct the netmask as a number using the prefixlen
-if (addr & netmask) == (prefix & netmask), then the address is a subnet of the prefix
+if (addr & netmask) == (prefix & netmask)
+   the address is a subnet of the prefix
 ```
-
 In python with pandas, this ended up looking as follows:
 ```python
 intaddr = route_df.prefix.str.split('/').str[0] \
@@ -96,7 +96,6 @@ result_df = route_df.loc[match.loc[match].index] \
                     .sort_values('prefixlen', ascending=False) \
                     .drop_duplicates(['vrf'])
 ```
-
 Essentially, the apply line has been reduced to the first 3 lines in the code fragment above. Even though it looks like intaddr. netmask and match are operating on a single value, they're actually operating on all the rows of the route table. To someone used to standard programming techniques, this code looks a bit strange. But with this change, **LPM was reduced to 2 seconds!** 
 
 Thus, we systematically reduced the LPM performance from close to 3 minutes to 2s for a full Internet routing table. **Doing LPM over 6.5 million rows went from over 6 minutes to 4 seconds!**
