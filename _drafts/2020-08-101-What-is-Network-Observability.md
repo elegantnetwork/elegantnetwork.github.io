@@ -39,7 +39,6 @@ You probably have interface monitoring or similar and that might be how you foun
 
 An important set of data that are not collected systematically are show commands. These are the commands that provide network engineers the information that they need to operate and debug the network. Collecting these systematically gives you a lot of advantages: you have history over time, you can corelate output from multiple commands for better understanding, you can build alerting, etc.
 
-
 ## Why does it matter -- Network Observability Questions
 
 There are many different questions that you want to be able to ask in networking, some of them are too hard or take too long, and some are not possible. In blog posts about observability there are often lists of questions as demonstration. I want to start with trying to classify some set of questions that I think are especially interesting around this space.
@@ -48,7 +47,7 @@ In many ways you need a way to orient yourself in your network. If you are opera
 
 ### Operations and Debugging
 
-What do I do when I don't know what to do? Usually I log into a device. There has to be a better way
+What do I do when I don't know what to do? Usually I log into a device. There has to be a better way.
 
 The first class of things that jumps out it operations and debugging. It can be very hard to debug problems in the network. First off, the problems are distributed, so triangulating to find where the problem is and collecting data from every device is hard. Also, there are so many interacting systems on each device, did you collect all the right information? And there's the issue of time, did you collect the data when things were broken, or only now? Can you see how things changed over time?
 
@@ -98,7 +97,12 @@ Another important deficit is that we don't have good ways to add tags to aggrega
 
 There's always more data to add, and we need help. Dinesh [wrote up a bunch of questions](https://github.com/netenglabs/suzieq/blob/experiments/docs/q-to-ask.rst) to help him frame what to build for Suzieq. There's a lot of those questions we can't yet answer, though there are others he wasn't thinking of then that it can answer.
 
+## Designing networks to be observable
+
+The more that each device is artisanal snowflake, the harder it is to understand your network. The more that devices have roles that are clearly defines and delineated that easier it is to understand and observe.
+
 ## Comments
+
 Let us know if I'm missing any good software that you think helps for network observability.
 
 ## References

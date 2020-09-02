@@ -12,13 +12,14 @@ description: Network Engineers are told to write code, but why? How important is
   * to solve problems
   * to think in terms of abstraction, testing, clean code, ci/cd
     * I should probably demonstrate those things
+ * add more resources
 
 The topic of writing code can be a controversial topic for network engineers. 
 Network Engineers already have to learn and know so many technologies, and 
 it’s not fun to find out that your ideas about 
 your career that you’ve worked very hard for are threatened by something 
-else. I want to talk about why writing code can help you be a better 
-network engineer. And why our industry needs us to write code to be better engineers.
+else. **I want to talk about why writing code can help you be a better 
+network engineer.** And why our industry needs us to write code to be better engineers.
 
 The usual argument starts with "Automate all the Things!". This is obvious, 
 and it's important, but not the most important.  If you start automating 
@@ -68,6 +69,14 @@ have software and computers at your command, you can approach a problem in
 a way that doesn't make sense for a human, but is actually a better way of 
 solving something. Hopefully you will start thinking of your network as a system, 
 rather than individual boxes with independent configuration.
+
+What do I mean by abstraction? For instance, rather than having to know that in 
+this datacenter, the first core router has this policy and is connected to this layer, 
+but the second one has a little different policy
+
+sometimes it means adding more hardware to make the abstractions cleaner. The 
+goal isn't the cheapest network in hardware, it's the most operatable.
+
 
 If you think about testing code, then maybe you'll start thinking about 
 how to build networks that are testable. This kind of thinking often leads 
