@@ -129,12 +129,80 @@ paramiko: 5.622337078035343
 netmiko: 54.29702621902106
 ```
 A few things jump out at these outputs:
-- The single host performace across the three libraries, asyncssh, libssh2 and paramiko are roughly equuivaent. If I run the test enough times, I can make any one of the three best the others.
+- The single host performace across the three libraries, asyncssh, libssh2 and paramiko, are roughly equivalent. If I run the test enough times, I can make any one of the three best the others.
 - Netmiko is consistently the slowest
 - In the case of multihost performance, asyncssh always beats out the others, by a fairly wide margin, at least 15x faster than the slowest.
 
 ## Acting on the Results
 
-So, you may wonder, how do people deal with multiple hosts using libraries other than asyncssh. They build their own version of concurrency by either using threads or processes. Ansible uses processes, if I remember correctly. Here is a link to a [post](https://www.consentfactory.com/python-threading-queuing-netmiko/) that shows how such a code might be written (I just randomly picked an entry from the search result).
+So, you may wonder, how do people deal with multiple hosts using libraries other than asyncssh. They build their own version of concurrency by either using threads or processes. Ansible uses processes, if I remember correctly. Here is a link to a [post](https://www.consentfactory.com/python-threading-queuing-netmiko/) that shows how such a code might be written (I just randomly picked an entry from the search result). Python's asyncio library uses multi-threading by default, not multi-processing, though you can write code to adapt it to use multiprocessing. 
 
-Python's asyncio library uses multi-threading by default, not multi-processing, though you can write code to adapt it to use multiprocessing. 
+### Code Readability
+
+But this brings me to another criterion in helping us decide on which library did we wanted to use in Suzieq. How simple and easy to read is the code. First up are the best answers in my opinion, asyncssh and netmiko. Here they are:
+```python
+async def async_ssh(host, port=22, user='vagrant', password='vagrant'):
+    conn = await asyncssh.connect(host, port=port,
+                                  username=user, password=password,
+                                  client_keys=None,  known_hosts=None)
+    output = await conn.run(command)
+    # print(f'{host}, {output.stdout.strip()}, {output.exit_status}')
+    conn.close()
+
+def netmiko_ssh(host, port=22, user='vagrant', password='vagrant'):
+
+    dev_connect = {
+        'device_type': 'autodetect',
+        'host': host,
+        'port': port,
+        'username': user,
+        'password': password
+    }
+
+    net_connect = ConnectHandler(**dev_connect)
+    output = net_connect.send_command(command, use_textfsm=False)
+    net_connect.disconnect()
+    # print(output)
+```
+Both are fairly easy to follow and hide all sorts of low level details from the code. asyncssh has the equivalent of netmiko's dev_connect variable model that you can use instead of passing the parameters in the call to connect as we've done. Paramiko is fairly equivalent, if not as terse as asyncssh.
+
+Next up is ssh2-python (this is taken from ssh2-python's examples):
+```python
+def ssh2_ssh(host, port=22, user='vagrant', password='vagrant'):
+    # Make socket, connect
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect((host, port))
+
+    # Initialise
+    session = Session()
+    session.handshake(sock)
+
+    session.userauth_password(user, password)
+
+    # Public key blob available as identities[0].blob
+
+    # Channel initialise, exec and wait for end
+    channel = session.open_session()
+    channel.execute(command)
+    channel.wait_eof()
+    channel.close()
+    channel.wait_closed()
+
+    # Print output
+    output = b''
+    size, data = channel.read()
+    while size > 0:
+        output += data
+        size, data = channel.read()
+
+    # Get exit status
+    output = output.decode("utf-8").strip()
+    # print(f'{host}, {output}, {channel.get_exit_status()}')
+```
+This is far less elegant than the first two, exposing sockets, sessions and channels. While one could argue that all this code could be tucked away in a routine and made to look as elegant as asyncssh or netmiko, I'm inherently lazy. I don't want to do work that I don't want to, unless there's a real strong motivation to do it.
+
+## Summary
+
+Asyncssh is the python ssh library used in Suzieq. Its successfully connected to Juniper MX, Juniper QFX, Cisco's 9K, Cumulus, Arista and SONIC machines without a problem. We use textfsm internally on the gathered data, if structured output is not available. Given our requirements, this was the best choice. Our choice was validated even more by how helpful the maintainer of asyncssh, Ron Fredericks is. I needed help with figuring something out, and he sent me an excellent, detailed and thoughtful response.
+
+While this is not a professional benchmarking article, I hope it helped the readers appreciate what a serious difference asyncio makes in performance.
