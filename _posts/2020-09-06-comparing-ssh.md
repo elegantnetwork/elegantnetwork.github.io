@@ -165,7 +165,7 @@ The results are summarized in this table below (note the slower times with 10 re
 | Junos, Single Host, 10 Repeats | 1.6236 | 1.9315 | 1.5417 | 1.6812 | 12.913 |
 | Junos, 2 Hosts, 10 Repeats | 1.9371 | 2.3284 | 3.1178 | 3.3258 | 25.2673 |
 
-## Mulltithreading with Synchronous IO
+## Concurrency with Synchronous IO
 
 So, you may wonder, how do people deal with multiple hosts using libraries other than asyncssh. They build their own version of concurrency by either using threads or processes. Ansible uses processes, if I remember correctly. Here is a link to a [post](https://www.consentfactory.com/python-threading-queuing-netmiko/) that shows how such a code might be written (I just randomly picked an entry from the search result). Python's asyncio library uses multi-threading by default, not multi-processing, though you can write code to adapt it to use multiprocessing. I don't want to do thread management if I can help it. The more I can rely on well-tested code, the more I can focus on my tool's value add and also focus on testing what's essential. 
 
