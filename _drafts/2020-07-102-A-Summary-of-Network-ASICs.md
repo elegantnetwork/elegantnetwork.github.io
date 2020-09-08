@@ -8,7 +8,7 @@ description: Current High Speed Merchant Silicon Ethernet ASICs
 ---
 There is a lot going on in the field of the highest speed network ASICs. These are focused on very high speed, and not as many features or buffers, driven by the hyperscalers and the Financial industry which desires the lowest latency switching. This is a very rich area and I've already written a lot. There's a lot more to dive into, but hopefully this will give you a taste and somethings to chase after if you want more understanding.
 
-An Application Specific Integrated Circuit (ASIC) is purpose built for a particular application. In this case, these are  built to provide as much network throughput as possible. They are two orders of magnitude faster than Intel CPUs for forwarding packets.
+An Application Specific Integrated Circuit (ASIC) is purpose built for a particular application. In this case, these are built to provide as much network throughput as possible. They are two orders of magnitude faster than Intel CPUs for forwarding packets.
 
 The use of these high speed ASICs in networking was really started by Broadcom and Fulcrum in the mid 2000s. [Fulcrum Terabit Clockless Crossbar switch](https://www.hotchips.org/wp-content/uploads/hc_archives/hc15/3_Tue/2.fulcrum.pdf) is a document from 2003, just the beginning for Fulcrum. They were using 130nm technology and building 1M transistor parts. We'll talk about what those mean later in this post. This chip wasn't even Ethernet, it's purpose was to be in the middle of other network (ethernet) processing chips and just be the switch. Later generations were L2, and then they created an L3 switch. Fulcrum ASICs (Alta) at 24 ports of 10G were how Arista got started.
 
@@ -21,10 +21,9 @@ These chips (and others with more functionality and/or lower speeds) are sometim
 
 For the most part, the ASICs that we are talking about here work as a single ASIC in the device. Meaning that there are other chips such as ethernet MACs and CPUs, but all the network forwarding decisions and buffering are done inside one chip. Many people think of these as the chips for ToR switches, not the rest of the network, but some networks, and especially hyperscalers are using them throughout the network, usually in the form of small fixed form factor (pizza boxes.) Some people do combine them in interesting ways such as [Facebook's minipack](https://engineering.fb.com/data-center-engineering/f16-minipack/).
 
-In any chip design there is a fixed budget of resources, which are transistors,space on the chip die, or the number of pins from the chip to the rest of the system. If you want more of one thing, than you have to give up something else. In these chips, they are optimized for the most speed, so they have a lot of their die tied up in getting off the chip to the interfaces. One of the consequences of this is that they have much less buffering and table space than other chips. You might say well "Why can't they use off chip TCAM or buffers?", and there are two reasons. The first is that to use off chip resources means that you are using pins and chip real-estate that you wanted to use for providing more interface speed. 
+In any chip design there is a fixed budget of resources, which are: transistors, space on the chip die, and the number of pins from the chip to the rest of the system. If you want more of one set of features then you have to give up something else. In these chips, they are optimized for the most speed, so they have a lot of their die tied up in getting data off the chip to the interfaces. One of the consequences is that they have much less buffering and table space than other chips. You might say well "Why can't they use off chip TCAM or buffers?" First, to use off chip resources means that you are using pins and chip real-estate that you wanted to use for providing more interface speed. Second, off chip memory is slower and higher latency so that it would slow down the packet-per-second rate.
 
-
-There are chipsets that work together to form large and there are even merchant silicon than does this. The most used in merchant silicon of these chips is the Broadcom Strata DNX. For instance, the [Arista 7500](https://www.arista.com/en/products/7500r-series) is [based on this chipset](https://www.arista.com/assets/data/pdf/7500E-Lippis-Report.pdf). There are two big advantages to kind of chipset: they work together to build a larger system to support more ports and because they are not a single chip, they can handle offchip table and buffer space, so these have 1M+ table space and large buffers. These chips are also used in fixed form-factor devices that have large enough tables for the internet.
+There are chipsets that work together to form large chassis devices and there are even merchant silicon than does this. The most popular in merchant silicon of these chips is the Broadcom Strata DNX. For instance, the [Arista 7500](https://www.arista.com/en/products/7500r-series) is [based on this chipset](https://www.arista.com/assets/data/pdf/7500E-Lippis-Report.pdf). There are two big advantages to this kind of chipset: they work together to build a larger system to support more ports and because they are not a single chip, they can handle off-chip table and buffer space, so these have 1M+ table space and large buffers. These chips are also used in fixed form-factor devices that have large enough tables for the internet. Any individual one of these chips has less throughput than the chips we've been focusing on because they must spend more of their resources accessing and connecting to other chips in the system.
 
 ## Important architecture considerations
 
@@ -69,47 +68,44 @@ Just like in CPUs, we've gotten to a place where you have to have multiple cores
 
 Another important piece of pipelines in the last half-decade is how programmable the pipeline is. Barefoot was the first to come out with a programable pipeline based on [P4](http://www.sigcomm.org/sites/default/files/ccr/papers/2014/July/0000000-0000004.pdf). Broadcom has it's own language called [NPL](https://nplang.org/npl/blog/). 
 
-As far as I'm concerned this does not matter. It sounds fantastic to have a programmable pipeline, but it's not actually useful. I worked in Amazon/AWS Networking for 17 years and we neither wanted nor could make use of this functionality. I have not seen anybody actually use this functionality to do something useful. But it sounds cool. [In this article about Xplaint](https://www.sdxcentral.com/articles/news/marvell-nixes-the-programmable-xpliant-chip-it-inherited-from-cavium/2018/08/) which also had a programmable pipeline, they talk about none of the hyperscalers find value in programmable pipelines. These Xpliant/Cavium/Marvell chips are no longer made. 
+As far as I'm concerned this is not important. It sounds fantastic to have a programmable pipeline, but it's not actually useful. I've not wanted or needed this functionality in network hardware and I have not seen anybody actually use this functionality to do something useful. But it sounds cool. [In this article about Xplaint](https://www.sdxcentral.com/articles/news/marvell-nixes-the-programmable-xpliant-chip-it-inherited-from-cavium/2018/08/) which also had a programmable pipeline, they talk about none of the hyperscalers finding value in programmable pipelines. These Xpliant/Cavium/Marvell chips are no longer made. 
 
-I did watch a presentation in which the claim was that in service provider and enterprise networks programmable pipelines were needed. I still doubt it, but I'm not as familiar with those networks as I am with datacenters.
+I did watch a presentation in which the claim was that in service provider and enterprise networks programmable pipelines were needed. I still doubt it, but I'm not as familiar with those networks as I am with datacenters. There are places in networks that do need packet rewrite. First, I think there are not many places where that's a good idea, and second, even then there are many places where these chips still don't have enough processing and memory, so often you have to go to general CPU anyway.
 
 All of these chips are more flexible than the chips available 10 years ago. It used to be that there were fixed buckets for the different tables necessary, like IPv4 LPM, host table, MAC table, ACL table, etc. Now many of them have shared table space that can be carved up as appropriate for the application. So if you do very little L2, you have a lot more space for LPM table.
 
 * <https://bm-switch.com/index.php/blog/whitebox_basics_programmable_fixed_asics/>
-
 * <https://www.nextplatform.com/2018/12/04/programmable-networks-get-a-bigger-foot-in-the-datacenter-door/>
 
 ## It's not just the hardware
 
-These are very complex chips. I do not know how hard it is to integrate the hardware of the different chips. But I do know that the different SDKs integration are a major challenge. Many of the vendors try to mimic the Broadcom SDK because then software systems have an easier chance to integrate, since Broadcom has been around the longest and has the most extensive portfolio.
-
-Supporting multiple SDKs is actually very hard work, so as you are choosing your ASIC, you need to be thinking if they have a future or not and if they are worth investing in that software development time. It's not just the initial integration with your system, these chips and the SDKs are very complicated and have bugs. You have to be continually working with the provider on making sure you have as bug-free an SDK as possible. Many device vendors have their own set of patches that they apply onto of the chip SDK for bug fixes. Broadcom seems to have [open sourced their SDK](https://www.broadcom.com/products/ethernet-connectivity/software/sdklt), probably in an attempt to make it even harder to switch to other vendors
+These are very complex chips. I do not know how hard it is to integrate the hardware of the different chips into complete systems; I'm not a hardware engineer. But I do know that the different SDKs integration are a major challenge. Many of the vendors try to mimic the Broadcom SDK because then software systems have an easier chance to integrate, since Broadcom has been around the longest and has the most extensive portfolio. As you are choosing your ASIC, you need to be thinking if they have a future or not and if they are worth investing in that software development time. It's not just the initial integration with your system, these chips and the SDKs are very complicated and have bugs. You have to be continually working with the provider on making sure you have as bug-free an SDK as possible. Many device vendors have their own set of patches that they apply onto of the chip SDK for bug fixes. Broadcom seems to have [open sourced their SDK](https://www.broadcom.com/products/ethernet-connectivity/software/sdklt), probably in an attempt to make it even harder to switch to other vendors.
 
 
 ## Current ASICs available or soon Available
 
-The dates are when the company says they are available, usually to select customers. That's different from when they are available in products. There is serious competition here, and depending on the year one company comes out with the fastest ASIC soonest. It's hard to find all this information, especially from publicly available sources, which is what I've done here. I've found as much information as I could.
+The dates are when the company says they were/are available, usually to select customers. That's different from when they are available in products. There is serious competition in this field, and depending on the year one company comes out with the fastest ASIC soonest. It's hard to find all this information, especially from publicly available sources, which is what I've done here. I've found as much information as I could.
 
 <script src="https://gist.github.com/jopietsch/c1573518516af6071ae9cd0462ff0fd3.js"></script>
 
 
 ### Barefoot / Intel
 
-Barefoot was a startup focused on high speed ethernet ASICs with a programmable pipeline. They and some researches crated P4. The intention, as far as I understand, is that with SDN/Openflow you want a programmable pipeline so that you can get the most out of the resources. Intel bough Barefoot in 2019.
+Barefoot was a startup focused on high speed ethernet ASICs with a programmable pipeline. They and some researches created P4. The intention, as far as I understand, is that with SDN/Openflow you want a programmable pipeline so that you can get the most out of the resources. Intel bought Barefoot in 2019.
 
 ![Tofino roadmap](https://www.servethehome.com/wp-content/uploads/2020/03/Intel-Barefoot-Tofino-1-3-Generations-scaled.jpg). [The only place I can find a mention of anything past Tofino 2](https://www.servethehome.com/hands-on-with-the-intel-co-packaged-optics-and-silicon-photonics-switch/) , but I cannot find the original Intel slideshow that came from. 
 
 This is not Intel's first foray into networking. The last time was [when they bought Fulcrum](https://perspectives.mvdirona.com/2011/07/consolidation-in-networking-intel-buys-fulcrum-microsystems/) and then nothing relevant came out of Fulcrum after that acquisition. They have also purchased Network Processor Unit (NPU) companies in the past. [Not much ever comes out of Intel after these acquisitions](https://www.nextplatform.com/2019/06/11/the-games-a-foot-intel-finally-gets-serious-about-ethernet-switching/).
 
 
-I'm biased against Barefoot/Intel. Barefoot sees themselves as a premium brand and was trying to charge premium price because of their programmable pipeline, but I do not see the need for programmable pipeline. And then Intel's history with Fulcrum makes me not trust the future. That's just opinion, not data, so take it for what it's worth. I'm still salty over the fulcrum's disappearance after being purchased by Intel. For a while there was no real rival to Broadcom and that isn't good for the industry.
+I'm biased against Barefoot/Intel. Barefoot sees themselves as a premium brand and was trying to charge premium price because of their programmable pipeline, but I do not see the need for programmable pipeline, as mentioned above. And then Intel's history with Fulcrum makes me not trust the future. That's just opinion, not data, so take it for what it's worth. I'm still salty over the fulcrum's disappearance after being purchased by Intel. For a while there was no real rival to Broadcom and that isn't good for the industry.
 
 * <https://www.nextplatform.com/2018/12/04/programmable-networks-get-a-bigger-foot-in-the-datacenter-door/>
 * <https://www.barefootnetworks.com/products/brief-tofino-2/>
 
 ### Broadcom
 
-Broadcom is the giant here, the king, the 800 pound gorilla. Broadcom was bought by Avago several years ago, and the whole company was renamed Broadcom.
+Broadcom is the giant in this industry, the king, the 800 pound gorilla. Broadcom was bought by Avago several years ago, and the whole company was renamed Broadcom.
 
 Broadcom has two important families of chips in this space. One is the Strata XGS, the other is Strata DNX which was from a company Broadcom purchased called Dune. The XGS are the single ASIC type that we've been talking about in this article. The Dune chipset can be used for chassis devices or in fixed-form-factor if you need large tables. The Jericho 2 is the chip that can be used standalone or with a fabric chip, which is called the [FE9600](https://www.broadcom.com/products/ethernet-connectivity/switching/stratadnx/bcm88790)
 
@@ -126,7 +122,7 @@ Broadcom is like Intel in the CPU space. They go in waves in which they are the 
 ![Tomahawk lineup](https://3s81si1s5ygj3mzby34dq6qf-wpengine.netdna-ssl.com/wp-content/uploads/2019/12/broadcom-tomahawk-roadmap.jpg)
 
 * <https://www.youtube.com/watch?v=n9bUEb1v0pU> Jericho 2
-*  <https://www.nextplatform.com/2019/12/12/broadcom-launches-another-tomahawk-into-the-datacenter/>
+* <https://www.nextplatform.com/2019/12/12/broadcom-launches-another-tomahawk-into-the-datacenter/>
 * <https://www.broadcom.com/products/ethernet-connectivity/switching/strataxgs>
 * <https://www.broadcom.com/news/product-releases/broadcom-ships-jericho2>
 * <https://www.broadcom.com/company/news/product-releases/52196>
@@ -134,7 +130,7 @@ Broadcom is like Intel in the CPU space. They go in waves in which they are the 
 
 ### Cisco
 
-In case you didn't know, Cisco is selling merchant silicon chips. They [bought a company Called Leaba](https://www.cisco.com/c/en/us/about/corporate-strategy-office/acquisitions/leaba.html), which was started by several of the founders of Dune. In general I would be very wary of using Cisco as a provider, they've not done this before, but the Dune/Leaba team is really good which is why this is interesting to me. It will be especially interesting to see how Cisco figures out to support an SDK to external customers.
+Cisco is selling merchant silicon chips. Not expected. They [bought a company Called Leaba](https://www.cisco.com/c/en/us/about/corporate-strategy-office/acquisitions/leaba.html), which was started by several of the founders of Dune. In general I would be very wary of using Cisco as a provider, they've not done this before, but the Dune/Leaba team is really good which is why this is interesting to me. It will be especially interesting to see how Cisco figures out to support an SDK to external customers.
 
 The Q100 is more like the Strata DNX/Dune family than the Tomahawk. It's also used in products at Cisco including the [8200](https://www.cisco.com/c/en/us/products/routers/8000-series-routers/index.html)
 
@@ -146,9 +142,9 @@ Cisco, of course has many different inhouse ASICs that they don't sell to third 
 ### Innovium
  
 Innovium is a very aggressive startup in which the main people from Innovium came from Broadcom. It is a very good team of people. 
-It's interesting that Innovium has [design wins](https://www.convergedigest.com/2019/06/innovium-silicon-powers-two-cisco-nexus.html) even though Broadcom das really upped their game in the last several of years.
+It's interesting that Innovium has [design wins](https://www.convergedigest.com/2019/06/innovium-silicon-powers-two-cisco-nexus.html) even though Broadcom has really upped their game in the last several of years.
 
-Innovium [has raised $350M](https://www.zdnet.com/article/network-chip-contender-innovium-scores-170-million-to-challenge-broadcom-prepares-for-the-400-gig-onslaught/). I don't know enough about these to know why it has required so much money, nor why investors think they can gain that back, other than they are winning designs.
+Innovium [has raised $350M](https://www.zdnet.com/article/network-chip-contender-innovium-scores-170-million-to-challenge-broadcom-prepares-for-the-400-gig-onslaught/). I don't know enough about these to know why it has required so much money, nor why investors think they can gain that back, other than that they are winning designs.
 
 ![Innovium lineup](https://3s81si1s5ygj3mzby34dq6qf-wpengine.netdna-ssl.com/wp-content/uploads/2020/05/innovium-teralynx-8-serdes-adoption.jpg)
 
@@ -161,9 +157,8 @@ Innovium [has raised $350M](https://www.zdnet.com/article/network-chip-contender
 
 
 ### Mellanox
-Mellanox is knows as the InfiniBand company, but they also sell Ethernet chips. Mellanox was purchased by Nvidia this year. They have been selling Ethernet Asics for many years.
+Mellanox is knows as the InfiniBand company, but they also sell Ethernet chips. Mellanox was purchased by Nvidia this year. They have been selling Ethernet Asics for many years. Mellanox also bought Cumulus, probably so that they can ensure that they have a good OS for their chipset.
 
-I've heard rumors that Mellanox 
 
 * <https://www.nextplatform.com/2020/03/26/mellanox-doubles-up-ethernet-bandwidth-with-spectrum-3/>
 * <https://www.mellanox.com/files/doc-2020/pb-spectrum-3.pdf>

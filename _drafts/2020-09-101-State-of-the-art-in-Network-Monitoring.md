@@ -1,3 +1,13 @@
+---
+layout: post
+comments: true
+author: Justin Pietsch
+title: State of the Art in Network Monitoring
+excerpt: 
+description: There is a lot that makes up Network Monitoring
+---
+
+
 What is Network Monitoring and What do we need it to be?
 
 if observability is better than monitoring, shouldn't we at least know what monitoring does for us?
