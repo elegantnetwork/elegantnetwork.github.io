@@ -13,8 +13,8 @@ In Suzieq, we needed to select a python library to fetch data from network devic
 We had a fairly simple list of requirements from the SSH libraries:
 - Good performance
 - Scalable
-- Python 3 
-- Supports the common authentication and connection models used in enterprises for connecting with network devices.
+- Python 3 support 
+- Support the common authentication and connection models used in a majority of the enterprises for connecting to network devices.
 
 Lets examine them in some detail now.
 
@@ -37,7 +37,7 @@ Connecting to network devices in enterprises and most organizations (except hype
 - Support ssh config files
 - Support using ssh-agent
 
-Any python library we used in Suzieq required support for these libraries.
+Any python library we used in Suzieq was required support for these libraries.
 
 ### SSH and Network Devices
 
@@ -53,7 +53,7 @@ The first contender is [Netmiko](https://pypi.org/project/netmiko/). Netmiko als
 
 All five libraries satisfy all the SSH functionality desired by Suzieq. Here is a table to compare the different libraries and their features:
 
-|  |asyncssh | scrapli | ssh2-python | paramiko | netmiko |
+|  | asyncssh | scrapli | ssh2-python | paramiko | netmiko |
 | :--: | :--------: | :-------: | :-----------: | :--------: | :-------:|
 | Version Tested | 2.4.0 | 2020.8.28 | 0.17.0 | 2.7.2 | 3.3.0 |
 | Python3 Support | yes | yes | yes | yes | yes |
@@ -165,7 +165,7 @@ The results are summarized in this table below (note the slower times with 10 re
 | Junos, Single Host, 10 Repeats | 1.6236 | 1.9315 | 1.5417 | 1.6812 | 12.913 |
 | Junos, 2 Hosts, 10 Repeats | 1.9371 | 2.3284 | 3.1178 | 3.3258 | 25.2673 |
 
-## Acting on the Results
+## Mulltithreading with Synchronous IO
 
 So, you may wonder, how do people deal with multiple hosts using libraries other than asyncssh. They build their own version of concurrency by either using threads or processes. Ansible uses processes, if I remember correctly. Here is a link to a [post](https://www.consentfactory.com/python-threading-queuing-netmiko/) that shows how such a code might be written (I just randomly picked an entry from the search result). Python's asyncio library uses multi-threading by default, not multi-processing, though you can write code to adapt it to use multiprocessing. I don't want to do thread management if I can help it. The more I can rely on well-tested code, the more I can focus on my tool's value add and also focus on testing what's essential. 
 
