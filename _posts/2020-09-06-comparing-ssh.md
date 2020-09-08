@@ -45,7 +45,7 @@ Networking devices are notorious for not behaving like proper shells when you us
 
 The primary problem has to do with how configuration commands work with network devices. Network device shells are contextual, especially so for configuration. For example, if you want to issue a command to assign an IP address to an interface. You need to first issue a command "configure", followed by "interface Ethernet 1/1", followed by "ip address 192.168.1.1". Issuing three independent commands will not work nor will issuing the three separated by ";". So, it would be very helpful for an SSH library intending to support communicating with network devices to help with this. 
 
-Fortunately, Suzieq never uses any configuration command. All its commands are so called "show" commands. Because of this, communicating with network devices for Suzieq is no different than communicating with any Linux server or Linux NOS such as Cumulus or SONIC(??). As a consequence, we can ignore requiring the SSH library used within Suzieq from needing to support context-driven configuration commands. 
+Fortunately, Suzieq never uses any configuration command. All its commands are so called "show" commands. Because of this, communicating with network devices for Suzieq is no different than communicating with any Linux server or Linux NOS such as Cumulus or SONIC(I don't know if SONIC supports Linux-like shells or only traditional network device-like shells). As a consequence, we can ignore requiring the SSH library used within Suzieq from needing to support context-driven configuration commands. 
 
 ## The Contenders
 
@@ -68,7 +68,7 @@ All five libraries satisfy all the SSH functionality desired by Suzieq. Here is 
 
 ## Benchmarking Setup
 
-I spun up a number of topologies using Vagrant. The simulations had different NOS such as Arista's EOS, Cisco's NXOS, Cumulus Linux, and JunOS. If the size of the hosts tested varies across the NOS, its because of whatever simulation I had ready to spin up. This allowed me to verify that changing the NOS didn't affect the test results. I ran the benchmark test from my laptop, a Lenovo Yoga with i7-8550U CPU and 16GB RAM and SSD. The simulations, except for Junos, ran on a different machine, an Intel NUC with an i7-8550U processor with 64GB RAM and an SSD. The network connectivity between my laptop and the NUC was wireless. The simulation using Junos ran on my laptop as well because of the IP addressing of Virtualbox (the addressing is only exposed on the local machine by default). JunOS VM is available on virtualbox only and I could not make it work on libvirt, unlike the other NOS. I used python 3.7.5.
+I spun up a number of topologies using Vagrant. The simulations had different NOS such as Arista's EOS, Cisco's NXOS, Cumulus Linux, and JunOS. If the number of the hosts tested varies across the NOS, its because of whatever simulation I had ready to spin up. This allowed me to verify that changing the NOS didn't affect the test results. I ran the benchmark test from my laptop, a Lenovo Yoga with i7-8550U CPU and 16GB RAM and SSD. The simulations, except for Junos, ran on a different machine, an Intel NUC with an i7-8550U processor with 64GB RAM and an SSD. The network connectivity between my laptop and the NUC was wireless. The simulation using Junos ran on my laptop as well because of the IP addressing of Virtualbox (the addressing is only exposed on the local machine by default). JunOS VM is available on virtualbox only and I could not make it work on libvirt, unlike the other NOS. I used python 3.7.5.
 
 I verified that the overall timing values were not affected if I shifted the order in which the different libraries were run i.e. I sometimes ran asyncssh first, netmiko second and so on while at other times I ran paramiko first, ssh2 second and so on.
 
@@ -167,11 +167,11 @@ The results are summarized in this table below (note the slower times with 10 re
 
 ## Concurrency with Synchronous IO
 
-So, you may wonder, how do people deal with multiple hosts using libraries other than asyncssh. They build their own version of concurrency by either using threads or processes. Ansible uses processes, if I remember correctly. Here is a link to a [post](https://www.consentfactory.com/python-threading-queuing-netmiko/) that shows how such a code might be written (I just randomly picked an entry from the search result). Python's asyncio library uses multi-threading by default, not multi-processing, though you can write code to adapt it to use multiprocessing. I don't want to do thread management if I can help it. The more I can rely on well-tested code, the more I can focus on my tool's value add and also focus on testing what's essential. 
+So, you may wonder, how do people deal with multiple hosts using libraries other than asyncssh. The answer is that they build their own version of concurrency by either using threads or processes. Ansible uses processes, if I remember correctly. Here is a link to a [post](https://www.consentfactory.com/python-threading-queuing-netmiko/) that shows how such a code might be written (I just randomly picked an entry from the search result). Python's asyncio library uses multi-threading by default, not multi-processing, though you can write code to adapt it to use multiprocessing. I don't want to do thread management if I can help it. The more I can rely on well-tested code, the more I can focus on my tool's value add and also focus on testing what's essential. 
 
 ### Code Readability
 
-But this brings me to another criterion in helping us decide on which library did we wanted to use in Suzieq. How simple and easy to read is the code. First up are the best answers in my opinion, asyncssh and netmiko. Here they are:
+This brings me to another criterion in helping us decide on which library did we wanted to use in Suzieq. How simple and easy to read is the code. First up are the best answers in my opinion, asyncssh and netmiko. Here they are:
 ```python
 async def async_ssh(host, port=22, user='vagrant', password='vagrant'):
     conn = await asyncssh.connect(host, port=port,
@@ -260,12 +260,13 @@ This is far less elegant than the first two, exposing sockets, sessions and chan
 ## Summary
 
 The main takeaways from these results are:
-- async versions far outstrip their synchronous equivalents
+- async versions far outstrip their synchronous equivalents when it comes to performance
 - Before the advent of Scrapli, it was difficult for network operators to use asynchronous SSH
 - Network devices make it far more difficult to work with compared to Linux-y NOS because what they offer is not a programmable shell.
 
-While this is not a professional benchmarking article, I hope it helped the readers appreciate what a serious difference asyncio makes in performance. 
+While this is not a professional benchmarking article, I hope it helped the readers appreciate what a serious difference asyncio makes in performance. Networking tools can get a good leg up in performance and staying simple by moving their libraries to the async versions.
 
-Asyncssh is the python ssh library used in Suzieq. Its successfully connected to Juniper MX, Juniper QFX, Cisco's 9K, Cumulus, Arista and SONIC machines without a problem. We use textfsm internally on the gathered data, if structured output is not available. Given our requirements, this was the best choice. Our choice was validated even more by how helpful the maintainer of asyncssh, Ron Fredericks is. I needed help with figuring something out, and he sent me an excellent, detailed and thoughtful response. What more could a developer or user ask for?
+Asyncssh is the python ssh library used in Suzieq. Its successfully connected to Juniper MX, Juniper QFX, Cisco's 9K, Cumulus, Arista and SONIC machines without a problem. We use textfsm internally on the gathered data, if structured output is not available. Given our requirements, this was the best choice. Our choice was validated even more by how helpful the maintainer of asyncssh, Ron Frederick is. I needed help with figuring something out, and he sent me an excellent, detailed and thoughtful response. What more could a developer or user ask for?
 
 
+Update: I made minor edits after publishing to improve readability and fix formatting errors.
