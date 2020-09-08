@@ -49,14 +49,25 @@ Fortunately, Suzieq never uses any configuration command. All its commands are s
 
 ## The Contenders
 
-The first contender is [Netmiko](https://pypi.org/project/netmiko/). Netmiko also comes with the ability to parse the command output and return it as a structured output via the popular command parsing library, [textfsm](https://github.com/google/textfsm). Netmiko is used in the popular [NAPALM](https://napalm.readthedocs.io/en/latest/) network device access library. netmiko itself is based off of [paramiko](https://github.com/paramiko/paramiko/), the next contender. Paramiko is what popular tools such as [Ansible](https://docs.ansible.com/ansible/latest/index.html) use. The third contender is a library that I ran into because it billed itself as being very fast and the basis for a fast parallel SSH client library, parallel-ssh (remember note about parallelism and concurrency above). The fourth contender is asyncssh, an asynchronous full-featured SSH implementation of SSH. The final contender is a relative newcomer called [scrapli](https://github.com/carlmontanari/scrapli). Scrapli is not itself an SSH library, but a wrapper around paramiko, asyncssh and ssh2 SSH libraries. It provides both a synchronous and an asynchronous version of SSH connection to network devices. However, unlike asyncssh which doesn't provide any additional support for network devices, scrapli tries to make it easy to connect to the network devices and issue configuration commands. We'll be using the scrpali wrapper around asyncssh in the tests below. However, scrapli doesn't provide any support for connecting to either Linux-y NOS like Cumulus and SONIC(??) or to Linux servers.
+The first contender is [Netmiko](https://pypi.org/project/netmiko/). Netmiko also comes with the ability to parse the command output and return it as a structured output via the popular command parsing library, [textfsm](https://github.com/google/textfsm). Netmiko is used in the popular [NAPALM](https://napalm.readthedocs.io/en/latest/) network device access library. netmiko itself is based off of [paramiko](https://github.com/paramiko/paramiko/), the next contender. Paramiko is what popular tools such as [Ansible](https://docs.ansible.com/ansible/latest/index.html) use. The third contender is a library that I ran into because it billed itself as being very fast and the basis for a fast parallel SSH client library, parallel-ssh (remember note about parallelism and concurrency above). The fourth contender is asyncssh, an asynchronous full-featured SSH implementation of SSH. The final contender is a relative newcomer called [scrapli](https://github.com/carlmontanari/scrapli). Scrapli is not itself an SSH library, but a wrapper around paramiko, asyncssh and ssh2 SSH libraries. It provides both a synchronous and an asynchronous version of SSH connection to network devices. However, unlike asyncssh which doesn't provide any additional support for network devices, scrapli tries to make it easy to connect to the network devices and issue configuration commands. We'll be using the scrpali wrapper around asyncssh in the tests below. However, scrapli doesn't provide any support for connecting to anything Linux-y like Cumulus and SONIC(??) or servers, and it also supports far fewer devices than Netmiko supports, at the time of this writing.
 
 All five libraries satisfy all the SSH functionality desired by Suzieq. Here is a table to compare the different libraries and their features:
-<script src=https://gist.github.com/ddutt/291ed977102200190d7a8d2986e20623.js"></script>
+|  |asyncssh|scrapli|ssh2-python|paramiko|netmiko|
+| :--: | :--------: | :-------: | :-----------: | :--------: | :-------:|
+| Version Tested | 2.4.0 | 2020.8.28 | 0.17.0 | 2.7.2 | 3.3.0 |
+| Python3 Support | yes | yes | yes | yes | yes |
+| Asyncio Support | yes | yes | no  | no  | no  |
+| Network Device Config Support | no | yes | no | yes | yes |
+| Linux Device Support | yes | no | yes | yes | yes |
+| Password Auth | yes | yes | yes | yes | yes |
+| Private Key | yes | yes | yes | yes | yes |
+| Private Key with Passphrase | yes | yes | yes | yes | yes |
+| Host Key Ignore | yes | yes | yes | yes | yes |
+| Jumphost Support | yes | ?? | yes | yes | yes |
 
 ## Benchmarking Setup
 
-I spun up a number of topologies using Vagrant. The simulations had different NOS such as Arista's EOS, Cisco's NXOS, Cumulus Linux, and JunOS. If the size of the hosts tested varies across the NOS, its because of whatever simulation I had ready to spin up. This allowed me to verify that changing the NOS didn't affect the test results. I ran the benchmark test from my laptop, a Lenovo Yoga with i7-8550U CPU and 16GB RAM and SSD. The simulations, except for Junos, ran on a different machine, an Intel NUC with an i7-8550U processor with 64GB RAM and an SSD. The network connectivity between my laptop and the NUC was wireless. The simulation using Junos ran on my laptop as well because of the IP addressing of Virtualbox (the addressing is only exposed on the local machine by default). JunOS VM is available on virtualbox only and I could not make it work on libvirt, unlike the other NOS. 
+I spun up a number of topologies using Vagrant. The simulations had different NOS such as Arista's EOS, Cisco's NXOS, Cumulus Linux, and JunOS. If the size of the hosts tested varies across the NOS, its because of whatever simulation I had ready to spin up. This allowed me to verify that changing the NOS didn't affect the test results. I ran the benchmark test from my laptop, a Lenovo Yoga with i7-8550U CPU and 16GB RAM and SSD. The simulations, except for Junos, ran on a different machine, an Intel NUC with an i7-8550U processor with 64GB RAM and an SSD. The network connectivity between my laptop and the NUC was wireless. The simulation using Junos ran on my laptop as well because of the IP addressing of Virtualbox (the addressing is only exposed on the local machine by default). JunOS VM is available on virtualbox only and I could not make it work on libvirt, unlike the other NOS. I used python 3.7.5.
 
 I verified that the overall timing values were not affected if I shifted the order in which the different libraries were run i.e. I sometimes ran asyncssh first, netmiko second and so on while at other times I ran paramiko first, ssh2 second and so on.
 
@@ -66,7 +77,7 @@ I ran what I think is a simple, common command in each case for the NOS, "show v
 
 ### Benchmarking using timeit
 
-Python comes with a module [timeit](https://docs.python.org/3/library/timeit.html) that's supported with the base Python distribution. I used it to get the execution times for each of the four libraries. I measured a single host execution time as well as a multi-host execution time. While it is possible to write more complex code to do thread management myself, I first chose to ignore this model and execute the comamands in as simple a fashion as possible using the library. In benchmarking methodology, its generally accepted practice to execute multiple runs of the command and average out the execution time across all those times. I used a repeat count of 3 and 10 to obtain the timings because of the time to execute a command, though most benchmarking methodologies typically employ much larger numbers. 
+Python comes with a module [timeit](https://docs.python.org/3/library/timeit.html) that's supported with the base Python distribution. I used it to get the execution times for each of the four libraries. I measured a single host execution time as well as a multi-host execution time. While it is possible to write more complex code to do thread management myself, I first chose to ignore this model and execute the comamands in as simple a fashion as possible using the library. In benchmarking methodology, its generally accepted practice to execute multiple runs of the command and average out the execution time across all those times. I used a repeat count of 3 and 10 to obtain the timings because of the time to execute a command, though most benchmarking methodologies typically employ much larger numbers. I noticed however that the times were consistently slower with 10 repeats vs 3 repeats.
 
 ## The results
 
@@ -74,7 +85,7 @@ Here are some of the outputs of running the test:
 ```
 $ python ssh_timeit.py nxos 10
 Running single host timing for simulation: nxos
-SINGLE HOST RUN(Avg of 10 runs)                                                                                                                                                                                    
+SINGLE HOST RUN(Avg of 10 runs)
 -------------------------------------------
 asyncssh: 5.310472506971564
 scrapli: 14.621411228028592
@@ -83,15 +94,15 @@ paramiko: 11.580183147045318
 netmiko: 27.1105942610302
 
 Running multi-host timing for simulation: nxos, 4 hosts
-MULTI HOST RUN(Avg of 10 runs)                                                                                                                                                                                     
-------------------------------------------                                                                                                                                                                         
+MULTI HOST RUN(Avg of 10 runs)
+------------------------------------------
 asyncssh: 9.257326865044888
 scrapli: 17.880212849995587
 ssh2: 32.365094934997614
 paramiko: 39.12168894999195
 netmiko: 91.02830006496515
 ```
-For 10 hosts, here are the test numbers (with Cumulus, and so no scrapli values):
+For 10 hosts, I used only 3 repeats because 10 repeats seemed to stress my server too much. The numbers are with Cumulus, and so no scrapli values:
 ```
 $ python ssh_timeit.py cumulus 3
 Running single host timing for simulation: cumulus
@@ -138,9 +149,20 @@ A few things jump out at these outputs:
 - Netmiko is consistently the slowest
 - In the case of multihost performance, asyncssh always beats out the others, by a fairly wide margin, at least 15x faster than the slowest.
 
-The results are summarized in this table below:
-<script src="https://gist.github.com/ddutt/0d863c06e583afec2e08a1c99df3bd59"></script>
+The results are summarized in this table below (note the slower times with 10 repeats vs 3 repeats):
 
+|  |asyncssh|scrapli|ssh2-python|paramiko|netmiko|
+| :--: | :--------: | :-------: | :-----------: | :--------: | :-------:|
+| NXOS, Single Host, 10 Repeats | 5.3104 | 14.6214 | 7.677 | 11.58 | 27.1105 |
+| NXOS, 4 Hosts, 10 Repeats | 9.2573 | 17.8802 | 32.265 | 39.1216 | 91.0283 |
+| NXOS, Single Host, 3 Repeats | 3.1058 | 4.0649 | 3.9866 | 4.3019 | 9.1016 |
+| NXOS, 10 Hosts, 3 Repeats | 4.1840 | 5.2396 | 17.8295 | 21.4979 | 35.8407 |
+| Cumulus, Single Host, 10 Repeats | 1.9506 | -1 | 2.4926 | 3.3294 | 19.7455 |
+| Cumulus, 10 Hosts, 10 Repeats | 11.315 | -1 | 66.3002 | 90.0536 | 215.1264 |
+| Cumulus, Single Host, 3 Repeats | 0.6976 | -1 | 0.7593 | 0.9228 | 4.5987 |
+| Cumulus, 10 Hosts, 3 Repeats | 4.8957 | -1 | 31.3517 | 28.6099 | 64.0242 |
+| Junos, Single Host, 10 Repeats | 1.6236 | 1.9315 | 1.5417 | 1.6812 | 12.913 |
+| Junos, 2 Hosts, 10 Repeats | 1.9371 | 2.3284 | 3.1178 | 3.3258 | 25.2673 |
 
 ## Acting on the Results
 
