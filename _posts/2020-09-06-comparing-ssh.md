@@ -156,7 +156,7 @@ The results are summarized in this table below (note the slower times with 10 re
 | NXOS, Single Host, 10 Repeats | 5.3104 | 14.6214 | 7.677 | 11.58 | 27.1105 |
 | NXOS, 4 Hosts, 10 Repeats | 9.2573 | 17.8802 | 32.265 | 39.1216 | 91.0283 |
 | NXOS, Single Host, 3 Repeats | 3.1058 | 4.0649 | 3.9866 | 4.3019 | 9.1016 |
-| NXOS, 10 Hosts, 3 Repeats | 4.1840 | 5.2396 | 17.8295 | 21.4979 | 35.8407 |
+| NXOS, 4 Hosts, 3 Repeats | 4.1840 | 5.2396 | 17.8295 | 21.4979 | 35.8407 |
 | Cumulus, Single Host, 10 Repeats | 1.9506 | -1 | 2.4926 | 3.3294 | 19.7455 |
 | Cumulus, 10 Hosts, 10 Repeats | 11.315 | -1 | 66.3002 | 90.0536 | 215.1264 |
 | Cumulus, Single Host, 3 Repeats | 0.6976 | -1 | 0.7593 | 0.9228 | 4.5987 |
