@@ -52,7 +52,8 @@ Fortunately, Suzieq never uses any configuration command. All its commands are s
 The first contender is [Netmiko](https://pypi.org/project/netmiko/). Netmiko also comes with the ability to parse the command output and return it as a structured output via the popular command parsing library, [textfsm](https://github.com/google/textfsm). Netmiko is used in the popular [NAPALM](https://napalm.readthedocs.io/en/latest/) network device access library. netmiko itself is based off of [paramiko](https://github.com/paramiko/paramiko/), the next contender. Paramiko is what popular tools such as [Ansible](https://docs.ansible.com/ansible/latest/index.html) use. The third contender is a library that I ran into because it billed itself as being very fast and the basis for a fast parallel SSH client library, parallel-ssh (remember note about parallelism and concurrency above). The fourth contender is asyncssh, an asynchronous full-featured SSH implementation of SSH. The final contender is a relative newcomer called [scrapli](https://github.com/carlmontanari/scrapli). Scrapli is not itself an SSH library, but a wrapper around paramiko, asyncssh and ssh2 SSH libraries. It provides both a synchronous and an asynchronous version of SSH connection to network devices. However, unlike asyncssh which doesn't provide any additional support for network devices, scrapli tries to make it easy to connect to the network devices and issue configuration commands. We'll be using the scrpali wrapper around asyncssh in the tests below. However, scrapli doesn't provide any support for connecting to anything Linux-y like Cumulus and SONIC(??) or servers, and it also supports far fewer devices than Netmiko supports, at the time of this writing.
 
 All five libraries satisfy all the SSH functionality desired by Suzieq. Here is a table to compare the different libraries and their features:
-|  |asyncssh|scrapli|ssh2-python|paramiko|netmiko|
+
+|  |asyncssh | scrapli | ssh2-python | paramiko | netmiko |
 | :--: | :--------: | :-------: | :-----------: | :--------: | :-------:|
 | Version Tested | 2.4.0 | 2020.8.28 | 0.17.0 | 2.7.2 | 3.3.0 |
 | Python3 Support | yes | yes | yes | yes | yes |
@@ -151,7 +152,7 @@ A few things jump out at these outputs:
 
 The results are summarized in this table below (note the slower times with 10 repeats vs 3 repeats):
 
-|  |asyncssh|scrapli|ssh2-python|paramiko|netmiko|
+|  | asyncssh | scrapli | ssh2-python | paramiko | netmiko |
 | :--: | :--------: | :-------: | :-----------: | :--------: | :-------:|
 | NXOS, Single Host, 10 Repeats | 5.3104 | 14.6214 | 7.677 | 11.58 | 27.1105 |
 | NXOS, 4 Hosts, 10 Repeats | 9.2573 | 17.8802 | 32.265 | 39.1216 | 91.0283 |
