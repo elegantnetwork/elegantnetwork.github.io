@@ -6,7 +6,6 @@ title: A Tale of Five Python SSH Libraries
 excerpt: An evaluation of different SSH libraries in Python
 description: An evaluation of different SSH libraries in Python
 ---
-<script src="https://gist.github.com/nisrulz/11c0d63428b108f10c83.js"></script>
 In Suzieq, we needed to select a python library to fetch data from network devices (and servers) via SSH. This led us to a search for and evaluation of five SSH libraries, which I thought were the most suitable for the task at hand.
 
 ## Requirements
@@ -53,8 +52,7 @@ Fortunately, Suzieq never uses any configuration command. All its commands are s
 The first contender is [Netmiko](https://pypi.org/project/netmiko/). Netmiko also comes with the ability to parse the command output and return it as a structured output via the popular command parsing library, [textfsm](https://github.com/google/textfsm). Netmiko is used in the popular [NAPALM](https://napalm.readthedocs.io/en/latest/) network device access library. netmiko itself is based off of [paramiko](https://github.com/paramiko/paramiko/), the next contender. Paramiko is what popular tools such as [Ansible](https://docs.ansible.com/ansible/latest/index.html) use. The third contender is a library that I ran into because it billed itself as being very fast and the basis for a fast parallel SSH client library, parallel-ssh (remember note about parallelism and concurrency above). The fourth contender is asyncssh, an asynchronous full-featured SSH implementation of SSH. The final contender is a relative newcomer called [scrapli](https://github.com/carlmontanari/scrapli). Scrapli is not itself an SSH library, but a wrapper around paramiko, asyncssh and ssh2 SSH libraries. It provides both a synchronous and an asynchronous version of SSH connection to network devices. However, unlike asyncssh which doesn't provide any additional support for network devices, scrapli tries to make it easy to connect to the network devices and issue configuration commands. We'll be using the scrpali wrapper around asyncssh in the tests below. However, scrapli doesn't provide any support for connecting to either Linux-y NOS like Cumulus and SONIC(??) or to Linux servers.
 
 All five libraries satisfy all the SSH functionality desired by Suzieq. Here is a table to compare the different libraries and their features:
-https://gist.github.com/ddutt/291ed977102200190d7a8d2986e20623
-
+<script src=https://gist.github.com/ddutt/291ed977102200190d7a8d2986e20623.js"></script>
 
 ## Benchmarking Setup
 
@@ -141,7 +139,7 @@ A few things jump out at these outputs:
 - In the case of multihost performance, asyncssh always beats out the others, by a fairly wide margin, at least 15x faster than the slowest.
 
 The results are summarized in this table below:
-https://gist.github.com/ddutt/0d863c06e583afec2e08a1c99df3bd59
+<script src="https://gist.github.com/ddutt/0d863c06e583afec2e08a1c99df3bd59"></script>
 
 
 ## Acting on the Results
