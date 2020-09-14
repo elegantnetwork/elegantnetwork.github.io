@@ -6,22 +6,22 @@ title: A summary of High Speed Ethernet ASICs
 excerpt: There is a lot going on in the field of the highest speed network ASICs.
 description: Current High Speed Merchant Silicon Ethernet ASICs
 ---
-There is a lot going on in the field of the highest speed network ASICs. These are focused on very high speed, and not as many features or buffers, driven by the hyperscalers and the Financial industry which desires the lowest latency switching. This is a very rich area and I've already written a lot. There's a lot more to dive into, but hopefully this will give you a taste and somethings to chase after if you want more understanding.
+There is a lot going on in the field of the highest speed network ASICs. These are focused on very high speed, and not as many features or buffers, driven by the hyperscalers and the Financial industry which desires the lowest latency switching. This is a very rich area and I've already written a lot. There's a lot more to dive into, but hopefully this will give you a taste and somethings to chase after if you want more understanding. {Intro needs work. where is the lot you've written about this for example, mixing lowest latency with large port count etc.]
 
-An Application Specific Integrated Circuit (ASIC) is purpose built for a particular application. In this case, these are built to provide as much network throughput as possible. They are two orders of magnitude faster than Intel CPUs for forwarding packets.
+An Application Specific Integrated Circuit (ASIC) is purpose built for a particular application. In this case, these are built to provide as much network throughput as possible. They are two orders of magnitude faster than Intel CPUs for forwarding packets. {Provide some examples]
 
 The use of these high speed ASICs in networking was really started by Broadcom and Fulcrum in the mid 2000s. [Fulcrum Terabit Clockless Crossbar switch](https://www.hotchips.org/wp-content/uploads/hc_archives/hc15/3_Tue/2.fulcrum.pdf) is a document from 2003, just the beginning for Fulcrum. They were using 130nm technology and building 1M transistor parts. We'll talk about what those mean later in this post. This chip wasn't even Ethernet, it's purpose was to be in the middle of other network (ethernet) processing chips and just be the switch. Later generations were L2, and then they created an L3 switch. Fulcrum ASICs (Alta) at 24 ports of 10G were how Arista got started.
 
-These chips (and others with more functionality and/or lower speeds) are sometimes called merchant silicon, meaning that these vendors sell these chips to other parties which might build systems including software around them. All network vendors use these merchant silicon in at least some of their routers and switches. These are also used by all the big cloud companies and anybody talking about disaggregated networks. 
+These chips (and others with more functionality and/or lower speeds) are sometimes called merchant silicon, meaning that these vendors sell these chips to other parties which might build systems including software around them. All network vendors use these merchant silicon in at least some of their routers and switches. These are also used by all the big cloud companies and anybody talking about disaggregated networks. [This is true today, and maybe add a sentence about how network vendors would build their own switching ASICs].
 
 [Over half of the Ethernet switches that ship now, ship with Merchant Silicon](https://www.datacenterknowledge.com/cisco/why-cisco-got-merchant-silicon-market).
 ![switches shipped per year](https://www.datacenterknowledge.com/sites/datacenterknowledge.com/files/omdia%20ihs%20switch%20silicon%20q3%202019.png)
 
 ## How they work and how they are different from chips in Chassis
 
-For the most part, the ASICs that we are talking about here work as a single ASIC in the device. Meaning that there are other chips such as ethernet MACs and CPUs, but all the network forwarding decisions and buffering are done inside one chip. Many people think of these as the chips for ToR switches, not the rest of the network, but some networks, and especially hyperscalers are using them throughout the network, usually in the form of small fixed form factor (pizza boxes.) Some people do combine them in interesting ways such as [Facebook's minipack](https://engineering.fb.com/data-center-engineering/f16-minipack/).
+For the most part, the ASICs that we are talking about here work as a single ASIC in the device. Meaning that there are other chips such as ethernet MACs and CPUs, but all the network forwarding decisions and buffering are done inside one chip. Many people think of these as the chips for ToR switches, not the rest of the network, but some networks, and especially hyperscalers are using them throughout the network, usually in the form of small fixed form factor (pizza boxes.) Some people do combine them in interesting ways such as [Facebook's minipack](https://engineering.fb.com/data-center-engineering/f16-minipack/). [Needs rework, especially the third sentence]
 
-In any chip design there is a fixed budget of resources, which are: transistors, space on the chip die, and the number of pins from the chip to the rest of the system. If you want more of one set of features then you have to give up something else. In these chips, they are optimized for the most speed, so they have a lot of their die tied up in getting data off the chip to the interfaces. One of the consequences is that they have much less buffering and table space than other chips. You might say well "Why can't they use off chip TCAM or buffers?" First, to use off chip resources means that you are using pins and chip real-estate that you wanted to use for providing more interface speed. Second, off chip memory is slower and higher latency so that it would slow down the packet-per-second rate.
+In any chip design there is a fixed budget of resources, which are: transistors, space on the chip die, and the number of pins from the chip to the rest of the system. If you want more of one set of features then you have to give up something else. In these chips, they are optimized for the most speed, so they have a lot of their die tied up in getting data off the chip to the interfaces. One of the consequences is that they have much less buffering and table space than other chips. You might say well "Why can't they use off chip TCAM or buffers?" First, to use off chip resources means that you are using pins and chip real-estate that you wanted to use for providing more interface speed. Second, off chip memory is slower and higher latency so that it would slow down the packet-per-second rate. [When you say most speed, did you mean overall throughput, port speed times the number of ports? If so, say this more explicitly].
 
 There are chipsets that work together to form large chassis devices and there are even merchant silicon than does this. The most popular in merchant silicon of these chips is the Broadcom Strata DNX. For instance, the [Arista 7500](https://www.arista.com/en/products/7500r-series) is [based on this chipset](https://www.arista.com/assets/data/pdf/7500E-Lippis-Report.pdf). There are two big advantages to this kind of chipset: they work together to build a larger system to support more ports and because they are not a single chip, they can handle off-chip table and buffer space, so these have 1M+ table space and large buffers. These chips are also used in fixed form-factor devices that have large enough tables for the internet. Any individual one of these chips has less throughput than the chips we've been focusing on because they must spend more of their resources accessing and connecting to other chips in the system.
 
@@ -35,7 +35,7 @@ Effectively all of the companies that build these chips are called fabless semic
 
 The ASICs we are focused on are almost as big as it's possible to make a chip with. It turns out that there is a limit to the size of chip that can be made in state-of-the-art fabrication plants (fabs), which is called the [Reticle limit](https://www.quora.com/Why-does-a-CPU-GPU-chip-have-a-physical-size-limit#:~:text=There's%20one%20hard%20limit%20that,as%20the%20limit%20for%2012nm) which is 33x26 mm. I do not understand the physics or any of this process to understand why that it's but it means that the absolute max size is 858mm^2. [Nvidia's next gen chip GA100](https://developer.nvidia.com/blog/nvidia-ampere-architecture-in-depth/#:~:text=Fabricated%20on%20the%20TSMC%207nm,die%20size%20of%20826%20mm2.) is 54.2 billion transistors and a die size of 826mm^2 using 7nm processor node.
 
-![tomahawk 1 and heatsink](https://www.servethehome.com/wp-content/uploads/2020/03/Edgecore-AS7712-32X-Internal-Overview.jpg) This is a picture of a switch with a heatsink on the Tomahawk 1.
+![tomahawk 1 and heatsink](https://www.servethehome.com/wp-content/uploads/2020/03/Edgecore-AS7712-32X-Internal-Overview.jpg) This is a picture of a switch with a heatsink on the Tomahawk 1. [Picture of an ASIC you mean?]
 
 Another important number to understand the the [process node size](https://www.pcmag.com/encyclopedia/term/process-technology) a measure of the size of the transistors. Current state-of-the-art is 7nm. The advantage of smaller node size the more transistors you can get on the chip. In the past several decades Intel has always had the smallest process node size, until the last year. Smaller node sizes always go to the biggest money maker and so for TSMC and other fabs like it those are now mobile processors. So 7nm mobile phone CPUs came out first. These are not big chips, but there are Billions of them. Soon after comes GPUs which are about as big of chips as you can make. And soon after that are these chips which are as big as the GPU.
 
@@ -43,7 +43,7 @@ One aspect of all this comes out in the amount of power that a chip consumes. So
 
 The design of these chips take a lot of money. It's very interesting how many different companies are trying to compete at this time and how much money some of them have raised. 
 
-It's also interesting to note when a company moves to a smaller process size and when another company stays at the size they were using before. Moving to new node sizes adds a lot of risk, so companies mitigate that risk compared to other changes their are making in their designs.
+It's also interesting to note when a company moves to a smaller process size and when another company stays at the size they were using before. Moving to new node sizes adds a lot of risk, so companies mitigate that risk compared to other changes their are making in their designs.[Can you say a sentence or two about what is risky?]
 
 ### IP and SERDES
 
@@ -59,7 +59,7 @@ One way to keep up with the complexity and size of these chips is to break them 
 
 ![Chiplets](https://eenews.cdnartwhere.eu/sites/default/files/styles/inner_article/public/sites/default/files/images/exascaleheterogeneous630.jpg?itok=VwcU0b9X) 
 
-Some of these high throughput network ASICs are using chiplets and some are not. [Chiplets are the way of the future for many IC designs](https://www.eenewsanalog.com/news/birth-chiplet-market-shows-more-40-annual-growth).
+Some of these high throughput network ASICs are using chiplets and some are not. [Chiplets are the way of the future for many IC designs](https://www.eenewsanalog.com/news/birth-chiplet-market-shows-more-40-annual-growth). [can you give an example of a chip which uses chiplet and which does not?]
 
 
 
@@ -68,11 +68,11 @@ Just like in CPUs, we've gotten to a place where you have to have multiple cores
 
 Another important piece of pipelines in the last half-decade is how programmable the pipeline is. Barefoot was the first to come out with a programable pipeline based on [P4](http://www.sigcomm.org/sites/default/files/ccr/papers/2014/July/0000000-0000004.pdf). Broadcom has it's own language called [NPL](https://nplang.org/npl/blog/). 
 
-As far as I'm concerned this is not important. It sounds fantastic to have a programmable pipeline, but it's not actually useful. I've not wanted or needed this functionality in network hardware and I have not seen anybody actually use this functionality to do something useful. But it sounds cool. [In this article about Xplaint](https://www.sdxcentral.com/articles/news/marvell-nixes-the-programmable-xpliant-chip-it-inherited-from-cavium/2018/08/) which also had a programmable pipeline, they talk about none of the hyperscalers finding value in programmable pipelines. These Xpliant/Cavium/Marvell chips are no longer made. 
+As far as I'm concerned this is not important. It sounds fantastic to have a programmable pipeline, but it's not actually useful. I've not wanted or needed this functionality in network hardware and I have not seen anybody actually use this functionality to do something useful. But it sounds cool. [In this article about Xplaint](https://www.sdxcentral.com/articles/news/marvell-nixes-the-programmable-xpliant-chip-it-inherited-from-cavium/2018/08/) which also had a programmable pipeline, they talk about none of the hyperscalers finding value in programmable pipelines. These Xpliant/Cavium/Marvell chips are no longer made. [Is it useful to compare this to CPU companies that tried to be fungible a.k.a. that company Linus worked for? Useful to Talk about how fixed function wins over programmable?]
 
 I did watch a presentation in which the claim was that in service provider and enterprise networks programmable pipelines were needed. I still doubt it, but I'm not as familiar with those networks as I am with datacenters. There are places in networks that do need packet rewrite. First, I think there are not many places where that's a good idea, and second, even then there are many places where these chips still don't have enough processing and memory, so often you have to go to general CPU anyway.
 
-All of these chips are more flexible than the chips available 10 years ago. It used to be that there were fixed buckets for the different tables necessary, like IPv4 LPM, host table, MAC table, ACL table, etc. Now many of them have shared table space that can be carved up as appropriate for the application. So if you do very little L2, you have a lot more space for LPM table.
+All of these chips are more flexible than the chips available 10 years ago. It used to be that there were fixed buckets for the different tables necessary, like IPv4 LPM, host table, MAC table, ACL table, etc. Now many of them have shared table space that can be carved up as appropriate for the application. So if you do very little L2, you have a lot more space for LPM table. [In the past, when networks were immatures, programmable may have been useful, but they weren't around then, now not so much. Are we simply chasing a ghost? Is programmable useful for telemetry?]
 
 * <https://bm-switch.com/index.php/blog/whitebox_basics_programmable_fixed_asics/>
 * <https://www.nextplatform.com/2018/12/04/programmable-networks-get-a-bigger-foot-in-the-datacenter-door/>
@@ -113,7 +113,7 @@ Even in the XGS line there are several sub-species. The one the hyperscalers foc
 
 In general, Tomahawk is focused on hyperscalers, Trident is focused on Enterprise, and Jericho/Dune is focused on Services Providers.
 
-Broadcom is a **very** aggressive company. They are not always fun to be a partner with. However, they are the biggest so you have to always be keeping track of them. Since [Ian Cox](https://techfieldday.com/appearance/broadcom-presents-at-networking-field-day-22/) is back at Broadcom they seem to have gotten themselves back in shape! :)
+Broadcom is a **very** aggressive company. They are not always fun to be a partner with. However, they are the biggest so you have to always be keeping track of them. Since [Ian Cox](https://techfieldday.com/appearance/broadcom-presents-at-networking-field-day-22/) is back at Broadcom they seem to have gotten themselves back in shape! :) [We talked about this]
 
 Broadcom is like Intel in the CPU space. They go in waves in which they are the clear leader and there is almost no competition, then they seem to slow down and competition breaks out. We are at that point in the cycle right now with lots of competition, though Broadcom has stepped up their game in the latest Tomahawks to really put pressure on their competition. This is very good for the industry.
 
@@ -141,7 +141,7 @@ Cisco, of course has many different inhouse ASICs that they don't sell to third 
 
 ### Innovium
  
-Innovium is a very aggressive startup in which the main people from Innovium came from Broadcom. It is a very good team of people. 
+Innovium is a very aggressive startup in which the main people from Innovium came from Broadcom. It is a very good team of people. [strong challenger instead of aggressive startup]
 It's interesting that Innovium has [design wins](https://www.convergedigest.com/2019/06/innovium-silicon-powers-two-cisco-nexus.html) even though Broadcom has really upped their game in the last several of years.
 
 Innovium [has raised $350M](https://www.zdnet.com/article/network-chip-contender-innovium-scores-170-million-to-challenge-broadcom-prepares-for-the-400-gig-onslaught/). I don't know enough about these to know why it has required so much money, nor why investors think they can gain that back, other than that they are winning designs.
@@ -157,7 +157,7 @@ Innovium [has raised $350M](https://www.zdnet.com/article/network-chip-contender
 
 
 ### Mellanox
-Mellanox is knows as the InfiniBand company, but they also sell Ethernet chips. Mellanox was purchased by Nvidia this year. They have been selling Ethernet Asics for many years. Mellanox also bought Cumulus, probably so that they can ensure that they have a good OS for their chipset.
+Mellanox is knows as the InfiniBand company, but they also sell Ethernet chips. Mellanox was purchased by Nvidia this year. They have been selling Ethernet Asics for many years. Mellanox also bought Cumulus, probably so that they can ensure that they have a good OS for their chipset.[Will get you data about switchdev, SONIC]
 
 
 * <https://www.nextplatform.com/2020/03/26/mellanox-doubles-up-ethernet-bandwidth-with-spectrum-3/>
@@ -184,7 +184,7 @@ There are a lot more topics that can be covered around these chips, but I'm not 
 * The effect of multiple memories on these chips and what that means for fairness
 * optics
 
-As networks get large, the cost of the network is drivee by the cost of the optics. The real money saving is not when you get a faster chip, but when the chip supports higher throughput SERDES.
+As networks get large, the cost of the network is drivee by the cost of the optics. The real money saving is not when you get a faster chip, but when the chip supports higher throughput SERDES.[This is a possibly important point, but its buried deep down and easy to lose].
 
 ## Other resources
 
