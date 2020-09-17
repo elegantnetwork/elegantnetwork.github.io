@@ -63,9 +63,9 @@ Some of these high throughput network ASICs are using chiplets and some are not.
 
 Just like in CPUs, we've gotten to a place where you have to have multiple cores to take advantage of the transistors available in these ASICs. They have multiple pipelines that are interacting together to get the performance required. This is interesting to track because some of these chips seem to have more scalable pipelines than others based on the company's ability to continue to make a faster chip as time goes on.
 
-Another differentiation in pipelines in the last half-decade is how programmable the pipeline is. Barefoot was the first to come out with a programable pipeline based on [P4](http://www.sigcomm.org/sites/default/files/ccr/papers/2014/July/0000000-0000004.pdf). Broadcom has it's own language called [NPL](https://nplang.org/npl/blog/). 
+Another differentiation in pipelines in the last half-decade is how programmable the pipeline is. Barefoot was the first to come out with a programmable pipeline based on [P4](http://www.sigcomm.org/sites/default/files/ccr/papers/2014/July/0000000-0000004.pdf). Broadcom has it's own language called [NPL](https://nplang.org/npl/blog/). 
 
-As far as I'm concerned this is not important to have a very programable pipeline. It sounds wonderful to have a programmable pipeline, but it's rarely useful. I've not wanted or needed this functionality in network hardware and I have not seen anybody actually use this functionality to do something useful. It sounds cool. [In this article about Xplaint](https://www.sdxcentral.com/articles/news/marvell-nixes-the-programmable-xpliant-chip-it-inherited-from-cavium/2018/08/) which also had a programmable pipeline, they talk about none of the hyperscalers finding value in programmable pipelines. These Xpliant/Cavium/Marvell chips are no longer made. If it helps companies produce chips faster, then that is fantastic, but I don't think offering that functionality to customers is very useful.
+As far as I'm concerned this is not important to have a very programmable pipeline. It sounds wonderful to have a programmable pipeline, but it's rarely useful. I've not wanted or needed this functionality in network hardware and I have not seen anybody actually use this functionality to do something useful. It sounds cool. [In this article about Xplaint](https://www.sdxcentral.com/articles/news/marvell-nixes-the-programmable-xpliant-chip-it-inherited-from-cavium/2018/08/) which also had a programmable pipeline, they talk about none of the hyperscalers finding value in programmable pipelines. These Xpliant/Cavium/Marvell chips are no longer made. If it helps companies produce chips faster, then that is fantastic, but I don't think offering that functionality to customers is very useful.
 
 All of these chips are more flexible than the chips available 10 years ago, and much of that is useful. It used to be that there were fixed buckets for the different tables necessary, like IPv4 LPM, host table, MAC table, ACL table, etc. Now many of them have shared table space that can be carved up as appropriate for the application. So if you do very little L2, you have a lot more space for LPM table. 
 
@@ -174,7 +174,7 @@ There are a lot more topics that can be covered around these chips, but I'm not 
 * The effect of multiple memories on these chips and what that means for fairness
 * optics
 
-As networks get large, the cost of the network is drivee by the cost of the optics. The real money saving is not when you get a faster chip, but when the chip supports higher throughput SERDES.[This is a possibly important point, but its buried deep down and easy to lose].
+As networks get large, the cost of the network is driven by the cost of the optics. The real money saving is not when you get a faster chip, but when the chip supports higher throughput SERDES.
 
 ## Other resources
 
