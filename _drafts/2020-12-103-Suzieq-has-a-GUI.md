@@ -6,7 +6,7 @@ title: Suzieq has a GUI
 excerpt: Our 0.8 release has (finally!) added a GUI.
 description: Suzieq is for Networking Understanding. Now with a GUI!
 ---
-We haven't blogged for almost three months. We've just been busy working on [(Suzieq)](https://github.com/netenglabs/suzieq). We've been adding features and figuring out where we want it to go. We haven't blogged about Suzieq for even longer, mostly because we're not sure that's what people are interested in compared to other content. But it's time to get back to Suzieq. Our 0.8 release has (finally!) added a GUI.
+We haven't blogged for almost three months. We've just been busy working on [Suzieq](https://github.com/netenglabs/suzieq). We've been adding features and figuring out where we want it to go. We haven't blogged about Suzieq for even longer, mostly because we're not sure that's what people are interested in compared to other content. But it's time to get back to Suzieq. Our 0.8 release has (finally!) added a GUI.
 
 We've had a hard time figuring out how to best describe what Suzieq is and why it's useful. We started with Network Observability, but after our last blog post on [Network Observability](https://elegantnetwork.github.io/posts/observability/), it doesn't look like that term resonates with Network Engineers and Operators.
 
@@ -47,8 +47,5 @@ One of the most common uses for suzieq is to find things in the network, like MA
 ## Asserts
 Another really powerful tool that Suzieq has are asserts. Asserts things that should be true, and then it can show violations. On this version of the GUI we've included the assert output on the same Xplore page for those services that have asserts. ![interface assert](/assets/images/2020-12-suzieq-gui/interfaces-with-assert.png)
 
-# Where we are going
-
-We keep working on Suzieq. We have been working to shore up it's foundation and also take advantage of what it has. Two areas that we haven't really taken advantage of yet are time asserts. Suzieq stores everything with a timestamp and can investigate things overtime, rather than just a snapshot at a time. This enable really powerful things like what just changes in the last 2 hours? While suzieq has all the data, right now it's not easy to really understand what it's telling you.
-
-The other, as I mentioned are asserts. With the data that Suzieq has, it can do some sophisticated analysis to understand how your network is working. We have a smattering of asserts, some are trivial (but really useful), like MTU, and some are complex, like the EvpnVni asserts. One idea is to have an asymetric path assert; if the two different directions have different number of hops that probably isn't what you expected.
+# Where is Suzieq going
+We still have so much more to build and demonstrate in Suzieq. We'd love it if you would like to contribute. Anything helps. Try it out, and help us build a great piece of important network software.
