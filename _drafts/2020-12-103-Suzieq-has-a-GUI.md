@@ -18,7 +18,7 @@ Networks are complicated and complex; they are hard to understand well, and that
 
 Suzieq allows analysis through a CLI, python objects, REST API, and now finally a GUI. The GUI does make it easier to present related data together, and of course, to show pictures, which are useful from time-to-time. We started with a CLI because we are not GUI/UI people, and we wanted to build something useful as soon as possible. Over time we've also added a [REST API](https://suzieq.readthedocs.io/en/latest/rest-server/) so that other systems can get access to Suzieq Analysis. We've now gotten to a GUI to demonstrate Suzieq's usefulness.
 
-Suzieq makes it really easy to explore your network, add asserts about correctness, dive into the details. 
+Suzieq makes it really easy to explore your network, add asserts about correctness, dive into the details. Suzieq gives you the ability to understand your network. You can find what's in your network.
 
 # Examples
 
@@ -26,10 +26,9 @@ Suzieq makes it really easy to explore your network, add asserts about correctne
 With the GUI, Suzieq how has a way to show the status of the network. We expect this to get better, but we can at least show potential. ![Suzieq Status](/assets/images/2020-12-suzieq-gui/status-2.png)
 
 ## Xplore
-Suzieq has always been about exploring your network. The most obvious was is the regular table output, but it's also had the ability to summarize data and to provide histograms of the data. With the GUI, Suzieq can show all of that together and it does a nice of representing how these different presentations are useful together.
+Suzieq has always been about exploring your network. The most obvious show command which gives table of data for a service, such as the route table. Suzieq also has the ability to summarize data and to provide histograms of the data. With the GUI, Suzieq can show all of that together and it does a nice of representing how these different presentations are useful together.
 
-Here you can see a view of the devices. There is a summary table at the top left to help you make sense of all the data. ![devices](/assets/images/2020-12-suzieq-gui/devices-gui.png) The Distribution Count section lets you pick any of the columns that you want to look at histograms.
-
+In the Xplore page, you first see a view of the devices. There is a summary table at the top left to help you make sense of all the data. ![devices](/assets/images/2020-12-suzieq-gui/devices-gui.png) The Distribution Count section lets you pick any of the columns that you want to look at histograms.
 
 In this example, we look at routes. In the summary table you can see how many IPv4 and V6 routes, how many are host routes, a distribution of routes per device, etc. ![routes](/assets/images/2020-12-suzieq-gui/routes-xplore.png)
 
