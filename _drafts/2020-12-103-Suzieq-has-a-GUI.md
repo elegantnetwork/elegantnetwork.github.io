@@ -37,7 +37,7 @@ One fun example is this data with a router that has a full IPv4 internet table. 
 There are so many things to Xplore with Suzieq. 
 
 ## Path Trace
-Suzieq has always had the ability to show all the paths between two source and dest IPs. Dinesh has continued to improve it's ability to deal with all the different aspects of forwarding such as overlays. With the GUI, we can even show you what it looks like and you can spot inconsistencies in your path. ![path trace](/assets/images/2020-12-suzieq-gui/path-gui.png)
+Suzieq has always had the ability to show all the paths between two source and dest IPs. Dinesh has continued to improve it's ability to deal with all the different aspects of forwarding such as overlays. With the GUI, we can even show you what it looks like and you can spot inconsistencies in your path. Version 0.8.5 has added more information to help troubleshoot when you see something you don't expect. ![path trace](/assets/images/2020-12-suzieq-gui/path-gui.png)
 
 ## Search
 
