@@ -69,3 +69,7 @@ Another really powerful tool that Suzieq has are asserts. Asserts are statements
 # Where Suzieq is going
 
 We still have so much more to build and demonstrate in Suzieq. We'd love it if you would like to contribute. Anything helps. Try it out, give us feedback, write some code, and help us build a great piece of important network software.
+
+# Try out Suzieq
+
+As always, you can find [Suzieq on Github](https://github.com/netenglabs/suzieq).
