@@ -24,6 +24,7 @@ what are you trying to do?
 * trend and graph? Performance
 * capacity planning?-- performance
 * how do you aggregate?
+* understand / troubleshoot / explore
 
 What are we trying to talk about? We are talking about measuring network devices so that we can understand them. Usually this refers to data that is needed to understand the dataplane, but also management issues like CPU utilization and power.
 
