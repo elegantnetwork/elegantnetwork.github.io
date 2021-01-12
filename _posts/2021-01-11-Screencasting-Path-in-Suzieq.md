@@ -14,6 +14,6 @@ Suzieq has always had the ability to show all the paths between a source and des
 
 [![Introducing Path in Suzieq](/assets/images/2021-01-11/mq2.jpp)](https://www.youtube.com/watch?v=4wZot1FBmrQ "Introducing Path in Suzieq"), the first video explains how path trace works in Suzieq, and how to make sense of the output in the GUI. 
 
-The [![second video](/assets/images/2021-01-11/mq1.jpp))](https://www.youtube.com/watch?v=kaCANwgUP3Y "Troubleshooting Example with Suzieq Path") goes deeper by taking a problem encountered in the first video and using the Suzieq GUI to figure out what the problem is. 
+The [![second video](/assets/images/2021-01-11/mq1.jpp)](https://www.youtube.com/watch?v=kaCANwgUP3Y "Troubleshooting Example with Suzieq Path") goes deeper by taking a problem encountered in the first video and using the Suzieq GUI to figure out what the problem is. 
 
 Please let us know if you found the videos useful, and if you'd like to see more of these kinds of videos illustrating the use of Suzieq.
