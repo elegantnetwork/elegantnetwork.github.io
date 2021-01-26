@@ -6,25 +6,28 @@ title: Network Validation
 excerpt: 
 description: How do you validate that your network is working correctly? What does that mean, how can we make it useful? How can we test our networks to know that they are correct?
 ---
-
 Network Validation is an important idea in networking, but what does it mean practically? Of course, there's no official description of what it means, but we can talk about what we would like it to mean so that it can be useful. What we are trying to get to is a network that is trustworthy. If the business or organization using the network can't know if the network works correctly and that if it's failing the networking operations team knows it and will debug it quickly they can't trust the network. This gets in the way of the organizations ability to do it's primary goal. 
 
 Many networks assume that they are working correctly if there aren't too many devices down and no customer is complaining. That's a very reactive position and as important as networking is to businesses, not where we want to be to [Get the network out of the way](https://elegantnetwork.github.io/posts/network-out-of-the-way/). For the most part, network monitoring focuses on faults. Just because a device or interface failed doesn't mean the network is not healthy or valid. **We are using this to raise the level of engineering.** Knowing faults does not give you enough information about if your network is functioning correctly.
 
 What we care about is **"Is my network is behaving as I think it should be?"** including when changes and failures occur. We want to minimize surprises. **Network surprises are too be avoided, at almost any cost.** They can come up when a device fails and the network doesn't adapt correctly, or when you add capacity and it doesn't add as much capacity as you thought, or you make a change and it breaks the network. Of course, that requires that I have an idea of how my network should be behaving and that I have a way to check that.
 
-I don't think most people are asking these great questions about network validity . I'd bet most people want to implicitly know the answer to these questions, but can't. So lets examine some questions, what they mean to the network, and if we can answer them. Questions that I care about that I think are hard to answer. Some questions I ask to understand if my network is valid:
+I don't think most people are asking these great questions about network validity. I'd bet most people want to implicitly know the answer to these questions, but can't. So lets examine some questions, what they mean to the network, and if we can answer them. Questions that I care about that I think are hard to answer. Some questions I ask to understand if my network is valid:
 
 - Can I safely make a change?
 - This change I just made, is it correct?
 - The change that I'm proposing, do I have the configuration correct?
 - Is my network working as expected?
+- Is my network healthy?
 - Do I understand my network?
-- Do I have violations from vendor approved design or best practices?
+- Do I have violations from best practices?
 
 Just being able to ask and answer these isn't enough. We need a way to systematically ask and answer these questions. If you make it systematic then you can rely on those answers. If you are doing it ad-hock, then you can keep getting surprised. Especially as you make changes automatically, network automation means applying changes more quickly, then you really want to have systematic checking that your network is what you want.
 
 One of the trickiest thing about this problem area is that we as network operators have a lot of assumptions in our heads about how the network is supposed to be working and how it is working. We need to get this assumptions out of our heads and into software that can confirm or deny your assumptions. You can think of network validation as ways to be testing your network to see if it is operating as expected. What are the kinds of tests you think you need to understand your network?
+
+## It's not just about faults
+
 
 # Change Validation
 
@@ -70,12 +73,11 @@ Another way is to run your vendor NOS in a virtual machine, such as vagrant or G
 
 Batfish (or simulation) is complementary to pre and post change checks. In fact, I think all three are required if you really want to be safe in your network.
 
-
-# Is my network behaving as I expect it to
+# Is my Network Behaving as I Expect
 
 As mentioned above we want to know that the network is behaving as expected. If it isn't, then we are going to get surprised, possibly when an operator changes something, or a device fails, or cosmic rays hit a router. 
 
-How do we confirm or deny what we think our networks are doing. We talked about how to write health checks that can be automated. That is a great place to start. But we want to add more. It's worth it to add a lot of testing that most of the time finds nothing, but every so often the testing finds something
+How do we confirm or deny what we think our networks are doing? We talked about how to write health checks that can be automated. That is a great place to start. But we want to add more. It's worth it to add a lot of testing that most of the time finds nothing, but every so often the testing finds something surprising.
 
 What is a valid network? I think to answer depends on the context that you are in.
 
@@ -95,87 +97,62 @@ You can think of those pre/post change health checks, that you run all the time 
 
 How do you want to be automatically testing your network all the time? Many network operators have felt the pain of OSPF or ISIS neighbors not coming up because MTUs were incorrect. So when not test all the time that your MTUs are what you expect? There are many things like this
 
-
 ## Validation against vendor or other best practices
 
 Another good idea is to get the list of recommended settings from your NOS vendor and see if you have those things correct. At a minimum, they can help you realize all the things that are in your head that you need to get out.
 
 ## Describe the Network
 
-The second tricky thing about network validation (after getting our assumptions our of our heads), is that it's actually hard to describe the network so that we can write good tests.
+The second tricky thing about network validation (after getting our assumptions our of our heads), is that it's actually hard to describe the network so that we can write good tests. As a network gets more complicated, the assumptions get more complicated. For instance, you might assume that host to leaf switch has an MTU of 9000, but leaf to spine is MTU of 9100. It's harder to right topology based assumptions.
+
+THe problem is, when we are designing networks, we are making topology, device, protocol, etc. based assumptions, we just don't have any way of writing those down. Without having that metadata about the network, you can't really express and test for your assumptions thoroughly.
+
+If I have four devices in a layer, do I wake somebody up if one device goes down? How can I describe that? If I add two more devices to that layer, I have to remember what I was assuming about how much capacity I can afford to lose, rather than writing it out.
+
+As far as I can tell, there are no good ways of describing my assumptions about a network.
 
 
 ## Intent based networking
 
-Isn't this Intent Based Networking? It might be, as usual with networking marketing terms, it changes over time. That's why I'm trying to dive into what we really need it to be. It's definitely not all of IBN. IBN focused on being able to describe what it calls intent and then be able to configure the network and check as appropriate.
+Isn't this Intent Based Networking? It might be a part of it, as usual with networking marketing terms, it changes depending on who you are talking to. That's why I'm trying to dive into what we really need it to be. It's definitely not all of IBN. IBN focused on being able to describe what it calls intent and then be able to configure the network and check as appropriate. It wants to focus on the what, not the how.
 
-IBN most pushed by A and in RFC ..., I don't think it does all these things, though I think it is trying to.
-
-I'm focusing on the validation piece (obvi), but I want to dive in deeper than I think IBN talks about.
-what is intent based networking
-different types of failures
+Maybe what I'm talking about is assumption driven networking. It's critical to get our assumptions of what the network will do down so that we can have tests to make sure those assumptions are correct (or not.) I think capturing intent is critical, but I also think capturing assumptions is even more critical. There are so many different assumptions we all make and it's important to get them out and understand what they are. That does include the high level intent: it's a very good idea to know what you are trying to accomplish with your change and with your network. 
 
 # Configuration Auditing and Validation
 
-One thing I've heard proposed a lot is auditing mechanisms to make sure that your configuration on devices is what is expected. I generally hate this idea. I'm much more interested in understanding that the effect of the change is correct, rather than the change.
-
-# Diving into the details of in-validness
-
-What's the right level of checking for validation? Is it low level, is it high level?
-just because something is broken, doesn't mean you know how to fix it?
-
-
-I'm not talking about formal verification, such as in batfish. That's another very interesting and useful field, but for another conversation.
-
-
-
-
-Just knowing what has failed or is in fault isn't enough. Just knowing things that are over threshold or out of compliance isn't enough. Is it important that interface or device or session is down
-
-
+One thing I've heard proposed a lot is auditing mechanisms to make sure that your configuration on devices is what is expected. I generally hate this idea. I'm much more interested in understanding that the effect of the change is correct, rather than the configuration. First off, if you just validate configuration you are only making sure that the device applied what you wanted, not that the effect that you were actually trying to produce is correct. Checking the configuration doesn't make you think about what it is you are really trying to do, and making sure that it what is correct.
 
 # Solutions
+
 Okay, we've identified a bunch of questions to ask, and thought about how we'd like to be able to answer those questions. Is there any software to help me do that? A lot of this is actually hard without good tools.
 
-Another small plug for [Suzieq](https://github.com/netenglabs/suzieq), which we've written to help with these type of questions. Suzieq continuously gathers operational state from the network and puts it in a vender-neutral normalized form. This makes it easy to then be able to write checks that we've been talking about. Suzieq also makes it easy to search for things like OS version. Suzieq has checks called asserts. These are still a little too complicated for people to easily add the kind of checks that we've been talking about, but it has the right architecture to make a great health check service. As an example of something cool, we already have a check (an assert) to see that MTUs on a link are the same. So it's not just checking for one MTU across the network, but can automatically take topology into account.
+I already mentioned [Batfish](https://batfish.org) which you should check out if you have not already done so. It's really powerful and can quickly simulate a network so that you can test out and validate that your network will behave as expected.
 
-I already mentioned [Batfish](https://batfish.org) which you should check out if you have not already done so.
+Another plug for [Suzieq](https://github.com/netenglabs/suzieq), which we've written to help with these type of questions. Suzieq continuously gathers operational state from the network and puts it in a vender-neutral normalized form. This makes it easy to then be able to write checks that we've been talking about. Suzieq also makes it easy to search for things like OS version. Suzieq has checks called asserts. These are still a little too complicated for people to easily add the kind of checks that we've been talking about, but it has the right architecture to make a great health check service. As an example of something cool, we already have a check (an assert) to see that MTUs on a link are the same. So it's not just checking for one MTU across the network, but can automatically take topology into account.
+
 
 # Conclusions
-
-Points I want to make
 
 1. We want to know our network is operating the way we think it is.
 1. The best way to do this is to come up with ways to be continuously testing the network. 
 1. Do pre/post change checking.
-1. Automate pre/post change checking.
+1. Automate pre/post change checking. Don't do automated changes without this.
+1. I think it's worth it to have a separate service/system to do these health checks. Separate from Ansible.
 1. Run these checks all the time to know your network is healthy.
 1. Make sure your change is correct with something like Batfish or simulation.
 1. Add even more correctness checks and run them all the time.
 1. To have really great validation, you must have network metadata.
+1. We need a way of describing topology and network holistically so that we can get more complete validation.
 1. It's hard to know that your network is working correctly and the way that you expect, but that just means it's a place to innovate.
 
 Great software engineering teams take testing very seriously. In networking, this is especially hard, and we haven't been trained that way. But we can get started.
 
 
-# questions
-- 
+# Conversation / Talk-Back
 
-other ideas I want to talk
-- https://mustelids.atlassian.net/wiki/spaces/NETWORKING/pages/746749977/Suzieq+Validation+Product+Page
-- turning alerts into something more useful
-	- aggregation, and suppressions, etc
-
-# Conversation
-
-- what of these ways of validating do you think are important?
-- what do you already have solutions for?
-- what would you like solutions for?
+- What of these ways of validating do you think are important?
+- What do you already have solutions for?
+- What would you like solutions for?
 - If this is too complex, let me know, ask me questions, and I'll see if I can have another go at it. I think these ideas are really important and it's likely I'm not telling the story well enough yet.
-
-what am I trying to do here
-- explain validation and it's interconnected parts
-- see if anybody cares about any given part in specific
-- see if the ideas of solving these things are done or 
 
 
