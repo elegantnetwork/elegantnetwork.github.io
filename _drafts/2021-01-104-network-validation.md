@@ -126,6 +126,8 @@ Okay, we've identified a bunch of questions to ask, and thought about how we'd l
 
 I already mentioned [Batfish](https://batfish.org) which you should check out if you have not already done so. It's really powerful and can quickly simulate a network so that you can test out and validate that your network will behave as expected.
 
+[pyATS](https://developer.cisco.com/docs/pyats/) is an interesting open source package from Cisco that helps abstract the interaction with NOSes to get operational state. It's multivendor, though the Cisco support is much more robust than any other. I have no experience with pyATS, though I do know that others do use it for checking to make sure changes worked as expected.
+
 Another plug for [Suzieq](https://github.com/netenglabs/suzieq), which is our open source multivendor tool we've written to help with these kind of problems. Suzieq continuously gathers operational state from the network and puts it in a vender-neutral normalized form. This makes it easy to then be able to write checks that we've been talking about. Suzieq also makes it easy to search for things like OS version. Suzieq has checks called asserts. It has the right architecture to make a great health check service. As an example of something cool, we already have a check (an assert) to see that MTUs on a link are the same. So it's not just checking for one MTU across the network, but can automatically take topology into account.
 
 Ansible and related tools can be used as the workflow engine for network validation, but they aren't very good at it. Ansible doesn't separate data gathering from checking, isn't vendor neutral, etc. But it's better than nothing.
