@@ -151,6 +151,8 @@ Great software engineering teams take testing very seriously. In networking, thi
 
 One of my main career goals is to figure out how to get more assumptions out of network engineers' heads and into systems that can instantiate them and validate their correctness. I think it's crucial. Too many operating parameters are locked inside people's heads, where  software can do no good.
 
+# Suzieq
+Try out [Suzieq](https://github.com/netenglabs/suzieq), our open source, multivendor tool for network understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
 # Conversation / Talk-Back
 
 - What of these ways of validating do you think are important?
