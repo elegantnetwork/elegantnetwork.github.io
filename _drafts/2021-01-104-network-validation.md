@@ -102,7 +102,7 @@ You can also include traffic levels and device uptime as validation. In other wo
 
 ## Describe the Network
 
-The second tricky thing about network validation (after getting our assumptions our of our heads), is that **it's actually hard to describe the network so that we can write good tests**. As a network gets more complicated, the assumptions get more complicated. For instance, you might assume that host to leaf switch has an MTU of 9000, but leaf to spine is MTU of 9100. It's harder to right topology based assumptions.
+The second tricky thing about network validation (after getting our assumptions our of our heads), is that **it's actually hard to describe the network so that we can write good tests**. As a network gets more complicated, the assumptions get more complicated. For instance, you might assume that host to leaf switch has an MTU of 9000, but leaf to spine is MTU of 9100. It's harder to describe topology based assumptions.
 
 The problem is when we are designing networks, we are making topology, device, protocol, etc. based assumptions, but we don't have any way of writing those down. Without having that metadata about the network, you can't really express and test for your assumptions thoroughly.
 
