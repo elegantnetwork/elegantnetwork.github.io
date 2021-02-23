@@ -3,18 +3,18 @@ layout: post
 comments: true
 author: Justin Pietsch
 title: Network Validation
-excerpt: Is my network is behaving as I think it should be?
+excerpt: Is my network behaving as I think it should be?
 description: How do you validate that your network is working correctly? What does that mean, how can we make it useful? How can we test our networks to know that they are correct?
 ---
-What does Network Validation does mean practically? Of course, there's no official description of what it means, but we can talk about what we would like it to mean so that it can be useful. What we are trying to get to is a network that is trustworthy. If the business or organization using the network can't know if the network works correctly and that if it's failing the networking operations team knows it and will debug it quickly they can't trust the network. This gets in the way of the organizations ability to do it's primary goal. 
+What does Network Validation mean practically? Of course, there's no official description of what it means, but we can talk about what we would like it to mean so that it can be useful. What we are trying to get to is a network that is trustworthy. If the business or organization using the network can't know if the network works correctly and that if it's failing the networking operations team knows it and will debug it quickly they can't trust the network. This gets in the way of the organizations ability to do it's primary goal. 
 
 Many networks assume that they are working correctly if there aren't too many devices down and no customer is complaining. That's a reactive position and as important as networking is to businesses, not where we want to be to [Get the network out of the way](https://elegantnetwork.github.io/posts/network-out-of-the-way/). For the most part, network monitoring focuses on faults. Just because a device or interface failed doesn't mean the network is not healthy or valid. **We want to raise the level of engineering.** Knowing faults does not give you enough information about if your network is functioning correctly.
 
-When I've been on-call, my least favorite phone calls or tickets are along the lines of "my application isn't working, is the network working?" This is extremely hard to answer well. To answer this I think requires different ways of thinking about networks and how to validate that a network is working correctly.
+When I've been on-call, my least favorite phone calls or tickets are along the lines of "my application isn't working, is the network working?" This is extremely hard to answer well. To answer this requires different ways of thinking about networks and how to validate that a network is working correctly.
 
-What we care about is **"Is my network is behaving as I think it should be?"** including when changes and failures occur. We want to minimize surprises. **Network surprises are too be avoided, at almost any cost.** They can come up when a device fails and the network doesn't adapt correctly, or when you add capacity and it doesn't add as much capacity as you thought, or you make a change and it breaks the network. Of course, that requires that I have an idea of how my network should be behaving and that I have a way to check that. 
+What we care about is **"Is my network behaving as I think it should be?"** including when changes and failures occur. We want to minimize surprises. **Network surprises are too be avoided, at almost any cost.** They can come up when a device fails and the network doesn't adapt correctly, or when you add capacity and it doesn't add as much capacity as you thought, or you make a change and it breaks the network. Of course, that requires that we have an idea of how my network should be behaving and that we have a way to measure and test the behavior. 
 
-Lets examine some questions, what they mean to the network, and if we can answer them. Some of these are hard to answer, but that doesn't mean we should try. I'd bet most people want to implicitly know the answer to these questions, but can't. Some questions I ask to understand if my network is valid:
+Some questions I ask to understand if my network is valid. I'd bet most people want to implicitly know the answer to these questions, but can't.
 
 - Can I safely make a change?
 - This change I just made, is it correct?
@@ -26,7 +26,7 @@ Lets examine some questions, what they mean to the network, and if we can answer
 
 Just being able to ask and answer these isn't enough. **We need a way to systematically ask and answer these questions.** If you make it systematic then you can rely on those answers. If you are doing it ad-hock, then you can keep getting surprised. Especially as you make changes automatically, network automation means applying changes more quickly, then you really want to have systematic checking that your network is what you want.
 
-One of the trickiest thing about this problem area is that we as network operators have a lot of assumptions in our heads about how the network is supposed to be working and how it is working. We need to get this assumptions out of our heads and into software that can confirm or deny your assumptions. You can think of network validation as ways to be testing your network to see if it is operating as expected. What are the kinds of tests you think you need to understand your network?
+One of the trickiest thing about this problem area is that we as network operators have a lot of assumptions in our heads about how the network is supposed to be working and how it is working. We need to get these assumptions out of our heads and into software that can confirm or deny the assumptions. You can think of network validation as ways to be testing your network to see if it is operating as expected. What are the kinds of tests you think you need to understand your network?
 
 ## It's not just about faults
 
@@ -38,7 +38,7 @@ So where do we start? Let's start when where I think most network engineers star
 
 ## Post-Change Validation
 
-In the most naïve case post-change validation is done after performing the change and by waiting for somebody to report that something is broken. You hope you have monitoring to show you that something is broken, but maybe it requires a customer to complain. I think we can safely say that is wildly inadequate: we want to be more proactive than that. The next step might be after the change to check traffic levels, or manually look to make sure that the configuration is applied correctly. This is no longer negligent, but we can do better. If checking it's manual, you might forget to completely check everything, and different engineers will check different things to make sure it's correct. Also, just because you check something doesn't mean you check correctly. We want automated checks of the network.
+In the most naïve case, post-change validation is done after performing the change  by waiting for somebody to report that something is broken. You hope you have monitoring to show you that something is broken, but maybe it requires a customer to complain. I think we can safely say that is wildly inadequate: we want to be more proactive than that. The next step might be after the change to check traffic levels, or manually look to make sure that the configuration is applied correctly. This is no longer negligent, but we can do much better. If checking is manual, you might forget to completely check everything, and different engineers will check different things to make sure it's correct. Also, just because you check something doesn't mean you check correctly. We want automated checks of the network.
 
 There's multiple ways to validate a change. You can check that it had the effect that you expected or you can check that the network is the way that you think it should be.  I think **it's more robust to check that the networks is operating as expected rather than doing something like making sure the config is correct**. If you think about the purpose of your change, what you are trying to accomplish, and then you can check for that, you have a better understanding at the end that the change worked correctly. Rather than checking that the configuration you typed has been applied, you check that the effect of the change is happening.
 
@@ -46,7 +46,7 @@ So what do I do if my post-change validation fails? The best answer is to roll b
 
 ## Pre-Change Validation
 
-If I have post-change validation, then **I also want pre-change validation.** Changes fail because the network wasn't the way the operator expected it to be when they made a change. For instance, if you are upgrading OSes, and have two devices in a pair, but one of them has some interfaces down, or BGP sessions down, then it won't have as much capacity as expected.
+If I have post-change validation, then **I also want pre-change validation.** Changes can fail because the network wasn't the way the operator expected it to be when they made a change. For instance, if you are upgrading OSes, and have two devices in a pair, but one of them has some interfaces down, or BGP sessions down, then it won't have as much capacity as expected. Rebooting a device might remove a greater percentage of the capacity than you thought it would.
 
 I'm unsure if many people do pre-change checking, but it seems as important as post-change checking, and as automatable. If you don't have a system to do that automatically, then it's harder. Again, you can use ansible or equivalent, but it's better to separate out the collection and normalization from the checking.
 
