@@ -112,7 +112,7 @@ As far as I can tell, there are no good ways of describing my assumptions about 
 
 ## Intent based networking
 
-Isn't this Intent Based Networking? It might be a part of it, as usual with networking marketing terms, it changes depending on who you are talking to. That's why I'm trying to dive into what we really need it to be. It's definitely not all of IBN. IBN focused on being able to describe what it calls intent and then be able to configure the network and check as appropriate. It wants to focus on the what, not the how. IBN does have a significant piece about checking the network, but I'm not sure exactly how that works and it is product specific.
+Isn't this Intent Based Networking? It might be a part of it, as usual with networking marketing terms, it's meaning changes depending on who you are talking to. That's why I'm trying to dive into what we really need it to be. It's definitely not all of IBN. IBN focused on being able to describe what it calls intent and then be able to configure the network and check as appropriate. It wants to focus on the what, not the how. IBN does have a significant piece about checking the network, but I'm not sure exactly how that works and it is product specific.
 
 Maybe what I'm talking about is assumption driven networking. **It's critical to get our assumptions of what the network will do out of our heads** o that we can have tests to make sure those assumptions are correct (or not.) I think capturing intent is critical, but I also think capturing assumptions is even more critical. There are so many different assumptions we all make and it's important to get them out and understand what they are. That does include the high level intent: it's a very good idea to know what you are trying to accomplish with your change and with your network. 
 
@@ -128,7 +128,7 @@ I already mentioned [Batfish](https://batfish.org) which you should check out if
 
 [pyATS](https://developer.cisco.com/docs/pyats/) is an interesting open source package from Cisco that helps abstract the interaction with NOSes to get operational state. It's multivendor, though the Cisco support is much more robust than any other. I have no experience with pyATS, though I do know that others do use it for checking to make sure changes worked as expected.
 
-Another plug for [Suzieq](https://github.com/netenglabs/suzieq), which is our open source multivendor tool we've written to help with these kind of problems. Suzieq continuously gathers operational state from the network and puts it in a vender-neutral normalized form. This makes it easy to then be able to write checks that we've been talking about. Suzieq also makes it easy to search for things like OS version. Suzieq has checks called asserts. It has the right architecture to make a great health check service. As an example of something cool, we already have a check (an assert) to see that MTUs on a link are the same. So it's not just checking for one MTU across the network, but can automatically take topology into account.
+Another plug for [Suzieq](https://www.stardustsystems.net/suzieq/), which is our open source multivendor tool we've written to help with these kind of problems. Suzieq continuously gathers operational state from the network and puts it in a vender-neutral normalized form. This makes it easy to then be able to write checks that we've been talking about. Suzieq also makes it easy to search for things like OS version. Suzieq has checks called asserts. It has the right architecture to make a great health check service. As an example of something cool, we already have a check (an assert) to see that MTUs on a link are the same. So it's not just checking for one MTU across the network, but can automatically take topology into account.
 
 Ansible and related tools can be used as the workflow engine for network validation, but they aren't very good at it. Ansible doesn't separate data gathering from checking, isn't vendor neutral, etc. But it's better than nothing.
 
@@ -152,7 +152,7 @@ Great software engineering teams take testing very seriously. In networking, thi
 One of my main career goals is to figure out how to get more assumptions out of network engineers' heads and into systems that can instantiate them and validate their correctness. I think it's crucial. Too many operating parameters are locked inside people's heads, where  software can do no good.
 
 # Suzieq
-Try out [Suzieq](https://github.com/netenglabs/suzieq), our open source, multivendor tool for network understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
 # Conversation / Talk-Back
 
 - What of these ways of validating do you think are important?
