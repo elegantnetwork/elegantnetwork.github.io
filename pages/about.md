@@ -15,4 +15,4 @@ The two main authors of the blog posts under The Elegant Network moniker are Din
 
 You can find out what we are up to at [Stardust Systems](https://www.stardustsystems.net)
 
-We are building out [Suzieq](https://github.com/netenglabs/suzieq), which is software for network obserability.
+We are building out [Suzieq](https://www.stardustsystems.net/suzieq/), which is software for network observability.
