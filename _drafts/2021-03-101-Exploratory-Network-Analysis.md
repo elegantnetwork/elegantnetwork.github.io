@@ -6,7 +6,8 @@ title: Exploratory Network Analysis (XNA)
 excerpt: Just like in data analysis, you need to be able to explore your network and find things easily.
 description: You need to be able to explore and Find things easily in your network.
 ---
- 
+![Suzieq interface type](/assets/images/2021-03-xna/interface-show-type.png)
+
 In data science there is this idea called Exploratory Data Analysis ([EDA](https://www.itl.nist.gov/div898/handbook/eda/section1/eda11.htm)). When I have a big bunch of data, what’s in it? How do I make sense of it? Where do I even start? In data analysis, this led to the S language, which led to S-Plus and the current favorite analysis language [R](https://www.r-project.org/about.html). In networking I think we have much of the same problem and we don't have ways to systematically approach it. We have to custom build tools and analysis for each question we want to ask, but usually we either do it all manually, relying on humans to remember and process things, including using whiteboards. This seems wildly insufficient, especially in the 2020s.
 
 EDA was defined by John W. Tukey in 1961. In his book Exploratory Data Analysis in 1977 he felt that there is too much emphasis on statistical testing, and not enough on understanding the data. I think we are in a similar situation in which we are not really looking at our network to understand how it operates. We rely on intuition and the general assumption that if users aren't complaining, then everything is okay. The point is that a small number of statistics isn't enough to understand the data (network.) You need to be able to look at the data, ask questions, find answers, ask more questions, etc. Just like in data analysis, not everything you want to examine is a metric. 
@@ -16,9 +17,6 @@ I like the points in this article [Why EDA is Crucial for any Data Science Prjec
 - Understanding data patterns
 - Drawing charts and graphs for better understanding
 - To get a better understanding of the problem statement
-
-
-
 
 
 ## XNA (eXploratory Network Analysis)
@@ -74,8 +72,10 @@ Now I'm going to jump into some Suzieq features that are Alpha, and ugly, but ca
 Same thing for BGP. You'll notice that there is a link that exists with LLDP from spine02 to exit02 that does not exist in BGP. This is clearly a bug (or the BGP session is down, but in the this case it's a bug in the configuration.) By exploring this data we can see that the network is not the way that we expect.
 ![Suzieq topology BGP](/assets/images/2021-03-xna/ospf-ibgp_bgp.png)
 
+### Path Trace
+This isn't really XNA, but it does allow you to explore your network. Suzieq can show you the forwarding decisions that routers make from a source, destination pair. ![Suzeq path trace](/assets/images/2021-03-xna/path-show-internet.png) That looks weird. There should be a path from spine01 and spine02 to exit01, just like there is to exit02. If you click on the link spine02 (or spine01) to exit02, you will see how the forwarding decisions are made. ![Suzieq path debug](/assets/images/2021-03-xna/spine02-exit02-path.png) You can see that the route was populated by BGP, but it only has one interface out. For some reason spine02 doesn't have a route to 172.16.253.1 that has a nexthop on exit01.
 
-### route table
+### Route Table
 
 As an example, Suzieq gathers the routing table from every device and allows you to look up that data. You can also ask it to give you a summary of the table at any given time, such as the size of the table. But what if you want to know how fast your routing table is growing. Suzieq doesn’t currently answer that question, but it has the data so that you could answer it yourself in several different ways
 
@@ -84,6 +84,9 @@ As an example, Suzieq gathers the routing table from every device and allows you
 ## How is this different than observability
 We've written about [Network Observability](https://elegantnetwork.github.io/posts/observability/) and it is very related to this area of XNA, it's just coming from a different field (compute devops vs Statics and data analysis). Observability focuses on being able to ask arbitrary questions in your network just like XNA. I would say that a good observability platform allows you to do this kind of Exploration. The point of EDA and XNA is the exploration that is needed.
 
+
+## Conclusion
+We all need good ways to explore what's in our network. We need better tools to allow us to do this. Suzieq is one way, I'm sure there are others. 
 ## Suzieq
 Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
 
@@ -91,6 +94,6 @@ Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, mult
 
 1. How do you explore, find, and understand your network today?
 2. Are there things you'd like to investigate that are too hard right now?
-3. Try out Suzieq (ok, not a conversation, but a conversation starting point.)
-4. When you've tried out Suzieq, what would you like to help you explore, find, and understanding your network?
+3. Try out Suzieq
+4. When you've tried out Suzieq, what would you like to help you explore, find, and understand your network?
 
