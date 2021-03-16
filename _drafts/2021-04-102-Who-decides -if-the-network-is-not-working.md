@@ -7,13 +7,13 @@ excerpt:
 description: Do you rely on your customers to tell you our network is not working or do you take responsibility for network health?
 ---
 
-When I started in networking at Amazon in fall of 2002, most of the time when we were paged for a problem it was because one of the users/services on the network was having problems and they thought it was the network.  Maybe it was the website was down, or a Fulfillment Center was down, or somebody was having some weird kind of software problem they didn't understand. We did not have good tools to identify ourselves that the network was misbehaving before our (internal) customers told us.
+When I started in networking at Amazon in fall of 2002 as a network engineer, most of the time when we were paged for a problem it was because one of the users/services on the network was having problems and they thought it was the network.  Maybe it was the website was down, or a Fulfillment Center was down, or somebody was having some weird kind of software problem they didn't understand. We did not have good tools to identify for ourselves that the network was misbehaving before our (internal) customers told us.
 
 We had some monitoring if our devices went down (though it might not have even cut us tickets, it was so long ago), but more than that we didn't have good alerting . I would guess that is the way that most networks work. It's extremely hard to know all the ways a network can fail and then monitor for that. Even before AWS came along, it wasn't really viable for Amazon.com's networking team to not know it was having problems until it's customers told it, but this is really hard to do well. Some of it was we just didn't have the software necessary to do the right monitoring, and in the early 2000s, Amazon networking was small and didn't have a lot of budget, so we couldn't build our own. 
 
 That changed overtime, and for a long time it's been true that AWS Networking expects to find problems before it's internal users or external customers. It continually pursues that and takes it very seriously.
 
-I think every network needs to move in that direction. Networks are just too important not to have the right visibility into understanding the network better than customers. If you  are unwilling for the majority of outages to be caught by network users, you have to think differently about networking, monitoring, and alerting
+I think every network needs to point that direction. Networks are just too important not to have the right visibility into understanding the network better than customers. If you  are unwilling for the majority of outages to be caught by network users, you have to think differently about networking, monitoring, and alerting
 
 It's very hard to answer the question definitively: "Is the network working correctly?" I think though, that first you have to start with accepting that you want to find the problems before your users/customers.
 
