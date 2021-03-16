@@ -17,3 +17,25 @@ I think healthy doesn't just mean that there are no outages or no current custom
 
 There are times in which all your systems are telling you things are running fine, but it turns out you aren't asking the right questions. Not exactly related, but in 2006 I was responsible for load balancers at Amazon, and I met our VP of Infrastructure in the hall and he asked me if we were doing fine for capacity. I said yes because all our indications were that it was correct. Then I started thinking about it more, and went home and started looking. I realized that we had been incorrectly modeling capacity, and that we were already out of capacity. In other words, you will get this wrong and you need to be able to ask and explore your network so that you can discover new things that you didn't realize you needed to care about.
 
+
+Your network design is also critical to how you can answer and deal with this
+
+
+## All my data sources
+there are a lot of data sources in the network, and some of them are much harder to make useful than others. syslog might be critical, but super hard to make useful. I have experienced several very bad outages in which there was a message in syslog to notify us, but we'd never seen it before so we didn't know to look for it. (I wish software engineers and NOS vendors were oncall for their own products, I think things like that would happen less.)
+
+## Alerts, Events, Alarms
+
+Ive 
+
+
+it's also not okay to be waking up people when there isn't really a problem. It demotivates people and you miss important events
+
+I've gotten an alert, is it important?
+I didn't get an alert, are things okay?
+
+the problem with network alerts
+
+- Are the alarms I'm getting important and prioritized? Do I get woken up for something not important? When I get woken up, can I make sense of all the different information I get?
+- When I get an alarm is it easy to action? Does it tell me where to look or is to to general?
+
