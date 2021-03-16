@@ -4,7 +4,7 @@ comments: true
 author: Justin Pietsch
 title: Exploratory Network Analysis (XNA)
 excerpt: Just like in data analysis, you need to be able to explore your network and find things easily.
-description: You need to be able to explore and Find things easily in your network.
+description: You need to be able to explore and find things easily in your network.
 ---
 ![Suzieq interface type](/assets/images/2021-03-xna/interface-show-type.png)
 
@@ -12,7 +12,7 @@ In data science there is this idea called Exploratory Data Analysis ([EDA](https
 
 EDA was defined by John W. Tukey in 1961. In his book Exploratory Data Analysis in 1977 he felt that there is too much emphasis on statistical testing, and not enough on understanding the data. I think we are in a similar situation in which we are not really looking at our network to understand how it operates. We rely on intuition and the general assumption that if users aren't complaining, then everything is okay. The point is that a small number of statistics isn't enough to understand the data (network.) You need to be able to look at the data, ask questions, find answers, ask more questions, etc. Just like in data analysis, not everything you want to examine is a metric. 
 
-I like the points in this article [Why EDA is Crucial for any Data Science Prject](https://www.aismartz.com/blog/why-eda-is-crucial-for-any-data-science-project/).
+I like the points in this article [Why EDA is Crucial for any Data Science Project](https://www.aismartz.com/blog/why-eda-is-crucial-for-any-data-science-project/).
 - Get a better understanding of data
 - Understanding data patterns
 - Drawing charts and graphs for better understanding
@@ -68,7 +68,7 @@ We can look at EVPN to get an an overview also. It's symmetric EVPN, some L2 and
 
 ### Topology
 
-I'm going to jump into a Suzieq feature that is Alpha, and ugly, but can be useful. It's handy to compare topology from different layers in your network. This example is a different network than the network above. We want to get an idea of the overall physical topology using LLDP. ![Suzieq topology LLDP](/assets/images/2021-03-xna/ospf-ibgp_lldp.png)
+I'm going to jump into a Suzieq feature that is Alpha, and a little unsightly, but can be useful. It's handy to compare topology from different layers in your network. This example is a different network than the network above. We want to get an idea of the overall physical topology using LLDP. ![Suzieq topology LLDP](/assets/images/2021-03-xna/ospf-ibgp_lldp.png)
 
 Same thing for BGP. You'll notice that there is a link that exists with LLDP from spine02 to exit02 that does not exist in BGP. This is clearly a bug (or the BGP session is down, but in the this case it's a bug in the configuration.) By exploring this data we can see that the network is not the way that we expect.
 ![Suzieq topology BGP](/assets/images/2021-03-xna/ospf-ibgp_bgp.png)
@@ -91,7 +91,7 @@ We've written about [Network Observability](https://elegantnetwork.github.io/pos
 ## Conclusion
 We all need good ways to explore what's in our network. We need better tools to allow us to do this. Suzieq is one way, I'm sure there are others. The important idea is to think about how to explore your network so that you can really understand how it works as opposed to how you might imagine how it works. Being able to explore your network gives you a better intuition about how it works.
 ## Suzieq
-Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
 
 ## Conversation
 
