@@ -60,7 +60,7 @@ We know we want a way to write automated checking before and after a change. Thi
 
 Let's go through a simple example: I need to upgrade all the devices in my network. This is the first time and I'm unsure of my process, so I'm going to go device by device. As part of the change I upload the latest software, shift traffic away from this device, then reboot. When it reboots I want to make sure that it's working correctly. What should I check? Some good indicators are if my protocol neighbors are up and exchanging routes. I can check to see if all the BGP neighbors that are configured to be up are up, all the OSPF or ISIS neighbors configured are up, and nothing is stuck. I probably do also want to check to make sure that there is traffic flowing through the box, maybe comparing before and after.
 
-**How do I automate all that?** I can do all this with [Ansible](https://www.ansible.com/). As part of the OS upgrade process you can have it do checks. I think it's hard to make these checks reusable, and it's really hard to make it generalizable for many different checks. In [Getting Network Device Operational Data from Ansible](https://blog.ipspace.net/2020/12/updated-ansible-parsing-content.html), Ivan Pepelnjak talks about how to write your own collection using Ansible, and this is a good idea, but there are better ways of doing this systematically.
+**How do I automate all that?** I can do all this with [Ansible](https://www.ansible.com/). As part of the OS upgrade process you can have it do checks. I think it's hard to make these checks reusable, and it's really hard to make it generalizable for many different checks. In [Getting Network Device Operational Data from Ansible](https://blog.ipspace.net/2020/12/updated-ansible-parsing-content.html), Ivan Pepelnjak talks about how to write your own collection using Ansible, and this is a good idea, but there are better ways of doing this systematically. In Dinesh's book "Cloud Native Data Center Networking" Chapter 10 "Network Automation", he has a section titled "Automating Verification" in which he talks about gathering the kind of data necessary to make this kind of validation.
 
 What I've seen is that when you start creating a set of automated checks that collects data and does checking, it's hard to write generalized code that is easy to maintain over time. You mix in the collection with the check. Then you realize you need to deal with multiple OSes or a new version changes the output or something ugly like that. And your code gets messy. You make mistakes, each new check is harder to add, and overall you trust the system less.
 
@@ -124,7 +124,7 @@ One thing I've heard proposed often is an auditing mechanisms to make sure that 
 
 ## Solutions
 
-We plan on following up with a post on examples and solutions. This post is already long and detailed enough. :)
+We plan on following up with a post on examples and solutions. As I've mentioned earlier, I think purpose built tools for this are better than mixing your other network automation tasks, but that discussion is better for another day. This post is already long and detailed enough. :)
 
 ## Conclusions
 
