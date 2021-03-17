@@ -1,12 +1,10 @@
-
 ---
 layout: post
 comments: true
 author: Justin Pietsch
-title: Geting Assumptions out of our Heads
+title: Getting Assumptions out of our Heads
 excerpt: 
 description: Too much of networking requires network engineers to keep a lot in their heads. We need to get that out.
-
 ---
 
 The best network engineers I've experienced can keep a lot in their heads. Maybe it's all the OSPF state machines as well as all the LSAs and what is in them. Or when they are debugging and they run various show commands they can remember which IP was the neighbor that they need to care about.
@@ -27,3 +25,5 @@ In networking people are rewarded for keeping all those assumptions in their hea
 
 
 I think this leads to precious networking
+
+I'm much more interested in figuring out how to do Assumption Based Networking than Intent Based Networking. Well, I don't think you can do IBN without recording your assumptions first. If you don't record your assumptions, then you are using somebody else's. And the recording of assumptions is critical.
