@@ -3,7 +3,7 @@ layout: post
 comments: true
 author: Justin Pietsch
 title: Exploratory Network Analysis (XNA)
-excerpt: Just like in data analysis, you need to be able to explore your network and find things easily.
+excerpt: Networks are complicated, have a lot of data, and are hard to understand. How do you explore your network now to find out what protocols you are using, or if is is operating as expected? 
 description: You need to be able to explore and find things easily in your network.
 ---
 ![Suzieq interface type](/assets/images/2021-03-xna/interface-show-type.png)
