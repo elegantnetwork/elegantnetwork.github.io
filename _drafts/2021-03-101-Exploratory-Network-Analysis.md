@@ -88,6 +88,10 @@ We can explore more, for instance, there are 5 protocols in the routes table, so
 We've written about [Network Observability](https://elegantnetwork.github.io/posts/observability/) and it is very related to this area of XNA, it's just coming from a different field (Devops vs Statistics and Data Analysis). Observability focuses on being able to ask arbitrary questions in your network just like XNA. I would say that a good observability platform allows you to do this kind of Exploration. The point of EDA and XNA is to enable the exploration that is needed.
 
 
+## Other resources
+
+[![Network Data Analysis by Eric Chou](https://img.youtube.com/vi/7TGYYPm1r4o/hqdefault.jpg)](https://www.youtube.com/watch?v=7TGYYPm1r4o)
+
 ## Conclusion
 We all need good ways to explore what's in our network. We need better tools to allow us to do this. Suzieq is one way, I'm sure there are others. The important idea is to think about how to explore your network so that you can really understand how it works as opposed to how you might imagine how it works. Being able to explore your network gives you a better intuition about how it works.
 ## Suzieq
