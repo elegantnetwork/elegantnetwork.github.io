@@ -72,6 +72,8 @@ Another common workflow for network operators is generating reports about variou
 
 The goal of this post was to show that observability has more use cases than just troubleshooting. By harnessing the power of observability, we hope to build a new set of networking tools to help build better networks that can be managed more easily. We'd love to hear back from you on your thoughts about observability, and even more so about your experience with any tools you have used that you thought helped with observability.
 
+## Suzieq
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
 ## References
 
 * <https://en.wikipedia.org/wiki/Observability>

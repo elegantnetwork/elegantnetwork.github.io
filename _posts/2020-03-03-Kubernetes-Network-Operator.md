@@ -23,3 +23,7 @@ History, basic Kubernetes concepts, different CNIs (Container Network Interface)
 Coming back to the backlash against Kubernetes, I found [this post](http://jmoiron.net/blog/is-k8s-too-complicated/) by Jason Moiron a very thoughtful and insightful one. One of the best points is this line from [Joe Beda's tweet](https://twitter.com/jbeda/status/993978918196531200): "...I think that, as engineers, we tend to discount the complexity we build ourselves vs. complexity we need to learn.". I recommend reading it in full. To be clear, I'm no cheerleader for Kubernetes(besides, I don't have the figure for it) . I'm simply trying to understand it and distill it to its essence. Then, I can begin to have an opinion.
 
 Next, I plan to add Kubernetes support to the [github repository](https://github.com/ddutt/cloud-native-data-center-networking) that is companion to my book. With that in place, I can begin writing a little more in depth about Kubernetes from a networking angle, hopefully demystifying it in the process. As always, please feel free to reach out with questions and more. To rephrase John Greene, "Don't forget to build an awesome network today".
+
+
+## Suzieq
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.

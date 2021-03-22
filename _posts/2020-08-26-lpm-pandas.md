@@ -146,3 +146,6 @@ To summarize the results for the full Internet IPv4 routing table:
 - using apply(): 1 min 40s
 
 The plan at this point is that the next version of Suzieq will ship with the vectorized version of the LPM for IPv4 and the itertuples version for IPv6, till I can get the vectorized version working for IPv6 as well. 
+
+## Suzieq
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.

@@ -195,3 +195,6 @@ It's based on Broadcom, where he works, but gives you a lot of the same informat
 As an aside, this should be some kind of knowledge base or wiki, but I don't know what that would be.
 
 Let me know if I'm missing anything and/or I got something wrong. And updated sources would be fantastic.
+
+## Suzieq
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.

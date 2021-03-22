@@ -89,3 +89,6 @@ You might notice all my stories are 10+ years ago, there are several reasons for
 <sup>1</sup>One of my two most hated products multiplied by vendor interactions. At one point they effectively told us it was our fault we had so much trouble because we ran both 100M and 1G Ethernet. Nope, the product was terrible. And it was a bad idea even if the product was good software. I still feel outrage 17 years later.
 
 <sup>2</sup>Anybody at Amazon these days hearing about a vendor logging into devices is probably throwing up right now. This has not happened for a long time.
+
+## Suzieq
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.

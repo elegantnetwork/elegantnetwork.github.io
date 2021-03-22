@@ -24,3 +24,7 @@ As an industry and a discipline, we can and need to do much better in the design
 Dinesh and I are working on software, content, and helping startups and network operators to improve network design and practice. We need much more elegant networking. Some of that involves big steps, some of that is simple steps.
 
 You can reach us via LinkedIn or via email at thenetworkelegant AT gmail.com.
+
+
+## Suzieq
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.

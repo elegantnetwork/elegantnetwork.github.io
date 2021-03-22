@@ -90,6 +90,8 @@ Innovate and get the network out of the way. The best way to do this might be to
 
 Another description of this is way of thinking is in https://www.forbes.com/custom/2014/10/20/sdn-gets-the-network-out-of-the-way/ by Jeff Doyle. It's a marketing piece about an SDN controller and I'm not convinced SDN is required to get the network out of the way, but he shares a lot of the same motivation 
 
+## Suzieq
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
 # Conversation / Talk-back
 I'd like to turn this into a conversation, one way is to answer some questions I have.
 1. Any good examples of the network in the way?

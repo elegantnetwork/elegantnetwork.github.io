@@ -52,3 +52,6 @@ To summarize, high port count switches are more useful higher up in the Clos top
 
 *Note: The post is structured around the use cases and traffic patterns at the time of writing. 10 GbE was fast enough for a lot of data center networks a decade ago.*
 
+
+## Suzieq
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.

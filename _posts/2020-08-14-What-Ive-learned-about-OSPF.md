@@ -32,3 +32,6 @@ If you have other considerations, such as you want to run IPv6, or EVPN, a singl
 No matter what, you need to understand the choices that you are making and understand the tradeoffs. This is hard to do, and especially hard in networking because we lack design patterns and good tools to help us understand the implications of our choices. 
 
 If anybody knows about tools or design patterns or even somebody who's actually compared OSPF vs BGP in Clos networks with data, I'd love to hear about it.
+
+## Suzieq
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.

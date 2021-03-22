@@ -139,3 +139,6 @@ you might have an idea that might take years.
 
 In the next post, we plan on talking about wrestling some of the vendor NOSes to simulate
 with vagrant. This is another piece of friction in our ability to understand our networks.
+
+## Suzieq
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
