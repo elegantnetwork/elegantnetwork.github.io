@@ -83,3 +83,6 @@ drive towards simplicity.
 I think better software is the key, but it's not the only thing.
 
 network validation
+
+## Suzieq
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.

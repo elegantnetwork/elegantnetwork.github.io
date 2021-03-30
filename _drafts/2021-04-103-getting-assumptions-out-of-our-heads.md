@@ -39,3 +39,6 @@ For instance, I'd like that you could record the properties of your network desi
 
 
 What can we do now?
+
+## Suzieq
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
