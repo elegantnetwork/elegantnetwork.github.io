@@ -3,7 +3,7 @@ layout: post
 comments: true
 author: Justin Pietsch
 title: What is Closed Loop Network Automation
-excerpt: 
+excerpt: you do the automation and then you check to make sure it did what you said
 description: What is Closed Loop Network Automation, what do vendors think it is, and what do we need it to be?
 ---
 I’ve been reading about network automation and I keep finding the term closed loop automation and want to dive into what it might mean, why I think what’s currently available is inadequate, what we might want and what we could do right now. **The point is that you do the automation and then you check to make sure it did what you said**. When something promises as much magic as closed loop automation seems to implement. I want to know how it actually works and the mechanisms it uses to get the magic done. 

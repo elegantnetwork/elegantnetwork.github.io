@@ -14,7 +14,7 @@ if observability is better than monitoring, shouldn't we at least know what moni
 
 People talk about Network Monitoring, but I don't think we all agree on what it means, we have a bunch of assumptions but aren't clear. I know that for me, I'm not even clear about my assumptions my self.
 
-I want to start with [FCAPS](https://en.wikipedia.org/wiki/FCAPS#:~:text=FCAPS%20is%20the%20ISO%20Telecommunications,model%20defines%20network%20management%20tasks.), which the ISO model for network monitoring and management. I think this is much like the ISO 7 layer model of the network: nobody actually does networking based actually on that model, but it's in the background of everybody's thinking. 
+I want to start with [FCAPS](https://en.wikipedia.org/wiki/FCAPS.), which the ISO model for network monitoring and management. I think this is much like the ISO 7 layer model of the network: nobody actually does networking based actually on that model, but it's in the background of everybody's thinking. 
 
 
 ok, what do I want from telemetry. What does it mean

@@ -64,7 +64,7 @@ being able to describe what you expect your network to be. I guess this would be
 
 
 ## How to do this with Suzieq
-Suzieq can't do all of these things yet, but it will be able to in the future. I'm not sure what we should be talking about.
+Suzieq can't do all of these things yet, but it will be able to in the future. 
 
 ## Suzieq
 Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
