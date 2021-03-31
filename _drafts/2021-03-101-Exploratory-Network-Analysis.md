@@ -4,7 +4,7 @@ comments: true
 author: Justin Pietsch
 title: Exploratory Network Analysis (XNA)
 excerpt: Networks are complicated, have lots of moving pieces, and are hard to understand. How do you explore your network now to find out what protocols you are using, or if is is operating as expected? 
-description: You need to be able to explore and find things easily in your network.
+description: You need to be able to explore and find things easily in your network. XNA, alongside Network Observability, allows you to understand your network and find things in your network.
 ---
 ![Suzieq interface type](/assets/images/2021-03-xna/interface-show-type.png)
 
@@ -83,7 +83,7 @@ I'm going to jump into a Suzieq feature that is Alpha, and a little unsightly, b
 Same thing for BGP. You'll notice that there is a link that exists with LLDP from spine02 to exit02 that does not exist in BGP. This is clearly a bug (or the BGP session is down, but in the this case it's a bug in the configuration.) By exploring this data we can see that the network is not the way that we expect.
 ![Suzieq topology BGP](/assets/images/2021-03-xna/ospf-ibgp_bgp.png)
 
-If we look at the BGP sessions for exit01 and exit02, we can see that there is a missing session from spine02 to exit02. ![Suzieq BGP show](/assets/images/2021-03-xna/bgp-show-exit01-exit02.png)
+If we look at the BGP sessions for exit01 and exit02, we can see that on exit01 there are sessions to spine01 and spine02, on exit02 there are only BGP sessions to spine01 and not spine02 ![Suzieq BGP show](/assets/images/2021-03-xna/bgp-show-exit01-exit02.png)
 
 ### Path Trace
 Sometimes you need to dive into a particular question to understand your network.  Suzieq can show you the forwarding decisions that routers make for om a source, destination pair with the path command. ![Suzeq path trace](/assets/images/2021-03-xna/path-show-internet.png) That looks weird. There should be a path from spine01 and spine02 to exit01, just like there is to exit02. If you click on the link spine02 to exit02, you will see how the forwarding decisions are made. ![Suzieq path debug](/assets/images/2021-03-xna/spine02-exit02-path.png) You can see that the route was populated by BGP, but it only has one interface out. Spine02 doesn't have a route to 172.16.253.1 that has a nexthop on exit01. The reason is what is shown in the topology section above, there is no BGP session from spine02 to exit01.
