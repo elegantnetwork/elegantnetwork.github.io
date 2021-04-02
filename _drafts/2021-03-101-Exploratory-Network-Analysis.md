@@ -23,9 +23,9 @@ I like the points in this article [Why EDA is Crucial for any Data Science Proje
 
 ## XNA (eXploratory Network Analysis)
 
-Networks are complicated, have lots of moving pieces, and are hard to understand. How do you explore your network now to find out what protocols you are using, or if is is operating as expected? You look at configs, maybe you look at traffic graphs, and you probably have to log into devices to run show commands. But the configs are complicated and hard to get your head around. And the traffic graphs don't represent how traffic flows or the protocols that ensure a functioning network. You look at a diagram, if it's up to date, at least you hope it is. 
+Why does the idea of EDA matter to networking? **We need better ways of understanding networks.** How do you explore your network now to find out what protocols you are using, or if is is operating as expected? You look at configs, maybe you look at traffic graphs, and you probably have to log into devices to run show commands. But the configs are complicated and hard to get your head around. And the traffic graphs don't represent how traffic flows or the protocols that ensure a functioning network. You look at a diagram, if it's up to date, at least you hope it is. 
 
-Just like in data analysis, you need to be able to explore your network and find things easily.
+Just like in data analysis, you need to be able to explore your network and find things easily. We need better approaches and systems to help us finding the context we need to design, build, operate, and scale the networks that we run.
 
 I'm going to discuss this idea in general, and talk about what we've implemented in [Suzieq](https://www.stardustsystems.net/suzieq/) for XNA. I'd love a discussion about the ideas in general, and any ideas on how to make Suzieq even better at eXploratory Network Analysis. We are accepting PRs :). Suzieq is currently focused on operational state in network devices. Suzieq does not currently answer all the exploratory questions I'd like to ask of a network, but it's a very good start.
 
@@ -38,7 +38,6 @@ There can be more than one type of exploring in networking. In one type you are 
 - How many OSes do I have? How many versions of each OS? How many device types?
 - How have things changed over time?
 	- What changed in the last 24 hours?
-
 
 In another you are looking for very specific pieces of data:
 - Where is this IP address or MAC address?
@@ -54,7 +53,6 @@ Most networks (AFAIK) have interface monitoring and graphs for metrics. Even wit
 - If we change our buffers, will we have less drops in the network?
 - When will we run out of capacity and where will that be?
 - What is the correlation between utilization and drops and is it the same across the network?
-
 
 Suzieq is using standard data science tools in Suzieq like Python, Pandas, and Parquet. We’ve built network engineering and operations applications on top of that, but you can use a Jupyter notebook and do all the analysis yourself if you so desire. 
 
