@@ -6,6 +6,9 @@ title: Getting Assumptions out of our Heads
 excerpt: 
 description: Too much of networking requires network engineers to keep a lot in their heads. We need to get that out.
 ---
+
+Networking requires a lot of decisions by somebody. Every point of designing, building, scaling, operating networks requires decisions. Many of those decisions have even more assumptions behind them.
+
 Some of the best network engineers I've experienced can keep a lot in their heads. Maybe it's all the OSPF state machines as well as all the LSAs and what is in them. Or when they are debugging and they run various show commands they can remember which IP was the neighbor that they need to care about. I can't do that. If I have to run a show command that has IP addresses that I need to resolve to know who the neighbors are, I'm in trouble. 
 
 But even if you are good at that, I think it's a very bad habit to rely on that. It appears to me that a lot of networking depends on engineers and operators keeping everything in their head. They aren't in the habit of getting ideas, concepts, etc. out of their heads. This is bad, because when they are in your head, they are unexamined, and as things get more complicated you need to understanding your assumptions and examine them.
@@ -27,8 +30,7 @@ If I have 8 core routers, I'm probably ok if 2 go down. How do I say for the dat
 
 
 
-
-### Examples from he past
+### Examples from the past
 One example I had for a long time was that you need to buy big chassis routers for datacenter networks. You need lots of interfaces and they have all the fancy and sophisticated switch backplanes to get you the performance that you need. But why do you need that? It turns out you don't.
 
 
