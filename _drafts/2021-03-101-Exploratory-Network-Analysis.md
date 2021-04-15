@@ -8,7 +8,7 @@ description: You need to be able to explore and find things easily in your netwo
 ---
 ![Suzieq interface type](/assets/images/2021-03-xna/interface-show-type.png)
 
-[DD: Overall comment: Starts off superbly, lays excellent ground work and then sort of peters out as if you got bored or distracted]
+[DD: Overall comment: Starts off superbly, lays excellent ground work and then sort of peters out as if you got bored or distracted. If you like, I can write the second half, the Suzieq part]
 
 In data science there is this concept called Exploratory Data Analysis ([EDA](https://www.itl.nist.gov/div898/handbook/eda/section1/eda11.htm)). When I have a big bunch of data, what’s in it? How do I make sense of it? Where do I even start? Just simple statistics about the dataset are not enough. In data analysis, this led to the S language, which led to S-Plus and the current favorite analysis language [R](https://www.r-project.org/about.html). **In networking I think we have much of the same problem and we don't have ways to systematically approach it.** Because we don't have good ways to explore our networks, we revert to manual gathering of data which takes a long time, or just educated guess, which can be wrong. This seems wildly insufficient, especially in the 2020s.
 
