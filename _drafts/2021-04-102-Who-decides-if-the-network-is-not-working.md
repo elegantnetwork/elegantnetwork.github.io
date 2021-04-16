@@ -6,7 +6,7 @@ title: Who decides if the network is unhealthy?
 excerpt: It's very important that the networking team that owns the design, build, and operations of the network is the responsible to know that the network it is operating is not working before it's customers do. This approach to networking will drive a network that is better monitored, probably better designed, and almost assuredly better for it's customers.
 description: Do you rely on your customers to tell you our network is not working or do you take responsibility for network health?
 ---
-It's very important that the networking team that owns the design, build, and operations of the network is responsible to know that the network it is operating is not working before it's customers do. This approach to networking will drive a network that is better monitored,  better designed, and  assuredly better for it's customers. Taking a more relaxed approach implies that you are not taking your network as seriously as it's importance in the business or community that you are supporting.
+**It's very important that the networking team that owns the design, build, and operations of the network is responsible to know that the network it is operating is not working before it's customers do.** This approach to operating your network will drive a network that is better monitored, better designed, and  assuredly better for it's customers. Taking a more relaxed approach implies that you are not taking your network as seriously as it's importance in the business or community that you are supporting.
 
 When I started in networking at Amazon in fall of 2002, when we were paged for a problem it was because one of the users/services on the network was having problems and they thought it was the network. We never knew ourselves that the network was broken until somebody told us it was. Maybe it was the website was down, or a Fulfillment Center was down, or somebody was having some weird kind of software problem they didn't understand. We did not have good tools to identify for ourselves that the network was misbehaving before our (internal) customers told us.
 
@@ -29,11 +29,11 @@ Accepting that it is your responsibility will change your monitoring, management
 
 ## What does this mean for your network design
 
-It should drive you towards simplicity. Owning [Network Health](https://elegantnetwork.github.io/posts/network-health/) is necessary to always know things are broken before your customers. If you must know if your network is healthy or unhealhty, then it might drive you to think about how to make your network easier to measure, and also have more obvious failures, and less grey failures.
+It should drive you towards simplicity. Owning [Network Health](https://elegantnetwork.github.io/posts/network-health/) is necessary to always know things are broken before your customers. If you must know if your network is healthy or unhealthy, then it might drive you to think about how to make your network easier to measure, and also have more obvious failures, and less grey failures.
 
-This is much like having the responsiblity for testing in software. If it's my responsbility to both write the software and show that it's working, I will spend more time and attention figuring out how to write software that is easier to test, easier to debug, and easier to monitor. The same needs to be true for networking. In networking it's often true that the people designing the network also run the network, but not always. But giving up the responsibility of finding the bugs also means you won't think as hard about how to find those issue.s
+This is much like having the responsibility for testing in software. If it's my responsibility to both write the software and show that it's working, I will spend more time and attention figuring out how to write software that is easier to test, easier to debug, and easier to monitor. The same needs to be true for networking. In networking it's often true that the people designing the network also run the network, but not always. But giving up the responsibility of finding the bugs also means you won't think as hard about how to find those issue.s
 
-I think better software is the key, but it's not the only thing. It does take a better midset change 
+I think better software is the key, but it's not the only thing. It does take a better mindset change.
 
 
 ## Summary
