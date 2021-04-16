@@ -100,14 +100,19 @@ Another reason why this is important is that by describing what you expect you g
 ## Related
 
 Once I'm thinking about how to really know that my network is healthy or unhealhty, I realize I need even more services. If I now know when my network is healthy, I want to troubleshoot more quickly and more systematically. I want to be able to do great root cause analysis to find what caused the problem and prevent future outages. And then I need to know I can make safe changes if the Root Cause analysis found something that needs fixing.
+
 ## How to do this with Suzieq
+
 We've been working on Suzieq for Network observability.  Right now it has fault information like device/interface/session up/down and we have a status page in the GUI with count of things that are up and down We will be adding an alarm page to keep track of which things are broken.
 
-Suzieq also has asserts, in which we have described rules that need to be true for correctness. It has rules like the MTUs of interfaces connected to each other need to be the same, and you can't have overlapping OSPF router IDs. This helps find and prevent problems. Right now you must run each individual assert. We will add asserts to the alarm page.
+Suzieq is collecting operational state data, which I think a lot of networks don't monitor. This allows things such as more precision about what has failed.
+
+Suzieq also has asserts, in which we have described rules that need to be true for correctness. It has rules like the MTUs of interfaces connected to each other need to be the same, and you can't have overlapping OSPF router IDs. This helps find and prevent problems by having describing some things about your network that you know should be correct.
 
 There is so much more than can be done with the data that is in Suzieq for Network Health. Help us figure out what problems you most need help with.
 
 ## Summary
+
 No matter what you are doing or how you think about it, understanding your network health and continually striving to measure it better is critical to a well operated network.
 
 1. Healthy is more than just you aren't currently affecting customers. Do you have failures you don't know about that you could prevent from turning into customer problems?
