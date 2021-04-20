@@ -53,46 +53,51 @@ Suzieq is using standard data science tools like Python, Pandas, and Parquet. We
 
 ## An example of understanding a network in general
 
-Let's say that I'm new to a network, either I'm a consultant looking at my customer's network for the first time or I'm a new operator at a company. I want to understand what it is in the network and how it works. ![Suzieq device show](/assets/images/2021-04-xna/device.png)
-This gives you an idea of what devices are in your network. From the summary table you can see that it's made up of several namespaces. Namespaces are a logical collection of devices in Suzieq. From the histogram on the top right, you can see the NOSes and how many devices in each. So this is a pretty simple network, and all the OSes are consistent, which is nice. 
+Let's say that I'm new to a network, either I'm a consultant looking at my customer's network for the first time or I'm a new operator at a company. I want to understand what it is in the network and how it works. I'll start by looking at the devices in the network. ![Suzieq device show](/assets/images/2021-04-xna/device.png)
+This gives you an idea of what devices are in your network. In this case there is just one namespace. Namespaces are a logical collection of devices in Suzieq. From the histogram on the top right, you can see the NOSes and how many devices in each. So this is a pretty simple network, and all the OSes are consistent, which is nice. There are 14 total devices: 8 are Cisco, 5 Ubuntu servers, and 1 Juniper. No devices are down and they are all polled successfully. 
 
-Let's look around, starting with routing protocols. As mentioned above, Suzieq collects operational state, like the OSPF neighbor information and BGP connections. You can view each of these, but for our purposes here to get a general overview, Suzieq has a summarize command. 
-
-### OSPF
+Let's look around, starting with routing protocols. As mentioned above, Suzieq collects operational state, like the OSPF neighbor information and BGP connections. You can view each of these, but for our purposes here to get a general overview, Suzieq has a summarize command which is the same information as the Summary Information in the GUI on the Xplore page. 
 
 First we'll look at OSPF, using the CLI. ![Suzieq OSPF summarize CLI](/assets/images/2021-04-xna/ospf-summarize.png)
-This gives you a good summary of OSPF in this network. There are 8 OSPF speakers, all in the same area 0, all in the same VRF. You can see the important OSPF timers as well. That seems straightforward, ok.
+This gives you a good summary of OSPF in this network. There are 8 OSPF speakers, all in the same area 0, all in the same VRF. You can see the important OSPF timers as well. There are 24 unnumbered Peers, which is pretty cool. In this network  there aren't an ABR, but if there were, I'd like to see how many there are. One odd thing is the 16 passive Peer connections. What are those? Let's see if we can figure that out. We can look at individual OSPF sessions with 'ospf show' and we can filter by those sessions that are just passive.  ![Suzieq OSPF show passive peers](/assets/images/2021-04-xna/ospf-show-passive.png). This shows us that they are all loopback interfaces. That seems fine, so nothing to worry about.
 
-### BGP
+
 
 How about BGP?![Suzieq BGP summarize GUI](/assets/images/2021-04-xna/bgp-summarize.png)
-There are 10 BGP speakers; interestingly different than the number of OSPF speakers. There is eBGP, no iBGP, no Route Reflectors, IPv4. We see that there are 2 active Afi/Safis. Let's look to see what those are. ![BGP AfiSafi](/assets/images/2021-04-xna/bgp-afisafi.png) This shows us we have IPv4 and EVPN.
+There are 10 BGP speakers; interestingly different than the number of OSPF speakers. Let's look at that. We can use the unique verb for both ospf and bgp to show us what hosts are participating in each. ![Suzieq hostname unique](/assets/images/2021-04-xna/unique-hostnames.png) Ah, BGP has dcedge01 and firewall01 that OSPF doesn't have. That makes sense.
+
+
+Let's get back to BGP, there is eBGP, and iBGP, no Route Reflectors, IPv4. We see that there are 2 active Afi/Safis. Let's look to see what those are. ![BGP AfiSafi](/assets/images/2021-04-xna/bgp-afisafi.png) This shows us we have IPv4 and EVPN. Because I used the count=True flag, we can see that there are 24 l2vpn evpn sessions. In the summary above, one of the interesting things is the 24 iBGP and 16 eBGP sessions. We can assume that the 24 iBGP for eVPN and the eBGP are for something else. We don't have a great way to look directly at what is eBGP vs eBGP in Suzieq. We need to add that.
+
+If you really want to look at BGP, Suzieq is collecting more data than is shown by default. To see all the data that is being collected for a table, use table describe. ![bgp describe](/assets/images/2021-04-xna/bgp-describe.png) We're not going to look at those all now.
+
 
 We can look at EVPN to get an an overview also. It's symmetric EVPN, some L2 and L3, and no multicast.
-![Suzieq EVPN summarize](/assets/images/2021-04-xna/evpnVni-summarize.png)
+![Suzieq EVPN summarize](/assets/images/2021-04-xna/evpnVni-summarize.png) 
 
-From these summaries we know what protocols we have, and a summary of each one.
-
-### MTU
-We have a screencast that goes into depth on investigating various aspects of MTU in your network
-<iframe width="560" height="315" src="https://www.youtube.com/embed/aAh1sJowDXI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+From these summaries we know what protocols we have, and a summary of each one. This gave us a pretty good overview and understanding of this network.
 
 
 ### Path Trace
 Sometimes you need to dive into a particular question to understand your network.  Suzieq can show you the forwarding decisions that routers make from a source, destination pair with the path command. ![Suzeq path trace](/assets/images/2021-04-xna/path-show-server101-server302.png) You can see that it's going from one server to another, the first and last hops are L2 and in the middle are some form of tunneling. Clicking on the link spine01 to exit01, you will see how the forwarding decisions are made. ![Suzieq path debug](/assets/images/2021-04-xna/leaf01-spine01-debug.png) You can see all the forwarding decisions for that hop and that the route was populated by BGP.
+
+### Routes
+
+Let's get an idea of what's in the routing table. ![Suzieq routes vrf](/assets/images/2021-04-xna/routes-vrf.png) The summary is a great place to start again. You can see the number of devices and total number of prefixes, host route count, IPv4 and IPv6 addresses, etc. In Suzieq Summary, anytime there is something named *Cnt, that is a list of things that might be interesting. If there are three or less, then Suzieq will display in the summary. If more than 3, you can use the Distribution Count in the GUI or the unique command in the CLI. In this case, we see there are 4 VRFs, and so we want to see which 4 VRFs they are and how many routes are in each VRF.
+
+We can explore more, for instance, there are 11 protocols in the routes table, so we can see what they are and how many routes are from each of the protocols. ![Suzieq routes  protocols](/assets/images/2021-04-xna/routes-protocol.png) That looks like the protocols I expect, and some weird NXOS stuff that seems fine.
+
+## Deep Dive
+I've most showed how to get an overview of your network with Suzieq, but if you want to dive in deep, Suzieq gives you that ability also. 
+
+We have a screencast that goes into depth on investigating various aspects of MTU in your network
+<iframe width="560" height="315" src="https://www.youtube.com/embed/aAh1sJowDXI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 We have a screencast to show off Path Trace:
 <iframe width="560" height="315" src="https://www.youtube.com/embed/4wZot1FBmrQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 And a have longer dive into troubleshooting Path with Suzieq:
 <iframe width="560" height="315" src="https://www.youtube.com/embed/kaCANwgUP3Y" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-### Routes
-
-Let's get an idea of what's in the routing table. ![Suzieq routes vrf](/assets/images/2021-04-xna/routes-vrf.png) The summary is a great place to start again. You can see the number of devices and total number of prefixes, host route count, IPv4 and IPv6 addresses, etc. In Suzieq Summary, anytime there is something named *Cnt, that is a list of things that might be interesting. If there are three or less, then Suzieq will display in the summary. If more than 3, you can use the Distribution Count in the GUI or the unique command in the CLI. In this case, we see there are 4 VRFs, and so we want to see which 4 VRFs they are and how many routes are in each VRF.
-
-We can explore more, for instance, there are 5 protocols in the routes table, so we can see what they are and how many routes are from each of the protocols. ![Suzieq routes  protocols](/assets/images/2021-04-xna/routes-protocol.png)
-
 
 ## How is this different than observability
 We've written about [Network Observability](https://elegantnetwork.github.io/posts/observability/) and it is very related to this area of XNA, it's just coming from a different field (Devops vs Statistics and Data Analysis). Observability focuses on being able to ask arbitrary questions in your network just like XNA. I would say that a good observability platform allows you to do this kind of Exploration. The point of EDA and XNA is to enable the exploration that is needed.
