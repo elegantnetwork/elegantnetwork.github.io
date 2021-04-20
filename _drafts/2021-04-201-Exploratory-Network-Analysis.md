@@ -53,7 +53,7 @@ Suzieq is using standard data science tools like Python, Pandas, and Parquet. We
 
 ## An example of understanding a network in general
 
-Let's say that I'm new to a network. I want to understand what it is in the network and how it works. ![Suzieq device show](/assets/images/2021-04-xna/device.png)
+Let's say that I'm new to a network, either I'm a consultant looking at my customer's network for the first time or I'm a new operator at a company. I want to understand what it is in the network and how it works. ![Suzieq device show](/assets/images/2021-04-xna/device.png)
 This gives you an idea of what devices are in your network. From the summary table you can see that it's made up of several namespaces. Namespaces are a logical collection of devices in Suzieq. From the histogram on the top right, you can see the NOSes and how many devices in each. So this is a pretty simple network, and all the OSes are consistent, which is nice. 
 
 Let's look around, starting with routing protocols. As mentioned above, Suzieq collects operational state, like the OSPF neighbor information and BGP connections. You can view each of these, but for our purposes here to get a general overview, Suzieq has a summarize command. 
@@ -79,7 +79,7 @@ We have a screencast that goes into depth on investigating various aspects of MT
 
 
 ### Path Trace
-Sometimes you need to dive into a particular question to understand your network.  Suzieq can show you the forwarding decisions that routers make from a source, destination pair with the path command. ![Suzeq path trace](/assets/images/2021-04-xna/path-show-internet.png) You can see that it's going from one server to another, the first and last hops are L2 and in the middle are some form of tunneling. Clicking on the link spine01 to exit01, you will see how the forwarding decisions are made. ![Suzieq path debug](/assets/images/2021-04-xna/spine01-exit01-path.png) You can see all the forwarding decisions for that hop and that the route was populated by BGP.
+Sometimes you need to dive into a particular question to understand your network.  Suzieq can show you the forwarding decisions that routers make from a source, destination pair with the path command. ![Suzeq path trace](/assets/images/2021-04-xna/path-show-server101-server302.png) You can see that it's going from one server to another, the first and last hops are L2 and in the middle are some form of tunneling. Clicking on the link spine01 to exit01, you will see how the forwarding decisions are made. ![Suzieq path debug](/assets/images/2021-04-xna/leaf01-spine01-debug.png) You can see all the forwarding decisions for that hop and that the route was populated by BGP.
 
 We have a screencast to show off Path Trace:
 <iframe width="560" height="315" src="https://www.youtube.com/embed/4wZot1FBmrQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
