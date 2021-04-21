@@ -68,7 +68,7 @@ Active monitoring or pingmesh is a really great data source. However, I'm not aw
 
 Active monitoring can be tricky because it can be noisy. If you already know you have a problem, it is great for isolating the problem. If the problem is remote site monitoring, usually the loss rate is so high it's easy to see. But in a datacenter with .5% packet loss affecting customers, or a small number of prefixes that are null routing, it's very hard to make an active monitoring system that can be precise and accurate.
 
-Ideally high quality active monitoring would be widely available, but it isn't. This doesn't mean you can't be responsible to know if your network is healthy or unhealhty, but it does mean you won't always know right away and you will not have actionable precision all the time.
+Ideally high quality active monitoring would be widely available, but it isn't. This doesn't mean you can't be responsible to know if your network is healthy or unhealthy, but it does mean you won't always know right away and you will not have actionable precision all the time.
 
 ### Monitoring Challenges
 
@@ -97,13 +97,13 @@ There are also a set of questions around if the network is as expected. If you j
 
 Another reason why this is important is that by describing what you expect you give your monitoring, alarming, and alerting services better data so that they can know when to page you. For instance, it would be nice to say that for this layer of the network, in this datacenter, I need to make sure that 3/4 of my devices (or interfaces or BGP sessions, etc.) are up at all times. In that way, you've given your alarming system better metadata about your intentions and assumptions about what matters.
 
-## Related
+## I need more tools
 
-Once I'm thinking about how to really know that my network is healthy or unhealhty, I realize I need even more tools. Knowing if your network is healthy or not is critical, the next steps are knowing what is broken, why it's broken, and how to remediate.
+Once I'm thinking about how to really know that my network is healthy or unhealthy, I realize I need even more tools. Knowing if your network is healthy or not is critical, the next steps are knowing what is broken, why it's broken, and how to remediate.
 
 If I now know when my network is healthy, I want to troubleshoot more quickly and more systematically. I want to be able to do great root cause analysis to find what caused the problem and prevent future outages. And then I need to know I can make safe changes if the Root Cause analysis found something that needs fixing.
 
-## How to do this with Suzieq
+## How to do this with Suzieq?
 
 We've been working on Suzieq for Network observability.  Right now it has fault information like device/interface/session up/down and we have a status page in the GUI with count of things that are up and down. We will be adding an alarm page to keep track of which things are broken.
 
@@ -127,9 +127,11 @@ No matter what you are doing or how you think about it, understanding your netwo
 1. Keep innovating to make your ability to know if you network is healthy or unhealthy better.
 
 ## Suzieq
+
 Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
 
 ## Conversation
+
 1. Do you have a good way of describing if your network is healthy or not?
 2. If you think about knowing, at all times, if your network is healthy or unhealthy, how will that change your tools and the way that you operate  your network?
 3. Which of these problems do you have? Do you have enough data, but you don't have good alarm aggregation, filtering, etc.?

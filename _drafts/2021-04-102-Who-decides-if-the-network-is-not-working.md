@@ -36,7 +36,7 @@ It will likely drive you towards simplicity. Owning [Network Health](https://ele
 
 This is much like having the responsibility for testing in software. If it's my responsibility to both write the software and show that it's working, I will spend more time and attention figuring out how to write software that is easier to test, easier to debug, and easier to monitor. The same needs to be true for networking. In networking it's often true that the people designing the network also run the network, but not always. But giving up the responsibility of finding the bugs also means you won't think as hard about how to find those issue.
 
-One of the things that I don't understand about networking is that outages don't seem to drive to a simpler network. Outages seem to be blamed on the vendor, and we all update our software eventually (while cursing at the vendor) but I've rarely seen engineers think through the complexity of their solution and the likelihood that the complexity will bring mistakes in operating and bugs in the software on the devices. I wonder if because the health of the network is hard to measure, and so not measured well, it's very hard to track which things make availability better and which do not. And because it's not tracked over time there is less presure to get better at it over time.
+One of the things that I don't understand about networking is that outages don't seem to drive to a simpler network. Outages seem to be blamed on the vendor, and we all update our software eventually (while cursing at the vendor) but I've rarely seen engineers think through the complexity of their solution and the likelihood that the complexity will bring mistakes in operating and bugs in the software on the devices. I wonder if because the health of the network is hard to measure, and so not measured well, it's very hard to track which things make availability better and which do not. And because it's not tracked over time there is less pressure to get better at it over time.
 
 I think better software in monitoring, management, alert aggregation, etc. is the key, but it's not the only thing. It does take a better mindset change. Obviously it requires that you have good ways of measuring Network Health. But don't use your inability to measure the health as an excuse to not feel ownership for being able to answer if your network is working well.
 
@@ -49,4 +49,5 @@ If your management team is reluctant to invest in better ways to measure your ne
 1. Think through what it will take to take the responsibility of knowing when the network is working or not.
 
 ## Suzieq
+
 Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
