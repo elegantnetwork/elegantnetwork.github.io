@@ -6,13 +6,11 @@ title: Exploratory Network Analysis (XNA)
 excerpt: Networks are complicated, have lots of moving pieces, and are hard to understand. How do you explore your network now to find out what protocols you are using, or if is is operating as expected? 
 description: You need to be able to explore and find things easily in your network. XNA, alongside Network Observability, allows you to understand your network and find things in your network.
 ---
-![Suzieq interface type](/assets/images/2021-03-xna/interface-show-type.png)
+![Suzieq interface type](/assets/images/2021-04-xna/interface-show-type.png)
 
-[DD: Overall comment: Starts off superbly, lays excellent ground work and then sort of peters out as if you got bored or distracted. If you like, I can write the second half, the Suzieq part]
+In data science there is this concept called Exploratory Data Analysis ([EDA](https://www.itl.nist.gov/div898/handbook/eda/section1/eda11.htm)). When I have a big bunch of data, what’s in it? How do I make sense of it? Where do I even start? Just simple statistics about the dataset are not enough. In data analysis, this led to the S language, which led to S-Plus and then the current favorite analysis language [R](https://www.r-project.org/about.html). **In networking I think we have much of the same problem and we don't have ways to systematically approach it.** Because we don't have good ways to explore our networks, we revert to manual gathering of data which takes a long time, or just educated guess, which can be wrong. This seems wildly insufficient, especially in the 2020s.
 
-In data science there is this concept called Exploratory Data Analysis ([EDA](https://www.itl.nist.gov/div898/handbook/eda/section1/eda11.htm)). When I have a big bunch of data, what’s in it? How do I make sense of it? Where do I even start? Just simple statistics about the dataset are not enough. In data analysis, this led to the S language, which led to S-Plus and the current favorite analysis language [R](https://www.r-project.org/about.html). **In networking I think we have much of the same problem and we don't have ways to systematically approach it.** Because we don't have good ways to explore our networks, we revert to manual gathering of data which takes a long time, or just educated guess, which can be wrong. This seems wildly insufficient, especially in the 2020s.
-
-EDA was defined by John W. Tukey in 1961. In his book Exploratory Data Analysis in 1977 he felt that there is too much emphasis on statistical testing, and not enough on understanding the data. I think we are in a similar situation in which we are not really looking at our network to understand how they operates. **We rely on intuition and the general assumption that if users aren't complaining, then everything is okay.** The point isthat a small number of statistics isn't enough to understand the data (network) and we often aren't even collecting all the data necessary to really know how the network is doing. You need to be able to look at the data, ask questions, find answers, ask more questions, etc. Just like in data analysis, not everything you want to examine is a metric. 
+EDA was defined by John W. Tukey in 1961. In his book Exploratory Data Analysis in 1977 he felt that there is too much emphasis on statistical testing, and not enough on understanding the data. I think we are in a similar situation in which we are not really looking at our network to understand how they operates. **We rely on intuition and the general assumption that if users aren't complaining, then everything is okay.** The point is that a small number of statistics isn't enough to understand the data (network) and we often aren't even collecting all the data necessary to really know how the network is doing. You need to be able to look at the data, ask questions, find answers, ask more questions, etc. Just like in data analysis, **not everything you want to examine is a metric.**
 
 The other networking discussions about this kind of approach are focused on looking at traffic, which is useful for some important problems. However, we need this same approach to understand how our network are operating.
 
@@ -22,80 +20,78 @@ I like the points in this article [Why EDA is Crucial for any Data Science Proje
 - Drawing charts and graphs for better understanding
 - To get a better understanding of the problem statement
 
-
 ## XNA (eXploratory Network Analysis)
 
-Why does the idea of EDA matter to networking? **We need better ways of understanding networks.** How do you explore your network now to find out what protocols you are using, or if is is operating as expected? You look at configs, maybe you look at traffic graphs, and you probably have to log into devices to run show commands. But the configs are complicated and hard to get your head around. And the traffic graphs don't represent how traffic flows or the protocols that ensure a functioning network. You look at a diagram, if it's up to date, at least you hope it is. [DD: Add info about onboarding network engineers, if you're a consultant making sense of a customer's network].
+Why does the idea of EDA matter to networking? **We need better ways of understanding networks.** How do you explore your network now to find out what protocols you are using, or if is is operating as expected? You look at configs, maybe you look at traffic graphs, and you probably have to log into devices to run show commands. But the configs are complicated and hard to get your head around. And the traffic graphs don't represent how traffic flows or the protocols that ensure a functioning network. You look at a diagram, if it's up to date, at least you hope it is. If you are a consultant and need to make sense of a customer's network, where do you start? If you are onboarding new network engineers to your team, where do you have them start?
 
-Just like in data analysis, you need to be able to explore your network and find things easily. We need better approaches and systems to help us finding the context we need to design, build, operate, and scale the networks that we run.
+Just like in data analysis, you need to be able to explore your network and find things easily. We need better approaches and systems to help us finding the context we need to design, build, operate, and scale the networks that we run. I'm going to discuss this idea in general, and talk about what we've implemented in [Suzieq](https://www.stardustsystems.net/suzieq/) for XNA. One of the key reasons Suzieq exists is to be able to explore your network.
 
-I'm going to discuss this idea in general, and talk about what we've implemented in [Suzieq](https://www.stardustsystems.net/suzieq/) for XNA. [DD: I'd move the rest of the paragraph to the end, as it breaks the flow, and a call to action at the end is better than in the middle]. I'd love a discussion about the ideas in general, and any ideas on how to make Suzieq even better at eXploratory Network Analysis. We are accepting PRs :). Suzieq is currently focused on operational state in network devices. Suzieq does not currently answer all the exploratory questions I'd like to ask of a network, but it's a very good start.
-
-There can be more than one type of exploring in networking. In one type you are trying to understand the "shape" of the network:
-- What protocols do I have in my network?
-- What is my topology, L1, L2, L3, per protocol?
-	- Do my L3 topologies have the same exact shape to my L1/L2?
-- Why does my network work this way? [DD: Example would be good for this. Say, symmetric vs asymmetric EVPN or OSPF vs BGP]
-- What does this policy do this? What does it mean for my overall network? [DD: Reword or remove this bullet. I couldn't understand]
-- How many OSes do I have? How many versions of each OS? How many device types?
-- How have things changed over time?
-	- What changed in the last 24 hours?
-
-In another you are looking for very specific pieces of data [DD: I recommend starting with this, because everyone can identify with this easily]:
+There can be more than one type of exploring in networking. In one type you are looking for very specific pieces of data:
 - Where is this IP address or MAC address?
 - How often (and when) does this MAC move?
 - Where did this MAC go? How many MACs do I have? Do I have any outliers that move a lot?
 - How does a packet traverse through my network including L2, L3, and eVPN hops?
 
-Most networks (AFAIK) have interface monitoring and graphs for metrics. Even with counters, there are not good ways to explore your data. You can usually point to a specific interface to see it's utilization, but can you ask more general questions like:
-- How many interfaces are ever over 50% utilized? [DD: I believe you can with PromQL]
-- What percentage of interfaces 99th percentile is less then 20% utilization? [DD: also with PromQL]
+ In another you are trying to understand the "shape" of the network:
+- What protocols do I have in my network?
+- What is my topology, L1, L2, L3, per protocol?
+	- Do my L3 topologies have the same exact shape to my L1/L2?
+- Why does my network work this way? For instance, where is it using eBGP vs iBGP, or symmetric vs asymmetric EVPN
+- How many NOSes do I have? How many versions of each NOS? How many device types?
+- What changed in the last 24 hours?
+
+Most networks (AFAIK) have interface monitoring and graphs for metrics. Even with counters, for most monitoring systems there are not good ways to explore your data. You can usually point to a specific interface to see it's utilization, but can you ask more general questions like:
+- How many interfaces are ever over 50% utilized?
+- What percentage of interfaces 99th percentile is less then 20% utilization? 
 - If we change our TCP algorithm, will we have less drops in the network? 
 	- How will the distribution of drops change?
 - If we change our buffers, will we have less drops in the network?
 - When will we run out of capacity and where will that be?
 - What is the correlation between utilization and drops and is it the same across the network?
 
-Suzieq is using standard data science tools like Python, Pandas, and Parquet. We’ve built network engineering and operations applications on top of that, but you can use a Jupyter notebook and do all the analysis yourself if you so desire. 
+Suzieq is using standard data science tools like Python, Pandas, and Parquet. We’ve built network engineering and operations applications on top of that, but you can use a [Jupyter notebook](https://jupyter.org/) and do all the analysis yourself if you so desire. It was designed to be extended to allow more and more easy ways to explore networks.
 
 ## An example of understanding a network in general
 
-Let's say that I'm new to a network. I want to understand what it is in the network and how it works. ![Suzieq device show](/assets/images/2021-03-xna/device.png)
-This gives you an idea of what devices are in your network. From the summary table you can see that it's made up of some Ubuntu hosts and some Cumulus routers. From the histogram on the top right, you can see the versions. So this is a pretty simple network, and all the OSes are consistent, which is nice. [DD: I recommend changing this to NXOS or EOS or Junos to get more readers in. I don't want too much association with Cumulus because its a dying market. You can use the suzieq-demo for data]
+Let's say that I'm new to a network. I want to understand what it is in the network and how it works. ![Suzieq device show](/assets/images/2021-04-xna/device.png)
+This gives you an idea of what devices are in your network. From the summary table you can see that it's made up of several namespaces. Namespaces are a logical collection of devices in Suzieq. From the histogram on the top right, you can see the NOSes and how many devices in each. So this is a pretty simple network, and all the OSes are consistent, which is nice. 
 
 Let's look around, starting with routing protocols. As mentioned above, Suzieq collects operational state, like the OSPF neighbor information and BGP connections. You can view each of these, but for our purposes here to get a general overview, Suzieq has a summarize command. 
 
-First we'll look at OSPF, using the CLI. ![Suzieq OSPF summarize CLI](/assets/images/2021-03-xna/ospf-summarize.png)
+### OSPF
+
+First we'll look at OSPF, using the CLI. ![Suzieq OSPF summarize CLI](/assets/images/2021-04-xna/ospf-summarize.png)
 This gives you a good summary of OSPF in this network. There are 8 OSPF speakers, all in the same area 0, all in the same VRF. You can see the important OSPF timers as well. That seems straightforward, ok.
 
-[DD: I haven't looked at the pics, but I hope these are from the latest version]
-How about BGP?![Suzieq BGP summarize GUI](/assets/images/2021-03-xna/bgp-summarize.png)
-There are 10 BGP speakers; interestingly different than the number of OSPF speakers. There is iBGP and eBGP, no Route Reflectors, IPv4, no IPv6, and there is EVPN.
+### BGP
+
+How about BGP?![Suzieq BGP summarize GUI](/assets/images/2021-04-xna/bgp-summarize.png)
+There are 10 BGP speakers; interestingly different than the number of OSPF speakers. There is eBGP, no iBGP, no Route Reflectors, IPv4. We see that there are 2 active Afi/Safis. Let's look to see what those are. ![BGP AfiSafi](/assets/images/2021-04-xna/bgp-afisafi.png) This shows us we have IPv4 and EVPN.
 
 We can look at EVPN to get an an overview also. It's symmetric EVPN, some L2 and L3, and no multicast.
-![Suzieq EVPN summarize](/assets/images/2021-03-xna/evpnVni-summarize.png)
+![Suzieq EVPN summarize](/assets/images/2021-04-xna/evpnVni-summarize.png)
 
 From these summaries we know what protocols we have, and a summary of each one.
 
-### Topology
+### MTU
+We have a screencast that goes into depth on investigating various aspects of MTU in your network
+<iframe width="560" height="315" src="https://www.youtube.com/embed/aAh1sJowDXI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-[DD: I recommend using the latest screenshots and say its coming out if you want to talk about it, and our ideas about this have evolved a bit. I didn't read this sectiion]
-
-I'm going to jump into a Suzieq feature that is Alpha, and a little unsightly, but can be useful. It's handy to compare topology from different layers in your network. This example is a different network than the network above. We want to get an idea of the overall physical topology using LLDP. ![Suzieq topology LLDP](/assets/images/2021-03-xna/ospf-ibgp_lldp.png)
-
-Same thing for BGP. You'll notice that there is a link that exists with LLDP from spine02 to exit02 that does not exist in BGP. This is clearly a bug (or the BGP session is down, but in the this case it's a bug in the configuration.) By exploring this data we can see that the network is not the way that we expect.
-![Suzieq topology BGP](/assets/images/2021-03-xna/ospf-ibgp_bgp.png)
-
-If we look at the BGP sessions for exit01 and exit02, we can see that on exit01 there are sessions to spine01 and spine02, on exit02 there are only BGP sessions to spine01 and not spine02 ![Suzieq BGP show](/assets/images/2021-03-xna/bgp-show-exit01-exit02.png)
 
 ### Path Trace
-Sometimes you need to dive into a particular question to understand your network.  Suzieq can show you the forwarding decisions that routers make for om a source, destination pair with the path command. ![Suzeq path trace](/assets/images/2021-03-xna/path-show-internet.png) That looks weird. There should be a path from spine01 and spine02 to exit01, just like there is to exit02. If you click on the link spine02 to exit02, you will see how the forwarding decisions are made. ![Suzieq path debug](/assets/images/2021-03-xna/spine02-exit02-path.png) You can see that the route was populated by BGP, but it only has one interface out. Spine02 doesn't have a route to 172.16.253.1 that has a nexthop on exit01. The reason is what is shown in the topology section above, there is no BGP session from spine02 to exit01.
+Sometimes you need to dive into a particular question to understand your network.  Suzieq can show you the forwarding decisions that routers make from a source, destination pair with the path command. ![Suzeq path trace](/assets/images/2021-04-xna/path-show-internet.png) You can see that it's going from one server to another, the first and last hops are L2 and in the middle are some form of tunneling. Clicking on the link spine01 to exit01, you will see how the forwarding decisions are made. ![Suzieq path debug](/assets/images/2021-04-xna/spine01-exit01-path.png) You can see all the forwarding decisions for that hop and that the route was populated by BGP.
+
+We have a screencast to show off Path Trace:
+<iframe width="560" height="315" src="https://www.youtube.com/embed/4wZot1FBmrQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+And a have longer dive into troubleshooting Path with Suzieq:
+<iframe width="560" height="315" src="https://www.youtube.com/embed/kaCANwgUP3Y" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### Routes
 
-Let's get an idea of what's in the routing table. ![Suzieq routes vrf](/assets/images/2021-03-xna/routes-vrf.png) The summary is a great place to start again. You can see the number of devices and total number of prefixes, host route count, IPv4 and IPv6 addresses, etc. In Suzieq Summary, anytime there is something named *Cnt, that is a list of things that might be interesting. If there are three or less, then Suzieq will display in the summary. If more than 3, you can use the Distribution Count in the GUI or the unique command in the CLI. In this case, we see there are 4 VRFs, and so we want to see which 4 VRFs they are and how many routes are in each VRF.
+Let's get an idea of what's in the routing table. ![Suzieq routes vrf](/assets/images/2021-04-xna/routes-vrf.png) The summary is a great place to start again. You can see the number of devices and total number of prefixes, host route count, IPv4 and IPv6 addresses, etc. In Suzieq Summary, anytime there is something named *Cnt, that is a list of things that might be interesting. If there are three or less, then Suzieq will display in the summary. If more than 3, you can use the Distribution Count in the GUI or the unique command in the CLI. In this case, we see there are 4 VRFs, and so we want to see which 4 VRFs they are and how many routes are in each VRF.
 
-We can explore more, for instance, there are 5 protocols in the routes table, so we can see what they are and how many routes are from each of the protocols. ![Suzieq routes  protocols](/assets/images/2021-03-xna/routes-protocol.png)
+We can explore more, for instance, there are 5 protocols in the routes table, so we can see what they are and how many routes are from each of the protocols. ![Suzieq routes  protocols](/assets/images/2021-04-xna/routes-protocol.png)
 
 
 ## How is this different than observability
@@ -104,7 +100,7 @@ We've written about [Network Observability](https://elegantnetwork.github.io/pos
 ## Conclusion
 We all need good ways to explore what's in our network. We need better tools to allow us to do this. Suzieq is one way, I'm sure there are others. The important idea is to think about how to explore your network so that you can really understand how it works as opposed to how you might imagine how it works. Being able to explore your network gives you a better intuition about how it works.
 
-[DD: Point to the MTU screencast someplace as another explanation of XNA]
+I'd love a discussion about the ideas in general, and any ideas on how to make Suzieq even better at eXploratory Network Analysis. We are accepting PRs :). Suzieq is currently focused on operational state in network devices. Suzieq does not currently answer all the exploratory questions I'd like to ask of a network, but it's a very good start.
 
 ## Suzieq
 Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
