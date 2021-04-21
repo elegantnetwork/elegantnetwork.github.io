@@ -8,7 +8,7 @@ description: Knowing if your network is healthy or unhealthy is hard to do but c
 ---
 Do you ask **"Is my network healthy?"** Do you know how to answer that well? This is a critical question, but a hard and confusing one to answer well. It's also one that I think most people don't ask explicitly and should. What does it even mean that the network is healthy? And if I figure that out, how do I answer that question? I probably don't have the systems to answer that question well. Is it my responsibility? We have to figure out what it means to know that your network is healthy. 
 
-When asking that question, what are you trying to accomplish? There is more than one thing, some practical and near term and some strategic. You want to know your network is broken so that you start fixing it. But of course if you can measure if your network is healthy or unhealthy, then you also might want to track it over time to see if you are getting better at operating your network. This can be very important because then you can see which things give you better availability and which do not. Focusing on network health and availability will force you to give you a better service for your customers.
+When asking that question, what are you trying to accomplish? There is more than one thing, some of which are practical and near term and some strategic. You want to know your network is broken so that you start fixing it. But of course if you can measure if your network is healthy or unhealthy, then you also might want to track it over time to see if you are getting better at operating your network. This can be very important because then you can see which things give you better availability and which do not. Focusing on network health and availability will force you to give you a better service for your customers.
 
 Sometimes you know your network is unhealthy when a customer calls up and says "My application isn't working, I've checked everything, I think the problem is the network." Sometimes it's when your CIO asks you "Is the network working correctly?" or worse "How many times this month has the network been unhealthy?"
 
@@ -18,13 +18,13 @@ Knowing if your network is healthy or not to a high degree of confidence is diff
 
 ## Definition of Healthy Network
 
-It's very hard to define a healthy network. We'll define it loosely as the ability for applications to be able to do what they want to do without the network causing trouble. That's probably good. The problem is that it is very hard to measure. How do you measure from all applications, especially if you are something like EC2 and customers might be doing anything?
+It's very hard to define a healthy network. We'll define it loosely as the ability for applications to be able to do what they want to do without the network causing trouble. That's probably good. The problem is that it is hard to measure. How do you measure from all applications, especially if you are something like EC2 and customers might be doing anything?
 
-It's often easier to know if your network is unhealthy. Sometimes that's obvious, everything is broken. Sometimes it's very subtle. The only want to really know if your network is healthy is the absence of unhealthy.In other words, if we don't know it's broken than it must be working fine. In some ways, that's all we can do. If that's so, then **we must be really confident that we have good ways to know when our network is unhealthy.**
+It's often easier to know if your network is unhealthy. Sometimes that's obvious, everything is broken. Sometimes it's very subtle. The only way to really know if your network is healthy is the absence of unhealthy. In other words, if we don't know it's broken than it must be working fine. In some ways, that's all we can do. If that's so, then **we must be really confident that we have good ways to know when our network is unhealthy.**
 
 It's also not enough to say every failure means that the network is unhealthy. If you have redundancy throughout your network and lose a device then the network is is still healthy, so you also need to have ways to understand all the various events that you might receive and figure out which are the important ones to tell you that the network is unhealthy.
 
-There's another important related question "Is my network behaving as expected?" This one can be even more subtle and complicated. It's important to think about because your network might be currently working correctly for all it's users, but what you expect, so when things break or fail, you will have a disaster you weren't expecting.
+Another important related question "Is my network behaving as expected?" This one can be even more subtle and complicated. It's important to think about because your network might be currently working correctly for all it's users, but what you expect, so when things break or fail, you will have a disaster you weren't expecting.
 
 ## Measuring Health
 
@@ -38,11 +38,11 @@ If my network is small I can just assume every device down is a pageable event. 
 
 What do we need to know if our networking is healthy or unhealthy? We need a lot of different sources of data. We need device data, up-down data, event/syslog/snmptrap data. But we also need to be able to figure out which data is important and which events are important. **We have to have broad measurement to catch any outage, but also we need to be precise so that we can fix things quickly.**
 
-There are a lot of data sources in the network, and some of them are much harder to make useful than others. Syslog might be critical, but hard to make useful. I have experienced several very bad outages in which there was a message in syslog to notify us, but we'd never seen it before so we didn't know to look for it. **I wish software engineers for NOS vendors were oncall for their own products, I think things like that would happen less.**
+There are a lot of data sources in the network,  some of them are harder to make useful than others. Syslog might be critical, but hard to make useful. I have experienced several very bad outages in which there was a message in syslog to notify us, but we'd never seen it before so we didn't know to look for it. **I wish software engineers for NOS vendors were oncall for their own products, I think things like that would happen less.**
 
 I know that I need data from several different sources to know if my network is healthy or not right now. I want to start with the obvious measuring device down, interface down, and standard interface monitoring, usually by SNMP.  Next I need to add event monitoring via SNMP traps and/or Syslog. This is harder to deal with because it's a lot of information and most of it doesn't tell me that something important has broken. It's usually important for going back and finding out what happened after an outage. After you learn which events give you the most information, then of course you can add those events as alerts.
 
-There's more data that you probably need. In most networks there is no monitoring for operational state. Are all the BGP sessions that you expect to be up up? Or OSPF neighbors, or eVPN state, etc. If you don't measure all the important state, you can't know that things have failed and it's harder to be precise and actionable.
+There's more data that you probably need. In most networks there is no monitoring for operational state. Are all the BGP sessions that you expect to be up up? Or OSPF neighbors, or eVPN state, etc.? If you don't measure all the important state, you can't know that things have failed and it's harder to be precise and actionable.
 
 To do this all really well, you need to think about all the things that can fail, and make sure you have a way to monitor them all. Then you need to be able to figure out how to turn that data into figuring out what's important.
 
@@ -62,7 +62,7 @@ What other capabilities are necessary
  
 ### Do you need active monitoring
 
-Since we defined a healthy network as one that is not affecting application traffic, then creating active application traffic and measuring that seems a boog idea. Even with instrumenting all of your devices and getting all the data available, you might have an outage that you don't know about. Part of it is you might not know how to instrument everything and part is that there is more data than you can make sense of. However, it can be noisy and misunderstood. It cannot be your only source of measurement.
+Since we defined a healthy network as one that is not affecting application traffic, then creating active application traffic and measuring that seems a boog idea. Even with instrumenting all of your devices and getting all the data available, you might have an outage that you don't know about. Part of it is you might not know how to instrument everything and part is that there is more data than you can make sense of. However, it can be noisy and misunderstood. 
 
 Active monitoring or pingmesh is a really great data source. However, I'm not aware of any good active monitoring solutions that are widely available either commercially or open source. Active monitoring can be done in degrees. Some people still smokeping to actively monitor latency and loss of very particular IP addresses, usually to monitor WAN links. Inside a datacenter you can do active monitoring to try to find out when there are errors in your network that your others systems aren't telling you about. Very advanced active monitoring can actually pinpoint which devices in the network are misbehaving. To do that can be a huge amount of data and is a very hard task. I've seen a great system at Amazon, and it took years to develop. I don't know any commercial or open source offering for pingmesh. This is an area that I wish had good tools.
 
@@ -70,7 +70,7 @@ Active monitoring can be tricky because it can be noisy. If you already know you
 
 Ideally high quality active monitoring would be widely available, but it isn't. This doesn't mean you can't be responsible to know if your network is healthy or unhealhty, but it does mean you won't always know right away and you will not have actionable precision all the time.
 
-### Challenges
+### Monitoring Challenges
 
 There are many challenges to network monitoring. My number 1 issue is that network device vendors don't takes that kind of monitoring seriously. I used to ask vendors if they had a counter for every possible packet drop. I've not gotten a good answer. At one meeting, the hardware people said "Of Course!" and the software people said: "We do?". It's actually hard to present those counters in a useful way and not make mistakes like over-counting. However, it doesn't matter if it's hard, we have to convince everyone that it's required.
 
@@ -99,11 +99,13 @@ Another reason why this is important is that by describing what you expect you g
 
 ## Related
 
-Once I'm thinking about how to really know that my network is healthy or unhealhty, I realize I need even more services. If I now know when my network is healthy, I want to troubleshoot more quickly and more systematically. I want to be able to do great root cause analysis to find what caused the problem and prevent future outages. And then I need to know I can make safe changes if the Root Cause analysis found something that needs fixing.
+Once I'm thinking about how to really know that my network is healthy or unhealhty, I realize I need even more tools. Knowing if your network is healthy or not is critical, the next steps are knowing what is broken, why it's broken, and how to remediate.
+
+If I now know when my network is healthy, I want to troubleshoot more quickly and more systematically. I want to be able to do great root cause analysis to find what caused the problem and prevent future outages. And then I need to know I can make safe changes if the Root Cause analysis found something that needs fixing.
 
 ## How to do this with Suzieq
 
-We've been working on Suzieq for Network observability.  Right now it has fault information like device/interface/session up/down and we have a status page in the GUI with count of things that are up and down We will be adding an alarm page to keep track of which things are broken.
+We've been working on Suzieq for Network observability.  Right now it has fault information like device/interface/session up/down and we have a status page in the GUI with count of things that are up and down. We will be adding an alarm page to keep track of which things are broken.
 
 Suzieq is collecting operational state data, which I think a lot of networks don't monitor. This allows things such as more precision about what has failed.
 
@@ -115,9 +117,9 @@ There is so much more than can be done with the data that is in Suzieq for Netwo
 
 No matter what you are doing or how you think about it, understanding your network health and continually striving to measure it better is critical to a well operated network.
 
+1. Asking if your network is healthy is a critical question for your network.
 1. Healthy is more than just you aren't currently affecting customers. Do you have failures you don't know about that you could prevent from turning into customer problems?
 1. Just monitoring Faults, like device or interface up/down is not enough!
-1. Over-paging is bad as is under-paging.
 1. Is your network behaving as expected?
 1. Make your network as easy to measure as possible.
 1. Monitor all the things that can fail.
