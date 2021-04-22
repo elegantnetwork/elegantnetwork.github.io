@@ -15,13 +15,6 @@ Yes, I do know that Google used Openflow in their Orion SDN controller. However,
 
 This is a post that's hard to write well. This topic makes me angry and so it's had to write something that everyone can read, but there are people I want to read this who can be offended by my opinion or just write me off because I disagree and am emotional about it. I want a real discussion because I think there are some really important points for our industry. It doesn't really matter that I don't like Openflow, it matters why I don't like Openflow
 
-## Why listen to me?
-
-It's easy for researchers or people trying to disrupt networking to say that network engineers just don't like new ideas and are stuck in the past. This can be true, but we are talking about a specific engineer with a specific opinion. 
-
-I'm worked in the largest datacenter network in the world: AWS, for a very long time. I'm very familiar with understanding tradeoffs around where functionality should be in the network (or on the hosts). I was around when EC2 was originally created and part of the networking team that ensured that the virtual networking for EC2 was not in the network, but was on the hosts. When VPCs were created, again, we made sure that the virtual network was not in the physical network. 
-
-So the problem for me with Openflow is not that I want networking in the network. It's that it's a bad idea. It's the wrong abstraction and it doesn't solve the real problems I have especially in my datacenters.
 
 ## Why is Openflow a bad idea?
 
@@ -52,13 +45,24 @@ I  also get upset when I read that the problem with Openflow is that the hardwa
 
 ## Why is Openflow dangerous?
 
-As an industry wasted so much time and attention on this bad idea that could never be useful. There are so many other things that we didn’t get right. 
+As an industry wasted so much time and attention on this bad idea that could never be useful. There are so many other things that we don't have right that need more attention.
 
 ## What about SDN?
 
 Some things are better done centrally. Configurations do an management. Traffic engineering.  But lots of things are not, like per flow setup. Holy cow what a bad bad bad idea
 
 There's "Separate the control plane from the forwarding plane" promise of SDN. Why is it important to separate controls plane from forwarding plane? It’s not. The point is to be able to have control over the decision making. BUt there are other and better ways to do that. It is possible to have an open source router in which you have source for all the software. In this case why do I need to separate control plane from routing plane. It sounds cool, I'll give you that.
+## Why listen to me?
+
+It's easy for researchers or people trying to disrupt networking to say that network engineers just don't like new ideas and are stuck in the past. This can be true, but we are talking about a specific engineer with a specific opinion. 
+
+I'm worked in the largest datacenter network in the world: AWS, for a very long time. I'm very familiar with understanding tradeoffs around where functionality should be in the network (or on the hosts). I was around when EC2 was originally created and part of the networking team that ensured that the virtual networking for EC2 was not in the network, but was on the hosts. When VPCs were created, again, we made sure that the virtual network was not in the physical network. 
+
+So the problem for me with Openflow is not that I want networking in the network. It's that it's a bad idea. It's the wrong abstraction and it doesn't solve the real problems I have especially in my datacenters.
+
+# Why not listen to me?
+
+Google had an SDN controller for a while: Orion. ANd Larry Peterson is a lot smarter and more famous than me.
 
 ## What should we be working on if it isn't Openflow
 
@@ -76,7 +80,7 @@ Many researchers will discount my argument because I don't understand research. 
 
 But I think there's some really interesting research. Batfish and Forward Networks came out of research and that's really important. Formal verification of things like ACLs is super interesting and I wish was widely deployed.
 
-I think propane is really important and am hoping that somebody (hopeful me) figures out how to take similar ideas and turn it into a real product/project. It has the potential to solve very important problems. There is important research, but translating from researching to product is very hard, and getting research to understand how to actually operate a network is a very high mountain to climb.
+I think languages to help describe policy like propane are really important and am hoping that somebody (hopeful me) figures out how to take similar ideas and turn it into a real product/project. It has the potential to solve very important problems. There is important research, but translating from researching to product is very hard, and getting research to understand how to actually operate a network is a very high mountain to climb.
 
 ## Conclusion
 
