@@ -18,17 +18,17 @@ Knowing if your network is healthy or not to a high degree of confidence is diff
 
 ## Definition of Healthy Network
 
-It's very hard to define a healthy network. We'll define it loosely as the ability for applications to be able to do what they want to do without the network causing trouble. That's probably good. The problem is that it is hard to measure. How do you measure from all applications, especially if you are something like EC2 and customers might be doing anything?
+Thought it's hard, we need to have some definition of a healthy network. We'll define it loosely as the ability for applications to be able to do what they want to do without the network causing trouble. That's probably good. The problem is that it is hard to measure. How do you measure from all applications, especially if you are something like EC2 and customers might be doing anything?
 
 It's often easier to know if your network is unhealthy. Sometimes that's obvious, everything is broken. Sometimes it's very subtle. The only way to really know if your network is healthy is the absence of unhealthy. In other words, if we don't know it's broken than it must be working fine. In some ways, that's all we can do. If that's so, then **we must be really confident that we have good ways to know when our network is unhealthy.**
 
 It's also not enough to say every failure means that the network is unhealthy. If you have redundancy throughout your network and lose a device then the network is is still healthy, so you also need to have ways to understand all the various events that you might receive and figure out which are the important ones to tell you that the network is unhealthy.
 
-Another important related question "Is my network behaving as expected?" This one can be even more subtle and complicated. It's important to think about because your network might be currently working correctly for all it's users, but what you expect, so when things break or fail, you will have a disaster you weren't expecting.
+Another important related question "Is my network behaving as expected?" This one can be even more subtle and complicated. It's important to think about because your network might be currently working correctly for all it's users, but not what you expect, so when things break or fail, you will have a disaster you weren't expecting.
 
 ## Measuring Health
 
-I'd guess most networking organization don't explicitly think about measuring if their network is healthy. They start instead by thinking about what they can monitor and how to know that things have failed. But of course just because something has failed doesn't mean that's a problem for the network. How do I decide what's a real problems? There are also problems in the network that aren't as obvious as a device or link down that we also need to know about. 
+I'd guess most networking organization don't explicitly think about measuring if their network is healthy. They start instead by thinking about what they can monitor and how to know that things have failed. But of course just because something has failed doesn't mean that's a problem for the network. How do I decide what's a real problem? There are also problems in the network that aren't as obvious as a device or link down that we also need to know about. 
 
 We want to know when the network is broken and affecting customers, but we also need to know when anything fails before it affects customers so that we can prevent customer outages. So we are kind of trapped. We want to collect all possible information to tell us that things are broken in the network, but we have to have a way to deal with all the information to decide what is important.
 
@@ -36,9 +36,9 @@ If my network is small I can just assume every device down is a pageable event. 
 
 ### All my data sources
 
-What do we need to know if our networking is healthy or unhealthy? We need a lot of different sources of data. We need device data, up-down data, event/syslog/snmptrap data. But we also need to be able to figure out which data is important and which events are important. **We have to have broad measurement to catch any outage, but also we need to be precise so that we can fix things quickly.**
+What do we need to know if our networking is healthy or unhealthy? We need a lot of different sources of data. We need device data, up-down data, and event/syslog/snmptrap data. But we also need to be able to figure out which data is important and which events are important. **We have to have broad measurement to catch any outage, but also we need to be precise so that we can fix things quickly.**
 
-There are a lot of data sources in the network,  some of them are harder to make useful than others. Syslog might be critical, but hard to make useful. I have experienced several very bad outages in which there was a message in syslog to notify us, but we'd never seen it before so we didn't know to look for it. **I wish software engineers for NOS vendors were oncall for their own products, I think things like that would happen less.**
+There are a lot of data sources in the network, some of them are harder to make useful than others. Syslog might be critical, but hard to make useful. I have experienced several very bad outages in which there was a message in syslog to notify us, but we'd never seen it before so we didn't know to look for it. **I wish software engineers for NOS vendors were oncall for their own products, I think things like that would happen less.**
 
 I know that I need data from several different sources to know if my network is healthy or not right now. I want to start with the obvious measuring device down, interface down, and standard interface monitoring, usually by SNMP.  Next I need to add event monitoring via SNMP traps and/or Syslog. This is harder to deal with because it's a lot of information and most of it doesn't tell me that something important has broken. It's usually important for going back and finding out what happened after an outage. After you learn which events give you the most information, then of course you can add those events as alerts.
 
@@ -46,7 +46,7 @@ There's more data that you probably need. In most networks there is no monitorin
 
 To do this all really well, you need to think about all the things that can fail, and make sure you have a way to monitor them all. Then you need to be able to figure out how to turn that data into figuring out what's important.
 
-Ideal list of data sources:
+List of data possible sources:
 - Fault monitoring -- SNMP or GNMI
 - Performance -- SNMP or GNMI
 - Event Monitoring -- SNMPtraps and Syslog
@@ -62,9 +62,9 @@ What other capabilities are necessary
  
 ### Do you need active monitoring
 
-Since we defined a healthy network as one that is not affecting application traffic, then creating active application traffic and measuring that seems a boog idea. Even with instrumenting all of your devices and getting all the data available, you might have an outage that you don't know about. Part of it is you might not know how to instrument everything and part is that there is more data than you can make sense of. However, it can be noisy and misunderstood. 
+Since we defined a healthy network as one that is not affecting application traffic, then creating active application traffic and measuring that seems a good idea. Even with instrumenting all of your devices and getting all the data available, you might have an outage that you don't know about. Part of it is you might not know how to instrument everything and part is that there is more data than you can make sense of. 
 
-Active monitoring or pingmesh is a really great data source. However, I'm not aware of any good active monitoring solutions that are widely available either commercially or open source. Active monitoring can be done in degrees. Some people still smokeping to actively monitor latency and loss of very particular IP addresses, usually to monitor WAN links. Inside a datacenter you can do active monitoring to try to find out when there are errors in your network that your others systems aren't telling you about. Very advanced active monitoring can actually pinpoint which devices in the network are misbehaving. To do that can be a huge amount of data and is a very hard task. I've seen a great system at Amazon, and it took years to develop. I don't know any commercial or open source offering for pingmesh. This is an area that I wish had good tools.
+Active monitoring or pingmesh is a really great data source. However, I'm not aware of any good active monitoring solutions that are widely available either commercially or open source. Active monitoring can be done in degrees. Some people still smokeping to actively monitor latency and loss of very particular IP addresses, usually to monitor WAN links. Inside a datacenter you can do active monitoring to try to find out when there are errors in your network that your others systems aren't telling you about. Very advanced active monitoring can actually pinpoint which devices in the network are misbehaving. To do that can be a huge amount of data and is a very hard task. I've seen a great system at Amazon, and it took years to develop. This is an area that I wish had good tools.
 
 Active monitoring can be tricky because it can be noisy. If you already know you have a problem, it is great for isolating the problem. If the problem is remote site monitoring, usually the loss rate is so high it's easy to see. But in a datacenter with .5% packet loss affecting customers, or a small number of prefixes that are null routing, it's very hard to make an active monitoring system that can be precise and accurate.
 
@@ -74,7 +74,7 @@ Ideally high quality active monitoring would be widely available, but it isn't. 
 
 There are many challenges to network monitoring. My number 1 issue is that network device vendors don't takes that kind of monitoring seriously. I used to ask vendors if they had a counter for every possible packet drop. I've not gotten a good answer. At one meeting, the hardware people said "Of Course!" and the software people said: "We do?". It's actually hard to present those counters in a useful way and not make mistakes like over-counting. However, it doesn't matter if it's hard, we have to convince everyone that it's required.
 
-Similarly, it's clear from network device syslog that whenever developers find errors they put error messages, but that doesn't mean the messages are useful, actionable, or organized in any sane way. THere's a difference between writing in my code that I found an error so I'll syslog, vs I need to be able to understand all syslog messages and translate that into something a human can understand and be able to act on. This is very difficult, I agree, but I'd appreciate more effort.
+Similarly, it's clear from network device syslog that whenever developers find errors they put error messages, but that doesn't mean the messages are useful, actionable, or organized in any sane way. There's a difference between writing in my code that I found an error so I'll syslog, vs I need to be able to understand all syslog messages and translate that into something a human can understand and be able to act on. This is very difficult, I agree, but I'd appreciate more effort.
 
 **Grey failures are especially hard.** I think active monitoring is great way to do this, but it is really really hard to do well. Even with active monitoring, having active monitoring that covers everything is almost impossible. Have you ever experienced an outage in which a small number of devices filled up their ECMP group tables? Even with active monitoring you'd have to know that for some prefixes for some neighbors they weren't using all their neighbors. Very hard to monitor with active monitoring.
 
@@ -93,9 +93,9 @@ You also don't want to wake some up for every fault, because it might not be imp
 
 ### Describing what you expect
 
-There are also a set of questions around if the network is as expected. If you just notice that the network is down or negatively effecting customers that's the symptoms. What if your network is sick, but you don't know it, and you want to prevent an outage before it happens? This requires being able to describe what you expect your network to be. I guess this would be preventative health. Or like you want to catch the cancer before there are 
+There are also a set of questions around if the network is as expected. If you just notice that the network is down or negatively effecting customers that's the symptoms. What if your network is sick, but you don't know it, and you want to prevent an outage before it happens? This requires being able to describe what you expect your network to be. We can call this preventative health.
 
-Another reason why this is important is that by describing what you expect you give your monitoring, alarming, and alerting services better data so that they can know when to page you. For instance, it would be nice to say that for this layer of the network, in this datacenter, I need to make sure that 3/4 of my devices (or interfaces or BGP sessions, etc.) are up at all times. In that way, you've given your alarming system better metadata about your intentions and assumptions about what matters.
+Another reason why this is important is that by describing what you expect you give your monitoring, alarming, and alerting services better data so that they can know when it's important to you. For instance, it would be nice to say that for this layer of the network, in this datacenter, I need to make sure that 3/4 of my devices (or interfaces or BGP sessions, etc.) are up at all times. In that way, you've given your alarming system better metadata about your intentions and assumptions about what matters.
 
 ## I need more tools
 
@@ -107,7 +107,7 @@ If I now know when my network is healthy, I want to troubleshoot more quickly an
 
 We've been working on Suzieq for Network observability.  Right now it has fault information like device/interface/session up/down and we have a status page in the GUI with count of things that are up and down. We will be adding an alarm page to keep track of which things are broken.
 
-Suzieq is collecting operational state data, which I think a lot of networks don't monitor. This allows things such as more precision about what has failed.
+Suzieq collects operational state data, which I think a lot of networks don't monitor. This allows things such as more precision about what has failed.
 
 Suzieq also has asserts, in which we have described rules that need to be true for correctness. It has rules like the MTUs of interfaces connected to each other need to be the same, and you can't have overlapping OSPF router IDs. This helps find and prevent problems by having describing some things about your network that you know should be correct.
 
