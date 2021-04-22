@@ -4,7 +4,7 @@ comments: true
 author: Justin Pietsch
 title: Is my Network Healthy?
 excerpt: Do you ask "Is my network healthy?" Do you know how to answer that well?
-description: Knowing if your network is healthy or unhealthy is hard to do but critical in operating a well run network.
+description: Knowing if your network is healthy or unhealthy is hard to do but critical in operating a well run network. It will help focus on what is important to making a better network that is more available for your customers.
 ---
 Do you ask **"Is my network healthy?"** Do you know how to answer that well? This is a critical question, but a hard and confusing one to answer well. It's also one that I think most people don't ask explicitly and should. What does it even mean that the network is healthy? And if I figure that out, how do I answer that question? I probably don't have the systems to answer that question well. Is it my responsibility? We have to figure out what it means to know that your network is healthy. 
 
