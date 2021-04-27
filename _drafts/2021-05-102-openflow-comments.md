@@ -9,11 +9,11 @@ description:
 
 I recently saw a blog post [celebrating Openflow](https://opennetworking.org/news-and-events/blog/openflow-catalyst-that-kickstarted-the-sdn-transformation/) and it's contribution to networking. I'm not sure talking about Openflow at this point is worth anybody's time, but for some reason, I'm going to. 
 
-Openflow is a bad idea, it was always a bad idea, and it caused (and still causes) a big problem in our industry. Openflow does not solve a real problem. The abstraction is wrong and makes managing the networks and operating them worse than before it. That wouldn't be so bad, but it's also taken attention away from solving real problems, and that's why it's dangerous.
+**Openflow is a bad idea, it was always a bad idea**, and it caused (and still causes) a big problem in our industry. Openflow does not solve a real problem. The abstraction is wrong and makes managing the networks and operating them worse than before it. That wouldn't be so bad, but it's also taken attention away from solving real problems, and that's why it's dangerous.
 
 Yes, I do know that Google used Openflow in their Orion SDN controller. However, I continue to think there are other ways they could have achieved the same thing. 
 
-This is a post that's hard to write well. This topic makes me angry and so it's had to write something that everyone can read, but there are people I want to read this who can be offended by my opinion or just write me off because I disagree and am emotional about it. I want a real discussion because I think there are some really important points for our industry. It doesn't really matter that I don't like Openflow, it matters why I don't like Openflow
+This is a post that's hard to write well. This topic makes me angry and so it's had to write something that everyone can read, but there are people I want to read this who can be offended by my opinion or just write me off because I disagree and am emotional about it. I want a real discussion because I think there are some really important points for our industry. It doesn't really matter that I don't like Openflow, **it matters why I don't like Openflow.**
 
 
 ## Why is Openflow a bad idea?
@@ -62,7 +62,9 @@ So the problem for me with Openflow is not that I want networking in the network
 
 # Why not listen to me?
 
-Google had an SDN controller for a while: Orion. ANd Larry Peterson is a lot smarter and more famous than me.
+Google had an SDN controller for a while: Orion. 
+
+And Larry Peterson is a lot smarter and more famous than me.
 
 ## What should we be working on if it isn't Openflow
 

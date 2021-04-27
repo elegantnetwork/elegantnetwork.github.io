@@ -4,7 +4,7 @@ comments: true
 author: Justin Pietsch
 title: Who decides if the network is unhealthy?
 excerpt: It's very important that the networking team that owns the design, build, and operations of the network is the responsible to know that the network it is operating is not working before it's customers do. This approach to networking will drive a network that is better monitored, probably better designed, and almost assuredly better for it's customers.
-description: Do you rely on your customers to tell you our network is not working or do you take responsibility for network health?
+description: Do you rely on your customers to tell you our network is not working or do you take responsibility for network health? The networking team that owns the design, build, and operations of the network is the responsible to know that the network it is operating is not working before it's customers do.
 ---
 When I started in networking at Amazon in the fall of 2002, when we were paged for a problem it was because one of the users/services on the network was having problems and they thought it was the network. We never knew ourselves that the network was broken until somebody told us it was. Maybe it was the website was down, or a Fulfillment Center was down, or somebody was having some weird kind of software problem they didn't understand. We did not have good tools to identify for ourselves that the network was misbehaving before our (internal) customers told us.
 

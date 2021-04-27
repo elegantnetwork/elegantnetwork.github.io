@@ -8,7 +8,7 @@ description: Can Networking be a good Market for an open source company, or any 
 ---
 Networking is critical to everything in IT, yet it doesn't get the same amount of attention or understanding as other parts of IT or even IT infrastructure. We need better networks and better network operations. Dinesh and I don't think the problem is that we are missing protocols or better devices. The problem is that there aren't the tools necessary to operate networks well. Because of that, the processes and procedures for networking are remedial and don't elevate networking to where it needs to be.
 
-Networking is unlike other parts of IT for a lot of reasons. It is so critical to everything these days, but doesn't get the attention and dollars that other pieces do. It's hard to measure how well you are doing, and it's just a small percentage of your IT people. It's also still different in the way solutions are evaulated and purchased. In the last 10 years, in other parts of IT there's been a lot of focus on what software engineers want and a lot of Enterprise, B2B marketing and sales are now directly focused at them. That's not true for networking, but it's a critical space that **needs much better software.**
+Networking is unlike other parts of IT for a lot of reasons. It is so critical to everything these days, but doesn't get the attention and dollars that other pieces do. It's hard to measure how well you are doing, and it's just a small percentage of your IT people. It's also still different in the way solutions are evaluated and purchased. In the last 10 years, in other parts of IT there's been a lot of focus on what software engineers want and a lot of Enterprise, B2B marketing and sales are now directly focused at them. That's not true for networking, but it's a critical space that **needs much better software.**
 
 We need to [Get the Network Out of the Way](https://elegantnetwork.github.io/posts/network-out-of-the-way/). Networks are about 10% of the cost of your IT infrastructure, but have an outsized effect on the whole company. If you have an outage in the network, it breaks everything. If the network can't keep up with the changes necessary for the rest of the business, it slows everything down. You can't operate your network well without better tools than you currently have. You just can't. Our tools are not good enough for how important networking is.
 
@@ -30,7 +30,7 @@ Ok, but we are in networking. The market is smaller, it is not as far along as t
 
 We have Suzieq as an open source project. It's hard to measure exactly how many people are using it. What we can measure is 300+ github stars, 2800+ docker container downloads, 100+ people in our slack. We can track github stars and you can see how it's growing.
 
-<iframe width="800" height="600" src="https://star-history.t9t.io/#netenglabs/suzieq&Icinga/icinga2&NagiosEnterprises/nagioscore&cilium/cilium&hashicorp/vagrant&batfish/batfish"></iframe>
+<iframe width="800" height="600" src="https://star-history.t9t.io/#netenglabs/suzieq&Icinga/icinga2&NagiosEnterprises/nagioscore&cilium/cilium&hashicorp/vagrant&batfish/batfish"> </iframe>
 
 If you compare Suzieq to other networking projects on that graph, the slope is a little steeper. If you compare those two compute projects to networking, networking slopes are shockingly smaller. So what do we do? We probably can never grow the community to be huge to drive sales. That has implications for our business model.
 
