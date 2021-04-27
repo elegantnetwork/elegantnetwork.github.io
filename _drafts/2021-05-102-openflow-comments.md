@@ -2,7 +2,7 @@
 layout: post
 comments: true
 author: Justin Pietsch
-title: Openflow: a dangerously bad idea
+title: "Openflow: a dangerously bad idea"
 excerpt: 
 description: 
 ---
