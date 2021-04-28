@@ -42,13 +42,15 @@ There are a lot of data sources in the network, some of them are harder to make 
 
 I know that I need data from several different sources to know if my network is healthy or not right now. I want to start with the obvious measuring device down, interface down, and standard interface monitoring, usually by SNMP.  Next I need to add event monitoring via SNMP traps and/or Syslog. This is harder to deal with because it's a lot of information and most of it doesn't tell me that something important has broken. It's usually important for going back and finding out what happened after an outage. After you learn which events give you the most information, then of course you can add those events as alerts.
 
-There's more data that you probably need. In most networks there is no monitoring for operational state. Are all the BGP sessions that you expect to be up up? Or OSPF neighbors, or eVPN state, etc.? If you don't measure all the important state, you can't know that things have failed and it's harder to be precise and actionable.
+You have too much data already. It's hard to sift through all the data that you have to make meaningful decisions.
+
+You also know that there is more data that you need. In most networks there is no monitoring for operational state. Are all the BGP sessions that you expect to be up up? Or OSPF neighbors, or eVPN state, etc.? If you don't measure all the important state, you can't know that things have failed and it's harder to be precise and actionable.
 
 To do this all really well, you need to think about all the things that can fail, and make sure you have a way to monitor them all. Then you need to be able to figure out how to turn that data into figuring out what's important.
 
 List of data possible sources:
-- Fault monitoring -- SNMP or GNMI
-- Performance -- SNMP or GNMI
+- Fault monitoring -- SNMP or gNMI
+- Performance -- SNMP or gNMI
 - Event Monitoring -- SNMPtraps and Syslog
 - Active Monitoring
 - Operational State Data -- Suzieq

@@ -30,7 +30,8 @@ Ok, but we are in networking. The market is smaller, it is not as far along as t
 
 We have Suzieq as an open source project. It's hard to measure exactly how many people are using it. What we can measure is 300+ github stars, 2800+ docker container downloads, 100+ people in our slack. We can track github stars and you can see how it's growing.
 
-<iframe width="800" height="600" src="https://star-history.t9t.io/#netenglabs/suzieq&Icinga/icinga2&NagiosEnterprises/nagioscore&cilium/cilium&hashicorp/vagrant&batfish/batfish "> </iframe>
+[![Github Stars](/assets/images/2021-05-network-startup/github-stars.png)](https://star-history.t9t.io/#netenglabs/suzieq&Icinga/icinga2&NagiosEnterprises/nagioscore&cilium/cilium&hashicorp/vagrant&batfish/batfish)
+
 
 If you compare Suzieq to other networking projects on that graph, the slope is a little steeper. If you compare those two compute projects to networking, networking slopes are shockingly smaller. So what do we do? We probably can never grow the community to be huge to drive sales. That has implications for our business model.
 
