@@ -1,7 +1,7 @@
 ---
 layout: post
 comments: true
-author: Dinesh Dutt, Ratul Mahajan
+author: Ratul Mahajan, Dinesh Dutt
 title: Closing the Loop on Testing Network Changes
 excerpt: closed loop automated testing is key to making safe network changes
 description: Rigorous testing via automated closed-loop testing makes the change process highly resilient and catches problems as early as possible
