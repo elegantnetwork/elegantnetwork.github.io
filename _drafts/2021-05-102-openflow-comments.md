@@ -9,18 +9,17 @@ description:
 
 I recently saw a blog post [celebrating Openflow](https://opennetworking.org/news-and-events/blog/openflow-catalyst-that-kickstarted-the-sdn-transformation/) and it's contribution to networking. I'm not sure talking about Openflow at this point is worth anybody's time, but for some reason, I'm going to. 
 
-**Openflow is a bad idea, it was always a bad idea**, and it caused (and still causes) a big problem in our industry. Openflow does not solve a real problem. The abstraction is wrong and makes managing the networks and operating them worse than before it. That wouldn't be so bad, but it's also taken attention away from solving real problems, and that's why it's dangerous.
+**Openflow is a bad idea, it was always a bad idea**, and it caused (and still causes) a big problem in our industry. Openflow does not solve a real problem that operators have in their networks. The abstraction of a flow is the wrong abstraction for thinking about forwarding decisions and makes managing the networks and operating them worse than before it. That wouldn't be so bad, but it's also taken attention away from solving real problems, and that's why it's dangerous.
 
-Yes, I do know that Google used Openflow in their Orion SDN controller. However, I continue to think there are other ways they could have achieved the same thing. 
+Yes, I do know that Google used Openflow in their Orion SDN controller. However, I continue to think there are other ways they could have achieved the same thing that would have been much better ways of 
 
 This is a post that's hard to write well. This topic makes me angry and so it's had to write something that everyone can read, but there are people I want to read this who can be offended by my opinion or just write me off because I disagree and am emotional about it. I want a real discussion because I think there are some really important points for our industry. It doesn't really matter that I don't like Openflow, **it matters why I don't like Openflow.**
 
-
 ## Why is Openflow a bad idea?
 
-Openflow points out some important problems, but solves them in a terrible way.  Openflow was made so that researchers could more easily write new ways of directing traffic. That's not a good reason to change production networking. They came up with the idea of a centralized controller. Centralized controllers have an important role in some parts of the network, but not all. 
+Openflow points out some important problems, but solves them in a terrible way. Openflow was made so that researchers could more easily write new ways of directing traffic. That's not a good reason to change production networking. They came up with the idea of a centralized controller. Centralized controllers have an important role in some parts of the network, but not all. 
 
-In almost every network, **flows are the wrong abstractions to make decisions on**. They are the right abstractions for load balancers and firewalls, which are generally on the edge of the network, but for routing inside of a network, flows are the wrong abstraction.
+In almost every network, **flows are the wrong abstractions to make decisions on**. They are the right abstractions for load balancers and firewalls, which are generally on the edge of the network, but for routing inside of a network, flows are the wrong abstraction. You cannot scale flow based forwarding decisions.
 
 We've known this as an industry. In the 90s, Cisco had routers and switches that were flow based. The original use of Netflow was to make forwarding decisions. However, the industry quickly learned this is a very bad idea. There will always be many orders of magnitude more flows than there are routes in the routing table. Also, a very important piece of scaling IPv4 routing is route aggregation. How do you aggregate flows? Can you aggregate flows? Well, I mean you can aggregate them into IP addresses, but  why didn't you start that way in the first place?
 
@@ -28,13 +27,13 @@ In the early 2000s a company called Caspian Networks tried to sell routers that 
 
 For Openflow to be flow based, and then worse off to have the first packet of every flow go to a centralized controller is a terrible idea. This was known in the industry.
 
-When EC2 launched, well, maybe I shouldn't tell that story in public. It involves flow routing and first packets going to an under powered separate processor and a lot of pain and suffering. Daily meeting with not-enough-progress, sad, very sad customers, etc. Oh yeah, and the very first ... yeah, not that one either
+When EC2 launched in 2006, well, maybe I shouldn't tell that story in public. It involves flow routing and first packets going to an under powered control processor and a lot of pain and suffering. Daily meeting with not-enough-progress, sad, very sad customers, etc. Oh yeah, and the very first ... yeah, not that one either.
 
-I hate when bad ideas come back and are trumpeted by people  as some brilliant idea. It wasn't a good idea the first time, it isn't a good idea now.
+I hate when bad ideas come back and are trumpeted by people as some brilliant idea. It wasn't a good idea the first time, it isn't a good idea now.
 
-We wasted so much time and attention on an idea that **could never work**. It cannot scale. It adds a lot of complexity. And let me say it again, the first packet went to a separate controller.  That should never have shipped.
+We wasted so much time and attention on an idea that **could never work**. It cannot scale. It adds a lot of complexity. And let me say it again, the first packet went to a separate controller. That should never have shipped.
 
-I don’t want the control that it seems to imply. If you remember early Openflow demos, or especially it’s predecessor Ethane, they were about directing flows specifically  through a network.  I don’t ever want that. I just want connectivity everywhere. In a datacenter that's what you want.
+I don’t want the control that it seems to imply. If you remember early Openflow demos, or especially it’s predecessor Ethane, they were about directing flows specifically  through a network. I don’t ever want that. I just want connectivity everywhere. In a datacenter that's what you want.
 
 In WAN you do want more control, but Openflow isn't a good abstraction for that. Traffic engineering is better with a controller, because it is possible to make better decisions with a centralized view, so that part of SDN right, but not first packet goes to the controller. That's still terrible.
 
