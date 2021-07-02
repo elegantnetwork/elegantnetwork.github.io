@@ -11,6 +11,8 @@ I think Network as an industry, discipline, and practice is broken, very badly b
 
 I want a radically different industry, but I don't know how to describe it, much less find the people who can help build it. Obviously, there is a lot that is working since you know, the internet and networks rule the world. But I think we need much much better than we have to get the network out of the way
 
+Better tools and better engineering. I think better engineering requires better tools. the word tools can get a bad rap because people build specific tools for a specific problem without thinking ahead and that's not what we are talking about here. There are pro
+
 
 First off, the protocols aren't the problem. They work just fine enough. We have the pieces we need to build. Or at least, those aren't nearly as big a problem as that we don't have are systematic ways to design, build, scale, and operate networks. I honestly think that the individual router hardware, OS, and software are pretty low on what should be the focus, and they are almost the complete focus. There needs to be changes in the way that we think about networking and how we design, build, scale, and operate networks
 
@@ -45,7 +47,7 @@ There are design and build problems and there are operations problems. I kind of
 
 I'm going to focus on the design side, because I think with good design tools everything gets better. Maybe you can't wait for good design tools and need better monitoring, observability, etc. That's also necessary, but an article for another day.
 
-Why is design side so important? We need to be able to do engineering and study tradeoffs. After we know the network, we need to be able to describe our assumptions and assertsion. From this, we can better validate and monitor the network. You can't validate that the network is working correctly if you can't describe how it should be working. Using config validation is wildly insufficient: how do you know that what you configured will do what you expect?
+Why is design side so important? We need to be able to do engineering and study tradeoffs. After we know the network, we need to be able to describe our assumptions and assertion. From this, we can better validate and monitor the network. You can't validate that the network is working correctly if you can't describe how it should be working. Using config validation is wildly insufficient: how do you know that what you configured will do what you expect?
 
 
 ## What's wrong
@@ -55,11 +57,15 @@ Networking is different. The main building blocks (network devices like routers 
 
 Some part of it is the missing engineering. Some large part is that we don't have tools that allow a better way of system wide thinking. Some of it is that measuring and monitoring is still difficult and there is a lot of data.
 
-I think there's a big problem with our hype cycle. THings get hyped that can't work out and waste a lot of time and energy for operators trying to guess what will work. 
+I think there's a big problem with our hype cycle. Things get hyped that can't work out and waste a lot of time and energy for operators trying to guess what will work. 
 
 How do we become better engineers? I think it's better tools and better approaches.
 
-## Examples
+
+It's hard to design a network that is easy to build, scale and operate well. I don't think that when people are designing the network they are really thinking about those things. Not every place scales at the rate of AWS over the last decade, but you have to be thinking about what the changes are going to be.
+
+
+## Examples of network engineering
 I'd like to try out different routing protocols in my three tier clos
 
 
@@ -103,11 +109,11 @@ THe network is not out of the way
 When the Intel 486 came out in 1989, I remember seeing a magazine cover with the chip on the front and the article describing 1Million transistors. The blew my teenage mind. We are now at the place in which there are networks with around that many devices. And routers are a lot more complicated than transistors.
 
 
-Most networks don't have 1 M devices, but I think even if you have 10, or 100, and certaily by 1000 you should have real design tools.
+Most networks don't have 1 M devices, but I think even if you have 10, or 100, and certainly by 1000 you should have real design tools.
 
 ## What is needed for all networks, large or small
 
-### What do extremly large networks need
+### What do extremely large networks need
 
 
 ## What about design tools
@@ -136,6 +142,9 @@ Augtera, but I haven't looked at it, somebody I know thinks it's really interest
 
 ### Design tools
 A way of describing high level design intent, assumptions, decisions, and from that be able to create device configuration for any device.
+
+
+We need the centralized control that SDN promised, but not necessarily in a centralized controller. You want to configure and manage everything together centrally, but you can still have the same distributed routing system.
 
 routing protocol policy in specific needs a system wide
 
