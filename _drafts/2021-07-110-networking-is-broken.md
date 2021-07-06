@@ -2,12 +2,12 @@
 layout: post
 comments: true
 author: Justin Pietsch
-title: Networking is Broken
+title: Understanding Networks
 excerpt:
-description:
+description: Networking is broken. It's too hard to understand networks, which makes it too hard to design, build, scale, and operate networks the way that we need for today's business and society.
 ---
 
-IP Networking as an industry, discipline, and practice is broken, very badly broken. I think it's critical to change how this industry works. I want to at least start talking about it. I don't even know how to describe all the things I think that are broken. At a minimum, I want a much more rigorous engineering approach to networking. That doesn't mean we have to slower, but it means we need better ways of asking questions about our networks.
+IP Networking as an industry, discipline, and practice is broken, very badly broken. I think it's critical to change how this industry works. I want to at least start talking about it. My best idea about what is broken and what needs to change is that networks are too hard to understand. I think network design is all about understanding. Can I understand what I did 3 months ago, 3 years ago, etc? Can somebody new understand waht I did? Can I understand what will happen as the network changes? Do I understand if the network actually do what is required of it?
 
 I want people to know that we can and should have a lot better. It's possible, but we need to do a lot of work to get there.
 
@@ -17,11 +17,7 @@ I want a radically different industry, though I can't completely describe it, mu
 
 I want to begin by focusing on design and the lack of design tools and better processes. There are design and build problems and there are operations problems. I kind of want to separate them. operations tools also need to get better, but we'll start with design tools. I think everything starts from our lack of good design tools. Better design tools give us better foundations and structures to make better decisions.
 
-Why is design so important? We need to be able to do engineering and study tradeoffs. After we know the network, we need to be able to describe our assumptions and assertion. From this, we can better validate and monitor the network. You can't validate that the network is working correctly if you can't describe how it should be working. Using config validation is wildly insufficient: how do you know that what you configured will do what you expect?
-
-At Amazon when we were first designing the very large 3-tier Clos that makes up the aggregation network in the Amazon/AWS datacenters, some people were saying that recabling as we grow isn't that big a deal, and that datacenter techs aren't necessarily that expensive. True, however, recabling is a very tedious and potentially error prone process that is invasive and potentially very damaging. I tried to design a network that didn't require recabling. I didn't completely succeed because there were some scaling issues I couldn't deal with: I would have had to overbuild in many cases to avoid recabling in a couple cases.
-
-However, Amazon/AWS has also built a sophisticated system for checking when cabling is done. A new network is thousands of cables and optics, making sure they are all cabled correctely and also that all the optics and cables work well is super tedius and so takes software to make it better. Again, when we made the trade off to build large Clos networks from Single ASIC pizza boxes rather than large chassis, the tradeoff is that you have a lot more cables, potentialy an order of magnitude more, so you have to do something different and hopefully use software to make things better.
+Why is design so important? We need to be able to do engineering and study tradeoffs. After we know the network, we need to be able to describe our assumptions and assertion. From this, we can better validate and monitor the network. You can't validate that the network is working correctly if you can't describe how it should be working. Using config validation is wildly insufficient: how do you know that what you configured will do what you expect? If you can write down all your assumptions and expectations, then we can use software to make sure those are true. **How else can you understand your network unless you first understand your own assumptions and expecation and can then verify that those are true?**
 
 I want a system engineering approach to networking. Think of the whole network as a system. How you make a change to one part effects another, so how can you understand those trade offs? I think design and architecture is not really given enough attention and instead operations and tinkering rule the day.
 
@@ -32,15 +28,22 @@ I want a system engineering approach to networking. Think of the whole network a
 
 What's wrong?
 * lots of complexity
+* not engineered
 * missing software
 * don't know how to describe what better software we need
 * it's not the protocols
 * we give way too much attention to the devices, and not enough on the whole network -- missing systems engineering
 
+Networks are complex and there are lots of interactions. They change over time. Even if you intend for them to stay the same, parts fail, bugs become present, software changes. Almost always there are new requirements for the network. How do we understand the network in that case?
+Most of this post is arguing that we need better software, until we get that then we have to keep things very simple, as far as I'm concerned. However, we don't have good design software and very few networks are as simple as possible. So we are trapped in the worst of both worlds; people won't make the network simple and they don't have the software to model and help with understanding
 
-I struggle to describe this coherently, and I've been noodling on it for over a decade.
-Network Engineers and operators are like plumbers, but you wouldn't want plumbers architecting, designing, and building a city water works.
-No other engineering discipline has no design tools. Can you image sewers or bridges or cars without software design tools these days? Why don't we have design tools for networks? They are very complicated with pottentially lots of pieces, it sure seems like design tools would be useful.
+
+Of course there are multiple dimensions and networking can get really complex, which makes understanding difficult. I want to just talk about IP connectivity. But of course there's all kinds of virtual networking for containers, Cloud computing, etc. Load balancing, firewalls, etc. There's always new technologies that need to be considered and encorporated. So it's hard to even describe what all the field covers. This makes it hard to be complete and and we won't all agree on where to start.
+
+
+Network Engineers and operators are like plumbers, and you wouldn't want plumbers architecting, designing, and building a city water works.
+No other engineering discipline has no design tools. Can you image sewers or bridges or cars without software design tools these days? Why don't we have design tools for networks? They are very complicated with pottentially lots of pieces, it sure seems like design tools would be useful. Without good software to help us manage the complexity we have to rely on our brains to keep up. I for one cannot keep up with complicated networks. I just don't have the memorization. When we started building our large scale 3-tier Clos in AWS to be our agggregation layer, I fought over and over to make it super simple so that I could model in my head what was going to happen. I spent weeks trying to argue against a practical compromise that was necessary because it was one more complexity that I couldn't keep in my head over time. If we had better software systems to help model these, then it's less necessary.
+
 
 We are missing software to help design, build, scale, and operate networks. I think this is the biggest problem. Why does networking seem to uniquely be missing the quality of software it needs? It's clearly important enough to merit the software. My best guess is that for software engineers it's much easier to build things that they understand. Software engineers understand word processors and spreadsheets, and they really understand compilers and operating systems. But they have no idea how to actually operate a network. And unless you try really really hard, it's too hard to understand networking to know what software is necessary. At the same time, network engineers are **TERRIBLE** at describing what they need. Actually, I think they don't know what they need, they ask for things that seem to make life more complicated, not less complicated overall. I think more people, especially engineers, are bad at asking for what they need. They usually ask for a specific solution, when they don't understand the other field so they don't understand the tradeoffs being made there. Instead if they **described the problems that they had rather than asking for a better solution** I think we'd make a lot of progress.
 
@@ -48,40 +51,32 @@ We are missing software to help design, build, scale, and operate networks. I th
 The protocols aren't the problem. They work fine enough. Or at least, those aren't nearly as big a problem as that we don't have are systematic ways to design, build, scale, and operate networks. I honestly think that the individual router hardware, OS, and software are pretty low on what should be the focus, and they are almost the complete focus. There needs to be changes in the way that we think about networking and how we design, build, scale, and operate networks.
 
 
-One of the problems, of course is there are multiple dimensions and networking can get really complex. I want to just talk about IP connectivity. But of course there's all kinds of virtual networking for containers, Cloud computing, etc. Load balancing, firewalls, etc. There's always new technologies that need to be considered and encorporated. So it's hard to even describe what all the field covers. This makes it hard to be complete and and we won't all agree on where to start.
-
-
 The devices are the least interesting part of the network, but they get all the attention. We need to be systematic and understand the whole network as a system, not just one particular piece. It's not that devices aren't interesting, I care about ASICs, and I care about protocol stacks, etc. However, these main building blocks are very complicated so the interactions of all the pieces throughout the network and how they are interact is critical to understand, and right now it's too hard to understand how they interact especially as things change, and there is always change.
-
-Some part of it is the missing engineering. Some large part is that we don't have tools that allow a better way of system wide thinking. Some of it is that measuring and monitoring is still difficult and there is a lot of data.
 
 I think there's a big problem with our hype cycle. Things get hyped that can't work out and waste a lot of time and energy for operators trying to guess what will work.
 
 
-It's hard to design a network that is easy to build, scale and operate well. I don't think that when people are designing the network they are really thinking about those things. Not every place scales at the rate of AWS over the last decade, but you have to be thinking about what the changes are going to be.
+## Why don't we have much better?
 
+This is the most confusing question for me. It could be because we have good enough. I know this isn't true for big networks like Amazon, but most people don't have the same problems, so do we have good enough? I don't think so, no matter the network size. Why are we decades behind other fields? Network engineers do not know how to ask for what they need, and software engineers do not know how to operate networks. But there's something else
+
+Network engineers like to tinker, many like to tinker a lot. That kind of tinkering is very useful if it leads to better understanding. But if you do continue to tinker and tinker and not use that to to think systematically that is the problem. I don't think most network engineers even know that they should really be thinking about the whole network, they have no examples and there is no real training.
+
+I think the solution to much of our problems is software, so why aren't network engineers begging for something better? Some part of it is that software for networking comes and goes; it's totally unreliable. What is reliable is that Cisco, Juniper, and Arista will be around, that BGP and OSPF will be around, so that learning how to configure those things will be around. Design software that requires you to think differently is hard work and what real benefit will it be? I don't know how to get around this.
 
 
 ### What about SDN
 
-SDN does describe some real problems, but much of the SDN solutions are a waste of time. Openflow is a disaster, I might talk about that some other day. I hate how much attention really bad ideas get and how much they waste and how far we are because so many of the "future" things are just bad ideas. However, being able to "program the whole network as a distributed system" is a good idea, but you can do that with the current protocols we have if you build a management system that can model the network. I do think one of the big problems in networking is that we can't easily think about the whole system.
+SDN does describe some real problems, but much of the SDN solutions are a waste of time. Openflow is a disaster, I will try to write a post  about that some other day. I hate how much attention really bad ideas get and how much they waste and how far we are because so many of the "future" things are just bad ideas. However, being able to "program the whole network as a distributed system" is a good idea, but you can do that with the current protocols we have if you build a management system that can model the network. I do think one of the big problems in networking is that we can't easily think about the whole system.
 
 The biggest problem with SDN is that it is too much hype, so nobody knows what it means. Relatedly, some of the purpose of SDN is to engineer networks without network engineers involved, but that really does't work.
 
-## Why don't we have much better?
-
-This is the most confusing question for me. Why are we decades behind other fields? Network engineers do not know how to ask for what they need, and software engineers do not know how to operate networks. But there's something else
-
-Network engineers like to tinker, many like to tinker a lot. That kind of tinkering is very useful if it leads to better understanding. But if you do continue to tinker and tinker and not use that to to think systematically that is the problem.
-
-
-
 ## What do we need?
 
-My best guess is that we need better tools and better engineering. I think better engineering requires better tools. the word tools can get a bad rap because people build specific tools for a specific problem without thinking ahead and that's not what we are talking about here. What other engineering discipline has such terrible tools? Many of them have math and equations, and they all have software to help them design and simulate. Where are our design tools?
+We need better tools and better engineering, they go hand in hand. In my experience better engineering requires better tools. The word tools can get a bad rap because people build specific tools for a specific problem without thinking ahead and that's not what we are talking about here. What other engineering discipline has such terrible tools? Many of them have math and equations, and they all have software to help them design and simulate. Where are our design tools?
 
 
-I'm demanding that network engineering be an engineering discipline, and not just people who read books from vendors and do what the vendor says. Engineering is about tradeoffs, you must know what tradeoffs you are making and not just following a recipe that somebody else, who isn't a cook (in this analogy I mean a network operator), made for you. There are probably plenty of networks  that going to Cisco and doing what they tell you is enough. But there are a lot of places in which that isn't enough but is still going on. (Using Juniper or Arista or ?? is a little better, at least you are thinking about some tradeoffs, but not much.)
+I'm demanding that network engineering be an engineering discipline, and not just people who read books from vendors and do what the vendor says. Engineering is about tradeoffs, you must know what tradeoffs you are making and not just following a recipe that somebody else, who isn't a cook (in this analogy I mean a network operator), made for you. There are probably plenty of networks  that going to Cisco and doing what they tell you is enough. But there are a lot of places in which that isn't enough but is still going on. (Using Juniper or Arista or ?? is a little better, at least you are thinking about some tradeoffs, but not much.) Similary, we need to pursue understanding our networks and understand waht will happen as they hange.
 
 
 Our industry focuses too much on per device configuration and not on how the whole system fits together. It's not systematic enough, because there is almost no way to be systematic.
@@ -89,7 +84,9 @@ Our industry focuses too much on per device configuration and not on how the who
 
 ## Examples of network engineering
 
-Engineering is the art of making tradeoffs. So I want to be able to ask a bunch of questions. How can I do that now? I don't know anything about real engineering disciplines, but I'd bet that they do a lot of what-if scenarios and simulations. In networking the best we can do is great engineerings on a whiteboard arguing about what will happen. This is very useful, and it works, but it's insufficient with how important networks. There's no technical reason that we can't make our decision with much better data, including numbers some times.
+Engineering is the art of making tradeoffs which means I want to be able to ask a bunch of questions. How can I do that now? I don't know anything about real engineering disciplines, but I'd bet that they do a lot of what-if scenarios and simulations. In networking the best we can do is great engineerings on a whiteboard arguing about what will happen. This is very useful, and it works, but it's insufficient with how important networks. There's no technical reason that we can't make our decision with much better data, including numbers some times.
+
+Here are some of the kinds of questions I'd like to be able to ask:
 
 
 ### Design time
@@ -115,15 +112,15 @@ I need to have a complex routing policy and I need to know that it's going to wo
 
 ## Systems Engineering
 
-There seems to me to be a engineering piece missing.
+As mentioned above, we focus too much on individual devices. What does the BGP configuration and policy need to be on this device? What we really need to be thinking about is how the whole network will behave. I think that's too hard right now, because we have to way to express system wide policy, we have no way to model what the whole network will do. It's easy to lab up with a single device (or maybe 2) to see if a configuration works. But you are missing how the whole network will work together.
 
-It's the engineering approach that's missing and there are not tools that enable it.
-
-
-Missing the global view, which is weird. Networking is about a whole network, but the focus of most discussion is per router configuration. There is no good way of describing
+We need a better approach to the network as a system.
 
 
 ## Automation isn't enough
+
+I think for many, they think that automation is the way to make networks better. I don't believe automation as is usually practiced makes understanding the network better. It just makes the mechanical processes done by humans done by computers, which can easily make the network harder to understand if not done well, if not done systematically.
+
 
 https://www.evernote.com/shard/s3/nl/221926/05034f9e-dac3-422c-8fb6-3dd7a5e850eb?title=automation%20isn't%20enough
 
@@ -197,7 +194,11 @@ maybe SD-WAN approaches solve this for the regular enterprise WAN needs. What I 
 What companies are actually trying to change networking and know what they are doing?
 
 
-I don't know everything. There might be solutions to some of the problems that I'm describing.ies are actually trying to change networking and know what they are doing?
-
-
 I don't know everything. There might be solutions to some of the problems that I'm describing.
+
+
+## Not sure what to do with this
+
+At Amazon when we were first designing the very large 3-tier Clos that makes up the aggregation network in the Amazon/AWS datacenters, some people were saying that recabling as we grow isn't that big a deal, and that datacenter techs aren't necessarily that expensive. True, however, recabling is a very tedious and potentially error prone process that is invasive and potentially very damaging. I tried to design a network that didn't require recabling. I didn't completely succeed because there were some scaling issues I couldn't deal with: I would have had to overbuild in many cases to avoid recabling in a couple cases.
+
+However, Amazon/AWS has also built a sophisticated system for checking when cabling is done. A new network is thousands of cables and optics, making sure they are all cabled correctely and also that all the optics and cables work well is super tedius and so takes software to make it better. Again, when we made the trade off to build large Clos networks from Single ASIC pizza boxes rather than large chassis, the tradeoff is that you have a lot more cables, potentialy an order of magnitude more, so you have to do something different and hopefully use software to make things better.
