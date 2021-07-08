@@ -124,7 +124,7 @@ No matter what you are doing or how you think about it, understanding your netwo
 1. Is your network behaving as expected?
 1. Make your network as easy to measure as possible.
 1. Monitor all the things that can fail.
-1. Figure out how to aggregate and corelate alarms.
+1. Figure out how to aggregate and correlate alarms.
 1. Keep innovating to make your ability to know if you network is healthy or unhealthy better.
 
 ## Suzieq
