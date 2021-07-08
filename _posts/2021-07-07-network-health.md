@@ -137,9 +137,3 @@ Try out [Suzieq](https://www.stardustsystems.net/suzieq/), the open source, mult
 2. If you think about knowing, at all times, if your network is healthy or unhealthy, how will that change your tools and the way that you operate  your network?
 3. Which of these problems do you have? Do you have enough data, but you don't have good alarm aggregation, filtering, etc.?
 
-## Conversation
-
-1. Do you have a good way of describing if your network is healthy or not?
-2. If you think about knowing, at all times, if your network is healthy or unhealthy, how will that change your tools and the way that you operate  your network?
-3. Which of these problems do you have? Do you have enough data, but you don't have good alarm aggregation, filtering, etc.?
-
