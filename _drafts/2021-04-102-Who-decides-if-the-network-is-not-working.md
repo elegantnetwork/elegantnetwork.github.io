@@ -3,20 +3,20 @@ layout: post
 comments: true
 author: Justin Pietsch
 title: Who decides if the network is unhealthy?
-excerpt: It's very important that the networking team that owns the design, build, and operations of the network is the responsible to know that the network it is operating is not working before it's customers do. This approach to networking will drive a network that is better monitored, probably better designed, and almost assuredly better for it's customers.
+excerpt: It's very important that the networking team that owns the design, build, and operations of the network is the responsible to know that the network it is operating is not working before it's customers do.
 description: Do you rely on your customers to tell you our network is not working or do you take responsibility for network health? The networking team that owns the design, build, and operations of the network is the responsible to know that the network it is operating is not working before it's customers do.
 ---
-When I started in networking at Amazon in the fall of 2002, when we were paged for a problem it was because one of the users/services on the network was having problems and they thought it was the network. We never knew ourselves that the network was broken until somebody told us it was. Maybe it was the website was down, or a Fulfillment Center was down, or somebody was having some weird kind of software problem they didn't understand. We did not have good tools to identify for ourselves that the network was misbehaving before our (internal) customers told us.
+When I started in networking at Amazon in the fall of 2002, when we were paged for a problem it was because one of the users/services on the network was having problems and they thought it was the network. We never knew ourselves that the network was broken until somebody told us it was. Maybe the website was down, or a Fulfillment Center was down, or somebody was having some weird kind of software problem they didn't understand. We did not have good tools to identify for ourselves that the network was misbehaving before our (internal) customers told us.
 
-We had some monitoring if our devices went down (IIRC it didn't cut us tickets) but we di have good alerting for more than that. I would guess that most networks rely on their users/customers to tell them if the network is not working. . Even before AWS came along, it wasn't really viable for Amazon.com's networking team to not know it was having problems until it's customers told it, but this is really hard to do well. Some of it was we just didn't have the software necessary to do the right monitoring, and in the early 2000s, Amazon networking was small and didn't have a lot of budget, so we couldn't build our own. That changed overtime, and for a long time it's been true that AWS Networking expects to find problems before it's internal users or external customers. It continually pursues that and takes it very seriously.
+We had some monitoring if our devices went down (IIRC it didn't cut us tickets) but we did not have good alerting for more than that. I would guess that most networks rely on their users/customers to tell them if the network is not working. Even before AWS came along, it wasn't viable for Amazon.com's networking team to not know it was having problems until it's customers told it, but this is really hard to do well. Some of it was we just didn't have the software necessary to do the right monitoring, and in the early 2000s, Amazon networking was small and didn't have a lot of budget, so we couldn't build our own. That changed overtime, and for a long time it's been true that AWS Networking expects to find problems before it's internal users or external customers. It continually pursues that and takes it very seriously.
 
-**It's very important that the networking team that owns the design, build, and operations of the network is responsible to know that the network it is operating is not working before it's customers do.** This approach to operating your network will drive a network that is better monitored, better designed, and  assuredly better for it's customers. Taking a more relaxed approach implies that you are not taking your network as seriously as it's importance in the business or community that you are supporting.
+**It's very important that the networking team that owns the design, build, and operations of the network is responsible to know that the network it is operating is not working before it's customers do.** This approach to operating your network will drive a network that is better monitored, better designed, and assuredly better for it's customers. Taking a more relaxed approach implies that you are not taking your network as seriously as it's importance in the business or community that you are supporting.
 
 Making this question primary will drive you to get better software to monitor your network. 
 
 ## Why does it matter who decides?
 
-I have lived in a world in which the networking team didn't have the ability to know when it was likely that the network was broken, and I have lived in a world in which the networking team usually knew when it was broken. When you know before your customers, you can move faster in fixing the network. Maybe even more importantly you gain trust of your customers because they can believe you when you say that it isn't the network that is broken. You gain control of your destiny. If you don't think you own knowing when your network is available or not you don't feel like you own making your network available or not.
+I have lived in a world in which the networking team didn't have the ability to know when it was likely that the network was broken, and I have lived in a world in which the networking team usually knew when it was broken. When you know before your customers, you can move faster in fixing the network. Maybe even more importantly **you gain trust of your customers** because they can believe you when you say that it isn't the network that is broken. You gain control of your destiny. If you don't think you own knowing when your network is available or not you don't feel like you own making your network available or not.
 
 As important as the network is to everything in business and society today, it's not okay that the networking team doesn't know when it's broken. Every network needs to move that direction. Networks are just too important not to have the right visibility into understanding the network better than customers. If you are unwilling for the majority of outages to be caught by network users, you have to think differently about networking, monitoring, and alerting, as well as network design.
 
@@ -44,10 +44,12 @@ If your management team is reluctant to invest in better ways to measure your ne
 
 ## Summary
 
+We want to keep raising the bar of what is expected of networking.
+
 1. You need to take responsibility to know that the network is broken before customers. Understand that this is critical to doing a good job and don't be satisfied with what you currently have. This is more important than keeping up with whatever latest feature from your network vendor.
 1. Own your destiny. 
 1. Think through what it will take to take the responsibility of knowing when the network is working or not.
 
 ## Suzieq
 
-Try out [Suzieq](https://www.stardustsystems.net/suzieq/), our open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), the open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
