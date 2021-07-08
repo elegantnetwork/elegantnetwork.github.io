@@ -31,7 +31,7 @@ Another important related question "Is my network behaving as expected?" This on
 
 Everything starts with Data. Data isn't everything, but you can't measure or act on network health without data. Different data allows different decisions.
 
-I'd guess most networking organization don't explicitly think about measuring if their network is healthy. They start instead by thinking about what they can monitor and how to know that things have failed. But of course just because something has failed doesn't mean that's a problem for the network. How do I decide what's a real problem? There are also problems in the network that aren't as obvious as a device or link down that we also need to know about. This isn't sufficient. It doesn't cover all the things that could fail in the network, the lack of faults doesn't mean you are okay. What else needs to be covered? The standard set of SNMP metrics is not enough to trully understand your network health.
+I'd guess most networking organization don't explicitly think about measuring if their network is healthy. They start instead by thinking about what they can monitor and how to know that things have failed. But of course just because something has failed doesn't mean that's a problem for the network. How do I decide what's a real problem? There are also problems in the network that aren't as obvious as a device or link down that we also need to know about. This isn't sufficient. It doesn't cover all the things that could fail in the network, the lack of faults doesn't mean you are okay. What else needs to be covered? The standard set of SNMP metrics is not enough to truly understand your network health.
 
 After you get all the data, then you have to translate it to an understanding of health. If my network is small I can just assume every device down is a pageable event. Every link down needs to be fixed as quickly as possible. But if your network gets big, that's not tenable. And people like to sleep, it's weird, so paging me for a device down when everything is okay is demoralizing. This isn't a good long term situation.
 
@@ -136,12 +136,10 @@ Try out [Suzieq](https://www.stardustsystems.net/suzieq/), the open source, mult
 1. Do you have a good way of describing if your network is healthy or not?
 2. If you think about knowing, at all times, if your network is healthy or unhealthy, how will that change your tools and the way that you operate  your network?
 3. Which of these problems do you have? Do you have enough data, but you don't have good alarm aggregation, filtering, etc.?
-tering, etc.?
-work.
 
 ## Conversation
 
 1. Do you have a good way of describing if your network is healthy or not?
 2. If you think about knowing, at all times, if your network is healthy or unhealthy, how will that change your tools and the way that you operate  your network?
 3. Which of these problems do you have? Do you have enough data, but you don't have good alarm aggregation, filtering, etc.?
-ch of these problems do you have? Do you have enough data, but you don't have good alarm aggregation, filtering, etc.?
+
