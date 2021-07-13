@@ -9,43 +9,37 @@ description:
 
 I recently saw a blog post [celebrating Openflow](https://opennetworking.org/news-and-events/blog/openflow-catalyst-that-kickstarted-the-sdn-transformation/) and it's contribution to networking. I'm not sure talking about Openflow at this point is worth anybody's time, but it brings up rancor in me.
 
-**Openflow is a bad idea, it was always a bad idea**, and it caused (and still causes) a big problem in our industry. Openflow does not solve a real problem that operators have in their networks. The abstraction of a flow is the wrong abstraction for thinking about forwarding decisions and makes managing the networks and operating them worse than before it. That wouldn't be so bad, but it's also taken attention away from solving real problems, and that's why it's dangerous.
+**Openflow is a bad idea, it was always a bad idea**, and it caused (and still causes) a big problem in our industry. Openflow does not solve a real problem that operators have in their networks. The abstraction of a flow is the wrong abstraction for thinking about forwarding decisions and makes managing the networks and operating them worse than before it. That wouldn't be so bad if it hadn't taken attention away from solving real problems, and that's why it's dangerous.
 
 This is a post that's hard to write well. This topic makes me angry and so it's had to write something that everyone can read, but there are people I want to read this who can be offended by my opinion or just write me off because I disagree and am emotional about it. I want a real discussion because I think there are some really important points for our industry. It doesn't really matter that I don't like Openflow, **it matters why I don't like Openflow.**
 
-## Why is Openflow a bad idea?
+I wish there was a way to rebuttal bad ideas. This is what I'm trying to do here.
 
+## Why is Openflow a bad idea?
 
 Openflow points out some important problems, but solves them in a terrible way Openflow was made so that researchers could more easily write new ways of directing traffic. That's not a good reason to change production networking. They came up with the idea of a centralized controller. Centralized controllers have an important role in some parts of the network, but not all. It's much easier to make traffic engineering decisions well in a centralized system. But Openflow was supposed to solve all kinds of problems which it doesn't solve.
 
-One of the purposes of Openflow is to have a standard API between control plane and forwarding plane. Why? I still don't know why I need that.
+One of the purposes of Openflow is to have a standard API between control plane and forwarding plane. Why? I still don't know why I need that. There are already standard enough ways to program routes, that is usually enough to get done what is necessary.
 
 In almost every network, **flows are the wrong abstractions to make decisions on**. They are the right abstractions for load balancers and firewalls, which are generally on the edge of the network, but for routing inside of a network, flows are the wrong abstraction. You cannot scale flow based forwarding decisions.
 
-We've known this as an industry. In the late 90s, Cisco had routers and switches that were flow based. The original use of Netflow was to make forwarding decisions. However, the industry quickly learned this is a very bad idea. There will always be many orders of magnitude more flows than there are routes in the routing table. Also, a very important piece of scaling IPv4 routing is route aggregation. How do you aggregate flows? Can you aggregate flows? Well, I mean you can aggregate them into IP addresses, but why didn't you start that way in the first place?
+We've known this as an industry. In the late 90s, Cisco had routers and switches that were flow based. The original use of Netflow was to make forwarding decisions. However, the industry quickly learned this is a very bad idea because you will run out of hardware resources and then your performance will crash. There will always be several orders of magnitude more flows than there are routes in the routing table. Also, a very important piece of scaling IPv4 routing is route aggregation. How do you aggregate flows? Can you aggregate flows? Well, I mean you can aggregate them into IP addresses, but why didn't you start that way in the first place?
 
-In the mid 2000s a company called Caspian Networks tried to sell routers that could optimize traffic based on flow data. I never understood that company, it was clearly a bad idea. I don't know anybody who bought their products, and they fizzled out.
+In the mid 2000s a company called Caspian Networks tried to sell routers that could optimize traffic based on flow data. I never understood that company, it was clearly a bad idea. I don't know anybody who bought their products, and they fizzled out. They promised specialized priority for specific flows, but again, how important is that? It's not worth the trade-offs.
 
 For Openflow to be flow based, and then worse off to have the first packet of every flow go to a centralized controller is a terrible idea. This was known in the industry.
 
-Very very early in EC2 some poor decisions were made and we had to deal with some terrible flow routing that we didn't understand, uncluding that the first packet of a flow had to go to a very slow processor. It was terrible, lots of suffering. Daily meeting with not-enough-progress, sad, very sad customers, etc. I'm not being abstract; flow based decision making through a network is non-scalable, I've felt the pain and the industry has already felt the pain before.
+Very early in EC2 some poor decisions were made and we had to deal with some terrible flow routing that we didn't understand, including that the first packet of a flow had to go to a very slow processor. It was terrible, lots of suffering. Daily meeting with not-enough-progress, sad, very sad customers, etc. The idea in this post that flows are a bad idea is not abstract; flow based decision making through a network is non-scalable, I've felt the pain and the industry has already felt the pain before.
 
-I hate when bad ideas come back and are trumpeted by people as some brilliant idea. It wasn't a good idea the first time, it isn't a good idea now.
+**I hate when bad ideas come back and are trumpeted by people as some brilliant idea.** It wasn't a good idea the first time, it isn't a good idea now.
 
 We wasted so much time and attention on an idea that **could never work**. It cannot scale. It adds a lot of complexity. And let me say it again, the first packet went to a separate controller. That should never have shipped.
 
-I don’t want the control that it seems to imply. If you remember early Openflow demos, or especially it’s predecessor Ethane, they were about directing flows specifically through a network. I don’t ever want that. I just want connectivity everywhere. In a datacenter that's what you want.
+I don’t want the control that it seems to imply. If you remember early Openflow demos, or especially it’s predecessor Ethane, they were about directing flows specifically through a network. I don’t ever want that; it's not worth the extra complexity and scale problems. I just want connectivity everywhere. In a datacenter that's what you want.
 
-In WAN you do want more control, but Openflow isn't a good abstraction for that. Traffic engineering is better with a controller, because it is possible to make better decisions with a centralized view, so that part of SDN right, but not first packet goes to the controller. That's still terrible.
+In WAN you do want more control, but Openflow isn't a good abstraction for that. Traffic engineering is better with a controller, because it is possible to make better decisions with a centralized view. That part of SDN right, but not first packet goes to the controller. That's still terrible.
 
-I'm all for shipping things that are useful but not completely done. Iterative software and all that. But first packet goes to a controller is such a bad idea it should never have been shipped or propagated as a good idea.
-
-I also get upset when I read that the problem with Openflow is that the hardware was wrong. It’s not that the hardware was wrong. The abstraction was never going to work.
-
-
-## Why is Openflow dangerous?
-
-As an industry wasted so much time and attention on this bad idea that could never be useful. There are so many other things that we don't have right that need more attention.
+I'm all for shipping things that are useful but not completely done. Iterative software and all that. But first packet goes to a controller is such a bad idea it should never have been shipped or propagated as a good idea. I also get upset when I read that the problem with Openflow is that the hardware was wrong. It’s not that the hardware was wrong. The abstraction was never going to work and isn't what we want.
 
 ## What about SDN?
 

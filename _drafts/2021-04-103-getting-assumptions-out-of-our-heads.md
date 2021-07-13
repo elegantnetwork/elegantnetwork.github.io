@@ -4,7 +4,7 @@ comments: true
 author: Justin Pietsch
 title: Getting Assumptions out of our Heads
 excerpt: 
-description: Too much of networking requires network engineers to keep a lot in their heads. We need to get that out.
+description: Too much of networking requires network engineers to keep a lot in their heads. Getting those thoughts out, especially in a programmable system, means that you can then truly understand what you are doing.
 ---
 Networking requires a lot of decisions by many different people. Every point of designing, building, scaling, and operating networks requires decisions. Many of those decisions have even more assumptions behind them. In networking we don't have a standard and good way of saving those artifacts; they live in people's heads and because of that we can't act on them, make them better, and use software to enforce and verify our assumptions.
 
@@ -16,12 +16,13 @@ Even if you are good at that, I think it's a very bad habit to rely on that. It 
 
 I'm much more interested in figuring out how to do Assumption Based Networking than Intent Based Networking. Well, I don't think you can do IBN without recording your assumptions first. If you don't record your assumptions, then you are using somebody else's. The recording of assumptions is critical.
 
-### Why get assumptions out of your head
+### Why get assumptions out of your head?
 * You can't examine and understand tradeoffs for things you don't know that you assume.
 * You can't have software understand your assumptions and do the right thing unless it's out of your head.
 * Nobody else knows what your assumptions are.
 
 ## What does this mean?
+
 Let's say I have a core network with 2 routers. The (obvious) assumption is that I can afford for only one of those routers to go down at any one time. When everything is working, I can only afford to have less then 50% capacity of traffic on those routers, because one might fail and I need to be able to support all traffic with a single device. Sounds good. This means I do things like have capacity alarms at 50%. But mostly, because it's so obvious, there are a bunch of rules I have in my head that I don't even think about. If one of the routers is down, I can't do maintenance on the other. If I am close to 50% utilization, I also need to make sure that all the interfaces on both routers are up all the time. But none of these rules are written down. So as the network changes and as I add automation I need those rules into tools like alarms, and workflows, etc.
 
 Now I'm upgrading to 4 routers. What are my assumptions? Am I assuming I can afford 1 router down, or is it still 1/2? When I go to 8, then what are my assumptions? For each change, each person on the team and each software for management and monitoring needs to know what those rules are. But this is rarely if ever done explicitly. It's complicated, and hard to reason about all the consequences of all the assumptions. 
@@ -38,7 +39,7 @@ We need ways to get assumptions out of our heads, into systems that humans and s
 * You assume a device can be down for RMA for 4 hours (or 8 or 24 or 3 days). But the operations manager doesn't know that and so doesn't prioritize devices down until later.
 * You assume your monitoring systems will tell you a device is down right away. But the monitoring system polls every 5 minutes and requires 3 SNMP failures to make something down, so you are surprised when it takes 15 minutes to tell you a device is down.
 
-## What do we need
+## What do we need?
 
 There are a lot of different assumptions around networking that we have. I think what we need are a suite of network design tools in which we can record what we think all our requirement assumptions as well as our assumptions about how a design works together. That seems there is a huge gap between what we have (effectively nothing) and where we need to be. Yes, that is true. But we should still think about what we need.
 
@@ -46,17 +47,15 @@ For instance, I'd like that you could record the properties of your network desi
 
 ## What can we do now?
 
-In some ways this is what Intention Based Networking is about, but not really. I think they have similar goals, but capturing assumptions is a critical missing step. I've not used any product labeled IBN, but to the best of my understanding you declare things about the network, like how many client interfaces you want. But the assumptions about how those are intentions are fulfilled are not yours to record. You must use what was designed for you in their blueprints. I'm sure there is some amount of configurability in the blueprints, but I doubt you get to record your assumptions about how your are changing the blueprints.
+In some ways this is what Intention Based Networking is about, but not really. I think they have similar goals, but capturing assumptions is a critical missing step. I've not used any product labeled IBN, but to the best of my understanding you declare things about the network, like how many client interfaces you want. But the assumptions about how those intentions are fulfilled are not yours to record. You must use what was designed for you in their blueprints. I'm sure there is some amount of configurability in the blueprints, but I doubt you get to record your assumptions about how your are changing the blueprints.
 
-Probably the best place to start is in writing out assumptions in design docs. Even if you are the only network engineer it's a good idea to start explicitly thinking about what your assumptions are. 
+Probably the best place to start is in writing out assumptions in design docs. Even if you are the only network engineer it's a good idea to start explicitly thinking about what your assumptions are. The more that your automation uses algorithms and loops to do things rather than standard config means you are recording assumptions, though not in the most convenient way. For instance, it's much better to have a loop in code decide your IP addresses for interfaces than a static table.
 
 After that, the more assumptions that can get into code the better, though it also requires that you document why you are making the assumptions you are making.
-
 
 ## Summary
 
 It's important to understand your assumptions around designing, building, managing, and operating your network. With that you can examine them and use them as the basis for all your automation, management, and monitoring.
-
 ## Suzieq
 
 Try out [Suzieq](https://www.stardustsystems.net/suzieq/), the open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network. 
