@@ -14,7 +14,7 @@ Even if you are good at that, I think it's a very bad habit to rely on that. It 
 
 **Engineering is the art of tradeoffs.** When making a decision, or even when operating on that decision, you have a set of assumptions about how those things will work. When you don't know what your assumptions are, you can't know that you are making tradeoffs. In real engineering disciplines, those assumptions can turn into numbers, models, and equations. In software "engineering", you get it out in code, and you test it through (hopefully automated) tests. In networking people are rewarded for keeping all those assumptions in their heads. I want them out. I want them out of our heads **RIGHT NOW**.
 
-I'm much more interested in figuring out how to do Assumption Based Networking than Intent Based Networking. Well, I don't think you can do IBN without recording your assumptions first. If you don't record your assumptions, then you are using somebody else's. The recording of assumptions is critical.
+I'm much more interested in figuring out how to do Assumption Based Networking than Intent Based Networking. Well, I don't think you can do IBN without recording your assumptions first. If you don't record your assumptions, then you are using somebody else's. The recording of assumptions is critical. To say it another way, when I want my intent fullfilled, I have assumptions about how that will happen. If I can't examine, understand, or change how that is being done I often can't build what I need to build.
 
 ### Why get assumptions out of your head?
 
