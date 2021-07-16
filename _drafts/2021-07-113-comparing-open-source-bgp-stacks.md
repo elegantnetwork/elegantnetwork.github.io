@@ -15,10 +15,12 @@ I'm doing fairly simple testing. Very little policy, just straight the number of
 
 I started with [BGPerf](https://github.com/osrg/bgperf), written by the same people that write gobgp. BGPerf hasn't been updated in 4+ years, doesn't work with Python3 and doesn't correctly configure any of the current versions of these protocol stacks. I've [forked and updated BGPerf](https://github.com/jopietsch/bgperf) to actually work, at least for the tests I ran. BGPerf has quite a bit of complexity that I didn't try out, especially around remote test subjects. Bu
 
+BGPerf uses exabgp to create and send all the routes. In some of the tests, exabgp adds a lot of load to the test because it's not the most efficient code (written in Python). However, I think you can see what this means by comparing the same test for the three different stacks.
 
 
 
-## 
+
+## Conclusion / Followup
 I'd sure love it if you want to have a discussion about how to have better tests. If you propose a test, I'd love config snippets for the protocol stacks that show exactly what you want to compare. Or even better, PRs to BGPerf
 
 
