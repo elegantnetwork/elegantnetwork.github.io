@@ -4,7 +4,7 @@ comments: true
 author: Justin Pietsch
 title: Who decides if the network is unhealthy?
 excerpt: It's very important that the networking team that owns the design, build, and operations of the network is responsible to know that the network it is operating is not working before it's users do.
-description: Do you rely on your users to tell you our network is not working or do you take responsibility for network health? The networking team that owns the design, build, and operations of the network is responsible to know that the network it is operating or not working before it's users do.
+description: The networking team that owns the design, build, and operations of the network is responsible to know that the network it is operating or not working before it's users do.
 ---
 When I started in networking at Amazon in the fall of 2002, when we were paged for a problem it was because one of the users/services on the network was having problems and they thought it was the network. We never knew ourselves that the network was broken until somebody told us it was. Maybe the website was down, or a Fulfillment Center was down, or somebody was having some weird kind of software problem they didn't understand. We did not have good tools to identify for ourselves that the network was misbehaving before our (internal) users told us.
 
@@ -12,7 +12,7 @@ We had some monitoring if our devices went down (IIRC it didn't cut us tickets) 
 
 **It's very important that the networking team that owns the design, build, and operations of the network is responsible to know that the network it is operating is not working before it's users do.** This approach to operating your network will drive a network that is better monitored, better designed, and assuredly better for it's users. Taking a more relaxed approach implies that you are not taking your network as seriously as it's importance in the business or community that you are supporting.
 
-Making this question primary will drive you to get better software to monitor your network. 
+Making this question primary will drive you to get better software to monitor your network.
 
 ## Why does it matter who decides?
 
@@ -47,9 +47,9 @@ If your management team is reluctant to invest in better ways to measure your ne
 We want to keep raising the bar of what is expected of networking.
 
 1. You need to take responsibility to know that the network is broken before users. Understand that this is critical to doing a good job and don't be satisfied with what you currently have. This is more important than keeping up with whatever latest feature from your network vendor.
-1. Own your destiny. 
+1. Own your destiny.
 1. Think through what it will take to take the responsibility of knowing when the network is working or not.
 
 ## Suzieq
 
-Try out [Suzieq](https://www.stardustsystems.net/suzieq/), the open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), the open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.derstanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
