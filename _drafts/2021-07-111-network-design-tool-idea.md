@@ -35,7 +35,7 @@ No other engineering discipline has no design tools. Can you image sewers or bri
 We are missing software to help design, build, scale, and operate networks. Why does networking seem to uniquely be missing the quality of software it needs? It's clearly important enough to merit the software. My best guess is that for software engineers it's much easier to build things that they understand. Software engineers understand word processors and spreadsheets, and they really understand compilers and operating systems. But they have no idea how to actually operate a network. And unless you try really really hard, it's too hard to understand networking to know what software is necessary. At the same time, network engineers are **TERRIBLE** at describing what they need. Actually, I think they don't know what they need, they ask for things that seem to make life more complicated, not less complicated overall. Most people, especially engineers, are bad at asking for what they need. They usually ask for a specific solution, when they don't understand the other field so they don't understand the tradeoffs being made there. Instead if they **described the problems that they had rather than asking for a better solution** I think we'd make a lot of progress.
 
 
-## A systematic look at networking
+## A systematic look at networking -- or is this it's own post
 
 
 
@@ -79,7 +79,7 @@ I don't mean to stop automating. I think the way we currently automate is missin
 Some people are using Source of Truth (SOT) systems for their automation, and this is sort of that direction. I think you need to be able to write up the rules for what is in the SOT, and not have to hand manage the data
 
 ## What should this look like?
-
+network wide models
 
 I want the design doc, that gets reviewed at the design meeting, to be the thing that actually produces the configuration.
 
