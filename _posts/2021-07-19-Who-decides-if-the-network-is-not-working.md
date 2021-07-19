@@ -59,4 +59,4 @@ We want to keep raising the bar of what is expected of networking.
 
 ## Suzieq
 
-Try out [Suzieq](https://www.stardustsystems.net/suzieq/), the open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.derstanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
+Try out [Suzieq](https://www.stardustsystems.net/suzieq/), the open source, multivendor tool for network observability and understanding. Suzieq collects operational state in your network and lets you find, validate, and explore your network. Suzieq collects operational state in your network and lets you find, validate, and explore your network.
