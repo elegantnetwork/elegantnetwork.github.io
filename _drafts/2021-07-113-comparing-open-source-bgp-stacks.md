@@ -73,6 +73,12 @@ Again, BIRD and FRR are  similar in performance, with BIRD being about 25% faste
 
 I wanted to test something crazy, but it failed. The bgperf process runs out of memory creating configs before it even gets stared. bgperf creates all the config in memory before writing it out, so if you have a large number of routes, like 10M, it will run out of memory on the 32bit Python process before it even gets to any of the rest of the test. This clearly could be improved, but I didn't get that far.
 
+### 500 neighbors
+
+FRRouting gets really upset when there are 500 neighbors, and it takes over 30 minutes to connect all the neighbors.
+
+<script src="https://gist.github.com/jopietsch/d27b94dcf537133e1c731156700437f6.js"></script>
+
 ## Observations
 
 ### GoBGP resource utilization
@@ -92,6 +98,8 @@ As mentioned, bgperf by default has BIRD use a separate table per neighbor. When
 FRRouting and BIRD (single table) are pretty close in performance except at many neighbors (> 30), where FRR takes extra time connecting to all the neighbors.
 
 I'd sure love it if you want to have a discussion about how to have better tests. If you propose a test, I'd love config snippets for the protocol stacks that show exactly what you want to compare. Or even better, PRs to bgperf.
+
+There is more to learn even from the results I've collected at the end.
 
 Anybody have any other benchmarks that are useful?
 
