@@ -55,11 +55,11 @@ All those 10K results in 1 graph.
 
 ![10K routes graph](/assets/images/2021-07-bgperf/bgperf-10K-routes.png)
 
-### 10 neighbors 100K routes
+### 5 neighbors, 100K routes
 
 What happens if we add more routes? Let's go up to 100K routes, staying with the 10 neighbors. 
 
-BIRD and FRR have similar performance. GoBGP is starting to get a lot slower. It's taking 24 seconds to receive all routes, while the others take 3-4 seconds. BIRD and FRRrouting take a full core at max CPU, while gobgp takes all the cores. GobGP also uses about 2x more memmory. Not looking that great for gobgp.
+BIRD and FRR have similar performance. GoBGP is starting to get a lot slower. It's taking 24 seconds to receive all routes, while the others take 3-4 seconds. BIRD and FRRrouting take a full core at max CPU, while gobgp takes all the cores. GobGP also uses about 2x more memory. Not looking that great for gobgp.
 
 
 <script src="https://gist.github.com/jopietsch/5204079a56528a114ba11ccee72d2ad7.js"></script>
