@@ -43,7 +43,7 @@ This might not be usual, but I'd bet there are some places where it's critical t
 
 You'll notice that there are two BIRD results here: the faster results are the single table results (with the -s flag to bgperf), while the longer are a table per neighbor. Single table is about 10x faster in this test 14 seconds vs 139. Also single table uses 1.4GB vs 10.6GB of memory. That makes sense.
 
-Single table BIRD and FRRouting each take about 15 seconds to send all the routes. However, FRRouting takes 61 seconds vs 4 to create all the neighbor relationships, so the total time for the whole test is much longer. 
+Single table BIRD and FRRouting each take about 15 seconds to send all the routes. However, FRRouting takes 61 seconds vs 4 to create all the neighbor relationships, so the total time for the whole test is much longer. It turns out that the version of FRRouting I originally used was not a stable version. Moving to version 7.5.1 got times faster than BIRD.
 
 GoBGP starts really looking bad here, about 40x slower than FRRouting or BIRD
 
@@ -75,7 +75,7 @@ I wanted to test something crazy, but it failed. The bgperf process runs out of 
 
 ### 500 neighbors
 
-FRRouting gets really upset when there are 500 neighbors, and it takes over 30 minutes to connect all the neighbors.
+FRRouting gets really upset when there are 500 neighbors, and it takes over 30 minutes to connect all the neighbors. As mentioned above, FRRouting version 7.5.1 looks really good, but the original version I tested which is not a stable release has some issues
 
 <script src="https://gist.github.com/jopietsch/d27b94dcf537133e1c731156700437f6.js"></script>
 
@@ -88,6 +88,10 @@ I was assuming that GoBGP would use more CPU resources but be quite a bit faster
 ### FRRouting and lots of neighbors
 
 You can see that as the number of neighbors jumps the time FRRouting takes to establish the neighbor connections. When it's at 30, it takes 3 seconds, at 50 it's 14s, at 100 60s, at 500 it's over 2100s. I don't know what FRRouting is doing there. I don't know if > 100 neighbors is unrealistic for FRRouting.
+
+As mentioned, it turns out that this is an issue with the original version I tested, 7.7, and looks good with 7.5.1.
+
+The problem was debugged from me on the FRRouting slack. Thanks People!
 
 ### Bird table per neighbor
 
@@ -115,36 +119,15 @@ I'm curious to test [rustybgp](https://github.com/osrg/rustybgp), and [bio-rd](h
 
 I should get the remote bgperf working and try out VM or container for various commercial stacks.
 
+## Update 2021-07-27
+- fixed typos in the tables
+
+- removed the debugging section and put it into the [bgperf README](https://github.com/jopietsch/bgperf/blob/master/README.md)
+
+- In cleaning up bgperf, I made it so that it used the FRRouting container in docker hub that is the latest. It turns out that's not a stable version and has some issues in neighbor performance. I then hard coded to the latest stable version (7.5.1) and reran tests. I've included that data above.
+
 ## All Results
 
 <script src="https://gist.github.com/jopietsch/9ce29828c7faca9678a499dc942248f6.js"></script>
 
-## How to debug bgperf
-
-If you try to change the config, it's a little tricky to debug what's going on since there are so many containers. What bgperf is doing is creating configs and startup scripts in /tmp/bgperf and then copies those to the containers before launching them. It creates three containers: bgperf_exabgp_tester_tester, bgperf_\<target\>_target, and bgperf_monitor. If things aren't working, it's probably because the config for the target is not correct. bgperf puts all the log output in /tmp/bgperf/*.log, but what it doesn't do is capture the output of the startup script.
-
-The startup script is in /tmp/bgperf/\<target\>/start.sh and gets copied to the target as /root/config/start.sh.
-
-In other words, to launch the start.sh and see the output you can run this docker command:
-
-```
-jpietsch@jpietsch-server:~/bgperf$ docker exec bgperf_bird_target /root/config/start.sh
-bird: I found another BIRD running.
-
-```
-In this case, things were already working, so I'll run ps and kill the old bird and start a new one.
-
-```
-jpietsch@jpietsch-server:~/bgperf$ docker exec bgperf_bird_target ps auxww
-USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-root           1  0.0  0.0   3984  2820 ?        Ss   21:21   0:00 bash
-root          14  0.0  0.0   4144  2016 ?        Ss   21:21   0:00 bird -c /root/config/bird.conf
-root          22  0.0  0.0   5904  2784 ?        Rs   21:22   0:00 ps auxww
-jpietsch@jpietsch-server:~/bgperf$ docker exec bgperf_bird_target kill 14
-```
-
-```
-jpietsch@jpietsch-server:~/bgperf$ docker exec bgperf_bird_target /root/config/start.sh
-```
-No output, so it was just fine.
 
