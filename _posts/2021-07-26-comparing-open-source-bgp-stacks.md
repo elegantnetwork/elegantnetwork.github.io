@@ -87,7 +87,7 @@ I was assuming that GoBGP would use more CPU resources but be quite a bit faster
 
 ### FRRouting and lots of neighbors
 
-You can see that as the number of neighbors jumps the time FRRouting takes to establish the neighbor connections. When it's at 30, it takes 3 seconds, at 50 it's 14s, at 100 60s, at 500 it's over 2100s. I don't know what FRRouting is doing there. I don't know if > 100 neighbors is unrealistic for FRRouting.
+The original tests showed very high neighbor times for FRRouting 7.7. I was trying to use the easiest way to build an FRRouting container, and didn't realize I was using a dev version. It turns out that the last stable version 7.5.1 has very good neighbor times. 
 
 As mentioned, it turns out that this is an issue with the original version I tested, 7.7, and looks good with 7.5.1.
 
@@ -99,7 +99,7 @@ As mentioned, bgperf by default has BIRD use a separate table per neighbor. When
 
 ## Conclusion / Followup
 
-FRRouting and BIRD (single table) are pretty close in performance except at many neighbors (> 30), where FRR takes extra time connecting to all the neighbors.
+FRRouting and BIRD (single table) are pretty close in performance. The 7.7.1-dev version I originally tested was slower, but that was a dev version and I didn't understand that. It looks like FRRrouting 7.5.1 is in general faster than BIRD, but I wouldn't assume that's actually true in practice. There might be interactions with ExaBGP testers that affect performance when the differences are that small. More for me to understand. Also, of course, this is pretty simple testing, so there are certain to be other features of BGP that will have different performance characteristics that might affect you more. 
 
 I'd sure love it if you want to have a discussion about how to have better tests. If you propose a test, I'd love config snippets for the protocol stacks that show exactly what you want to compare. Or even better, PRs to bgperf.
 
@@ -125,6 +125,9 @@ I should get the remote bgperf working and try out VM or container for various c
 - removed the debugging section and put it into the [bgperf README](https://github.com/jopietsch/bgperf/blob/master/README.md)
 
 - In cleaning up bgperf, I made it so that it used the FRRouting container in docker hub that is the latest. It turns out that's not a stable version and has some issues in neighbor performance. I then hard coded to the latest stable version (7.5.1) and reran tests. I've included that data above.
+
+## Update 2021-07-30
+- tried to make it more clear the results and that the original testing of FRRouting was for a dev version, not a production version.
 
 ## All Results
 
