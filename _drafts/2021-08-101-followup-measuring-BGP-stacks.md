@@ -7,9 +7,7 @@ excerpt:
 description: Measuring
 ---
 
-After I published [the post on measuring open source BGP stacks](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-stacks/), I was embarrassed after I realized how haphazard the testing was. I was not very systematic about the way I tried different test parameters.  So I hacked on [bgperf](https://github.com/jopietsch/bgperf), added some more reporting and created a new batch feature that iterates through parameters systematically, and automatically graphs the results.
-
-By request, I added [rustybgp](https://github.com/osrg/rustybgp) and [OpenBGPD](http://www.openbgpd.org/). I've only added rudimentary support for these just to get started testing the number of prefixes and neighbors. Rustybgp isn't yet a fully formed BGP stack; I don't think it has much support for any kind of policy yet. 
+After I published [the post on measuring open source BGP stacks](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-stacks/), I was embarrassed after I realized how haphazard the testing was. I was not very systematic about the way I tried different test parameters.  So I hacked on [bgperf](https://github.com/jopietsch/bgperf), added some more reporting and created a new batch feature that iterates through parameters systematically, and automatically graphs the results. By request, I added [rustybgp](https://github.com/osrg/rustybgp) and [OpenBGPD](http://www.openbgpd.org/). I've only added rudimentary support for these just to get started testing the number of prefixes and neighbors. Rustybgp isn't yet a fully formed BGP stack; I don't think it has much support for any kind of policy yet. 
 
 In these tests I stopped testing GoBGP, even though bgperf still supports it. As you can see from the previous post, it uses a lot more resources and is much slower. It makes the graphs much harder to interpret. I also only test the single table version of bird, because it's the easier config and it's faster.
 
@@ -129,7 +127,6 @@ Route Reception has a greater difference between both FRRs and BIRD/Rustybgp. Ma
 
 
 ### results table
-<script src="https://gist.github.com/jopietsch/e146b31e87df3fadc0c122c6766d9f1d.js"></script>
 <script src="https://gist.github.com/jopietsch/1ca47cb3d8a102337fadbe4334bb8c43.js"></script>
 ## Many (many) neighbors, 10 prefixes
 
@@ -160,7 +157,7 @@ OpenBGPD is an order of magnitude worse at 500 neighbors, 1000 prefixes, then at
 
 ![max cpu](/assets/images/2021-08-followup-bgp-stacks/ec2-m5.12xlarge/bgperf_prefix_growth_max_cpu.png)
 
-We see Rusytbgp jump up in CUP usage at 500 neighbors
+We see Rusytbgp jump up in CPU usage at 500 neighbors
 
 ![max mem](/assets/images/2021-08-followup-bgp-stacks/ec2-m5.12xlarge/bgperf_prefix_growth_max_mem.png)
 
@@ -191,8 +188,6 @@ I wanted to try out what would happen on a machine with more limited resources. 
 
 It's interesting that RustyBGP uses less CPU, because there is less, but it's not much slower than on the other machines. What is it doing with those other CPU resources?
 
-### results table
-
 
 ## Many (many) neighbors, 10 prefixes
 Can only test many less parameters because of memory.
@@ -206,21 +201,15 @@ While not really different, it is interesting to zoom in on just 250 and 500 nei
 
 Again, not much different, but zooming in shows the difference in memory between FRRouing 8/OpenBGPD vs the others.
 
-### results table
-
 
 ## Many neighbors, 100 prefixes
 
 Nothing interestingly different here.
 
-### results table
-
 
 ## what happens as prefixes grow significantly
 
 Nothing interestingly different here.
-
-### results table
 
 
 ## 1M routes.
@@ -233,8 +222,6 @@ While the others are about the same, Rustybgp doubles it's time here.
 ![max cpu](/assets/images/2021-08-followup-bgp-stacks/ec2-t3.2xlarge/bgperf_1M_max_cpu.png)
 
 Just a lot less CPU resources for RustyBGP to use.
-
-### results table
 
 
 
