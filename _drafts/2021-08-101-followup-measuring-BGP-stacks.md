@@ -2,7 +2,7 @@
 layout: post
 comments: true
 author: Justin Pietsch
-title: Followup Measuring BGP Stacks
+title: Followup Measuring BGP Stacks Performance
 excerpt: 
 description: Measuring
 ---
@@ -48,12 +48,17 @@ The time to receive prefixes, all 10 per neighbor, doesn't matter in this test.
 
 ![max cpu](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_many_neighbors_10p_max_cpu.png)
 
-Interestingly, Rustybgp uses the smallest amount of CPU and OpenBGPD uses the most, by a lot. FRRouting 8 uses more  CPU at 1750 neighbors 7.5.1. I don't know that is important since it's still not very much
+Interestingly, Rustybgp uses the smallest amount of CPU and OpenBGPD uses the most, by a lot. FRRouting 8 uses more  CPU at 1750 neighbors than 7.5.1. I don't know that is important since it's still not very much
 
 ![max mem](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_many_neighbors_10p_max_mem.png)
 
-OpenBGPD uses a lot more memory, several orders of magnitude more. The weirdest thing is that FRRouting 8 uses a lot more memory than FRRouting 7.5.1 or BIRD. Don't know if this matters because it's only 10 prefixes, but it's interesting.
+OpenBGPD uses a lot more memory, several orders of magnitude more.
 
+Because it's so hard to see everything but OpenBGPD, going to remove it so we can look at the others.
+
+![max mem](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_many_neighbors_10p_max_mem-no-openbgpd.png)
+
+FRRouting 8 uses a lot more memory than FRRouting 7.5.1 or BIRD. Don't know if this matters because it's only 10 prefixes, but it's interesting. There looks like some kind of per neighbor memory tax in FRRouting 8. It is too much? I don't know. Is it impactful as there are more routes? Let's see.
 ### results table
 
 <script src="https://gist.github.com/jopietsch/7fec4c43104b7bfa9295a0fd2697a742.js"></script>
@@ -72,7 +77,13 @@ Similar to the 10 prefix tests, OpenBGPD uses many more CPU resources than the o
 
 ![max mem](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_many_neighbors_100p_max_mem.png)
 
-Similar to the 10 prefix tests, OpenBGPD uses many more memory resources than the others.
+Similar to the 10 prefix tests, OpenBGPD uses many more memory resources than the others. What's troubling is that at 10 prefixes and 750 neighbors it's about 1GB but at 100 prefixes, 750 neighbors it's 6GB. 
+
+Let's again remove OpenBGPD so we can understand the others better.
+
+![max mem](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_many_neighbors_100p-no-openbgpd_max_mem.png)
+
+FRRouting 8 is still a lot higher than the others, but it grows to about 0.58 GB from 0.52 at 750 neighbors. That again leads credence to a per neighbor memory tax, but doesn't seem to be in the way as more prefixes are added. 
 
 ### results table
 <script src="https://gist.github.com/jopietsch/650122b9a01c10110c17b7d24910720d.js"></script>
@@ -91,11 +102,16 @@ route reception is trivial, except OpenBGPD at 250 neighbors, 1000 prefixes. It 
 
 ![max mem](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_prefix_growth_max_mem.png)
 
+Zoom in without OpenBGPD again.
+
+![max mem](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_prefix_growth-no-openbgp_max_mem.png)
+
+Not sure how to interpret this exactly. It looks like additional routes don't really matter for memory until 1000 ish. FRRouting 8 still uses more memory but looks like a fixed amount perf neighbor not a percentage, so probably not so concerning. Rustybgp is the lowest memory user still.
 ### results table
 <script src="https://gist.github.com/jopietsch/918047845cc0e5f84890cd7b0c175125.js"></script>
 
 ## 1M routes.
- Since the internet is getting close to 1M routes, I wanted to see how how these do with 1M routes and multiple neighbors.
+ Since the internet is getting close to 1M routes, how do these stacks do with 1M routes and multiple neighbors?
 
 ![route reception time](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_1M_route_reception.png)
 
