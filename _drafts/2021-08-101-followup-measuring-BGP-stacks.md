@@ -26,7 +26,7 @@ Route reception is the time from the first route received until all routes are r
 ![route reception time](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_10K_route_reception.png)
 
 
-The first thing that jumps out is how much slower OpenBGPD is especially at 100, and even 50, neighbors. While harder to see, bird and rusytbgp at 100 neighbors are considerably slower than the two FRRoutings 18s compared to 9/10s.
+The first thing that jumps out is how much slower OpenBGPD is especially at 100, and even 50, neighbors. While harder to see, bird and rusytbgp at 100 neighbors are considerably slower than the two FRRoutings, 18s compared to 9/10s.
 
 ![max cpu](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_10K_max_cpu.png)
 
@@ -119,7 +119,6 @@ I won't go through all the graphs, because there are pretty similiar results. Bu
 
 
 ## 10K prefixes
-We'll start with 10K prefixes. It iterates through 10, 30, 50, and then 100 neighbors. It looks like 100 neighbors with each 10K prefixes is pretty taxing on many of these stacks.
 
 ![route reception time](/assets/images/2021-08-followup-bgp-stacks/ec2-m5.12xlarge/bgperf_10K_route_reception.png)
 
@@ -167,8 +166,6 @@ OpenBGPD is using over 30GB of RAM and is slow at 500 neighbors.
 <script src="https://gist.github.com/jopietsch/ee987b7bea29001801a4b266e5f53d12.js"></script>
 
 ## 1M routes.
- Since the internet is getting close to 1M routes, I wanted to see how how these do with 1M routes and multiple neighbors
-
 
 ![max cpu](/assets/images/2021-08-followup-bgp-stacks/ec2-m5.12xlarge/bgperf_1M_max_cpu.png)
 
@@ -186,7 +183,7 @@ I wanted to try out what would happen on a machine with more limited resources. 
 
 ![max cpu](/assets/images/2021-08-followup-bgp-stacks/ec2-t3.2xlarge/bgperf_10K_max_cpu.png)
 
-It's interesting that RustyBGP uses less CPU, because there is less, but it's not much slower than on the other machines. What is it doing with those other CPU resources?
+It's interesting that RustyBGP uses less CPU, because there is less, but it's not much slower than on the other machines. What is it doing with those other CPU resources when it has them?
 
 
 ## Many (many) neighbors, 10 prefixes
@@ -227,15 +224,19 @@ Just a lot less CPU resources for RustyBGP to use.
 
 # Conclusion
 
-OpenBGP struggles in places that the other stacks do not, but it's still faster than GoBGP. For anybody running OpenBGP, are there scenarios that make it more useful than the other stacks?
+OpenBGP struggles in places that the other stacks do not, but it's still faster than GoBGP. For anybody running OpenBGP, are there scenarios that make it more useful than the other stacks? All other things being equal, if performance or memory use matters, it looks like OpenBGP is the loser here.
 
-Run bgperf yourself
+Not sure the winner, maybe FRRouting 7.5.1? Is that enough to not use FRRouting 8? I doubt it, but I'm not testing functionality, just straight up speed on these simple tests. There are some cases in which RustyBGP is faster or uses less memory.
 
+Try out [bgperf](https://github.com/jopietsch/bgperf) yourself
+
+
+## Questions
 
 Are the scenarios that I'm using to test useful? Are there different combinations of prefixes and neighbors that I should be testing?
 
 Does anybody else have either BGP testing tools that they can share, or other results that they can share?
 
-# followup / todo
+## followup / todo
 
 It would be interesting to test these on even more constrained devices. However, I need to figure out a way to have the target stacks isolated and not consumed by the tester ExaBGP processes.
