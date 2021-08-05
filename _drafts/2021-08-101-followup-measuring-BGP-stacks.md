@@ -88,13 +88,13 @@ FRRouting 8 is still a lot higher than the others, but it grows to about 0.58 GB
 ### results table
 <script src="https://gist.github.com/jopietsch/650122b9a01c10110c17b7d24910720d.js"></script>
 
-## what happens as prefixes grow significantly
+## Prefix iterations
 
 This set of tests iterates from 50 to 250 neighbors and 10 prefixes to 1000.
 
 ![route reception time](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_prefix_growth_route_reception.png)
 
-route reception is trivial, except OpenBGPD at 250 neighbors, 1000 prefixes. It plain freaks out.
+Route Reception is trivial, except OpenBGPD at 250 neighbors, 1000 prefixes. It plain freaks out.
 
 
 ![max cpu](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_prefix_growth_max_cpu.png)
@@ -117,17 +117,21 @@ Not sure how to interpret this exactly. It looks like additional routes don't re
 
 This is the first time that RustyBGP is considerably slower than all the others.
 
+FRR 8 is somewhat slower than 7.5.1 or BIRD. OpenBGPD looks good here.
+
 
 ![max cpu](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_1M_max_cpu.png)
 
 
 ![max mem](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_1M_max_mem.png)
 
+BIRD uses 1/3 the memory of FRRouting. Rustybgp also uses significantly less memory than FRRouting, but it's slower too.  OpenBGPD uses the most memory, as usual.
+
 ### results table
 <script src="https://gist.github.com/jopietsch/191af811bd28b5b34546fb14377edac1.js"></script>
 
 
-# tests on EC2 m5 
+# Results from EC2 m5 
 
 I wanted to see what would happen with more resources, specifically twice as much RAM. However, the AMD device is a consumer device with less cores but each higher speed. That might matter to some of these tests because of the single core processes.
 
@@ -162,7 +166,7 @@ OpenBGPD at 750 neighbors is a lot greater route reception time than on the AMD.
 
 <script src="https://gist.github.com/jopietsch/b94d7327d16f56c3bea84a7116d6781f.js"></script>
 
-## what happens as prefixes grow significantly
+## Prefix iterations
 
 Because of more memory, I tested to 500 neighbors.
 
@@ -172,7 +176,7 @@ OpenBGPD is an order of magnitude worse at 500 neighbors, 1000 prefixes, then at
 
 ![max cpu](/assets/images/2021-08-followup-bgp-stacks/ec2-m5.12xlarge/bgperf_prefix_growth_max_cpu.png)
 
-We see Rusytbgp jump up in CPU usage at 500 neighbors
+We see Rusytbgp jump up in CPU usage at 500 neighbors. On the AMD is never got past 100%.
 
 ![max mem](/assets/images/2021-08-followup-bgp-stacks/ec2-m5.12xlarge/bgperf_prefix_growth_max_mem.png)
 
@@ -220,7 +224,7 @@ Again, not much different, but zooming in shows the difference in memory between
 Nothing interestingly different here.
 
 
-## what happens as prefixes grow significantly
+## Prefix iterations
 
 Nothing interestingly different here.
 
@@ -244,6 +248,8 @@ OpenBGP struggles in places that the other stacks do not, but it's still faster 
 
 Not sure the winner, maybe FRRouting 7.5.1? Is that enough to not use FRRouting 8? I doubt it, but I'm not testing functionality, just straight up speed on these simple tests. There are some cases in which RustyBGP is faster or uses less memory.
 
+Or maybe the winner is BIRD? It's faster and uses less resources with small amounts of neighbors and 1M routes.
+
 Try out [bgperf](https://github.com/jopietsch/bgperf) yourself
 
 
@@ -256,3 +262,4 @@ Does anybody else have either BGP testing tools that they can share, or other re
 ## followup / todo
 
 It would be interesting to test these on even more constrained devices. However, I need to figure out a way to have the target stacks isolated and not consumed by the tester ExaBGP processes.
+
