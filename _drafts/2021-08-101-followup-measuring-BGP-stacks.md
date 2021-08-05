@@ -62,7 +62,7 @@ OpenBGPD uses a lot more memory, several orders of magnitude more. The weirdest 
 
 ## Many neighbors, 100 prefixes
 
-This only goes from 250 to 750 neighbors with 100 prefixes. More than that runs out of memory on my 64 GB machine (because of all the ExaBGP)
+This only goes from 250 to 750 neighbors with 100 prefixes. More than that runs out of memory on my 64 GB machine (because of all the ExaBGP processes.)
 
 ![route reception time](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_many_neighbors_100p_route_reception.png)
 
@@ -77,7 +77,7 @@ Similar to the 10 prefix tests, OpenBGPD uses many more CPU resources than the o
 Similar to the 10 prefix tests, OpenBGPD uses many more memory resources than the others.
 
 ### results table
-
+<script src="https://gist.github.com/jopietsch/650122b9a01c10110c17b7d24910720d.js"></script>
 
 ## what happens as prefixes grow significantly
 
@@ -97,11 +97,11 @@ route reception is trivial, except OpenBGPD at 250 neighbors, 1000 prefixes. It 
 <script src="https://gist.github.com/jopietsch/918047845cc0e5f84890cd7b0c175125.js"></script>
 
 ## 1M routes.
- Since the internet is getting close to 1M routes, I wanted to see how how these do with 1M routes and multiple neighbors
+ Since the internet is getting close to 1M routes, I wanted to see how how these do with 1M routes and multiple neighbors.
 
 ![route reception time](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_1M_route_reception.png)
 
-This is the first time that RustyBGP is considerably slower than all the others
+This is the first time that RustyBGP is considerably slower than all the others.
 
 
 ![max cpu](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_1M_max_cpu.png)
@@ -130,12 +130,13 @@ Route Reception has a greater difference between both FRRs and BIRD/Rustybgp. Ma
 
 ### results table
 <script src="https://gist.github.com/jopietsch/e146b31e87df3fadc0c122c6766d9f1d.js"></script>
-
+<script src="https://gist.github.com/jopietsch/1ca47cb3d8a102337fadbe4334bb8c43.js"></script>
 ## Many (many) neighbors, 10 prefixes
 
 I didn't find any interesting differences here.
 
 ### results table
+<script src="https://gist.github.com/jopietsch/b4addbf8795a6e072fdae99f64bd83d6.js"></script>
 
 
 
@@ -146,6 +147,9 @@ I didn't find any interesting differences here.
 OpenBGPD at 750 neighbors is a lot greater route reception time than on the AMD.
 
 ### results table
+
+<script src="https://gist.github.com/jopietsch/b94d7327d16f56c3bea84a7116d6781f.js"></script>
+
 ## what happens as prefixes grow significantly
 
 Because of more memory, I tested to 500 neighbors.
@@ -163,6 +167,7 @@ We see Rusytbgp jump up in CUP usage at 500 neighbors
 OpenBGPD is using over 30GB of RAM and is slow at 500 neighbors.
 ### results table
 
+<script src="https://gist.github.com/jopietsch/ee987b7bea29001801a4b266e5f53d12.js"></script>
 
 ## 1M routes.
  Since the internet is getting close to 1M routes, I wanted to see how how these do with 1M routes and multiple neighbors
@@ -174,6 +179,7 @@ RustyBGP uses twice as much CPU as the AMD, but is still slower than all the oth
 
 ### results table
 
+<script src="https://gist.github.com/jopietsch/1a7723bd3befdc39e9a0a09669a3f499.js"></script>
 
 # results for EC2 t3
 
