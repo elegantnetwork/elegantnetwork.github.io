@@ -245,7 +245,7 @@ Just a lot less CPU resources for RustyBGP to use.
 
 After doing those suite of tests across all three different hardware, I realized that in some cases it's still telling us more about how much resources the test suite uses than the limits of these stacks. These no longer test OpenBGPD (or GoBGP) because it is so much less performant than the other stacks. I can't use my own AMD machine because these tests run out of memory, so this is all EC2 hardware.
 
-## 10 Prefies, Many Many Neighbors
+## 10 Prefixes, Many Many Neighbors
 
 ![route reception time](/assets/images/2021-08-followup-bgp-stacks/ec2-stress/bgperf_many_many_neighbors_10p_route_reception.png)
 
@@ -300,7 +300,7 @@ I've seen twitter claims that RustyBGP is significantly faster that FRRouting, b
 
 ## BIRD
 
-BIRD with more than 1000 neighbors and more than just a handful of prefixes becomes promlematic. And with 1000 prefixes, By 500 neighbors it's performing badly again. I don't know what it is exactly that is the bottleneck here.
+BIRD with more than 1000 neighbors and more than just a handful of prefixes becomes problematic. And with 1000 prefixes, By 500 neighbors it's performing badly again. I don't know what it is exactly that is the bottleneck here.
 
 # Conclusion
 
