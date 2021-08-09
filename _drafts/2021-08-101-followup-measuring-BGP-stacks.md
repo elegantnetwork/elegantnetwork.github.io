@@ -289,9 +289,6 @@ Interestingly, BIRD uses the least amount of memory. RustyBGP uses a lot of memo
 
 <script src="https://gist.github.com/jopietsch/d16521523fde9c3dd620611fc13bcf7b.js"></script>
 
-## 1M routes
-
-Lots of 1M route neighbors is not what BGPerf does well, there's lot of pythong here. We are going to try anyway.
 
 # Observations
 These tests use quite a bit of hardware in CPU and memory. Most of those resources are going into ExaBGP sending the prefixes rather than in the targets. In some ways this is a test of the test system. I'm still figuring out how to best test the targets without the test system getting in the way.
@@ -311,7 +308,7 @@ OpenBGP struggles in places that the other stacks do not, but it's still faster 
 
 Not sure the winner, maybe FRRouting 7.5.1? Is that enough to not use FRRouting 8? I doubt it, but I'm not testing functionality, just straight up speed on these simple tests. There are some cases in which RustyBGP is faster or uses less memory.
 
-Or maybe the winner is BIRD? It's faster and uses less resources with small amounts of neighbors and 1M routes.
+I'm not really going to declare a winner.
 
 Try out [bgperf](https://github.com/jopietsch/bgperf) yourself.
 
