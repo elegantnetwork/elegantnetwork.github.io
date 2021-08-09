@@ -4,10 +4,10 @@ comments: true
 author: Justin Pietsch
 title: Followup Measuring BGP Stacks Performance
 excerpt: After I published the post on measuring open source BGP stacks I was embarrassed after I realized how haphazard the testing was.
-description: Performance Measurement of Open Source BGP Stacks, adding Rustybgp and OpenBGPD
+description: Systematic performance measurement of Open Source BGP Stacks, adding RustyBGP and OpenBGPD
 ---
 
-After I published [the post on measuring open source BGP stacks](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-stacks/), I was embarrassed after I realized how haphazard the testing was. I was not very systematic about the way I tried different test parameters. So I hacked on [bgperf](https://github.com/jopietsch/bgperf), added some more reporting and created a new batch feature that iterates through parameters systematically, and automatically graphs the results. By request, I added [rustybgp](https://github.com/osrg/rustybgp) and [OpenBGPD](http://www.openbgpd.org/). I've only added rudimentary support for these just to get started testing the number of prefixes and neighbors. Rustybgp isn't yet a fully formed BGP stack; I don't think it has much support for any kind of policy yet. 
+After I published [the post on measuring open source BGP stacks](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-stacks/), I was embarrassed after I realized how haphazard the testing was. I was not very systematic about the way I tried different test parameters. So I hacked on [bgperf](https://github.com/jopietsch/bgperf), added some more reporting and created a new batch feature that iterates through parameters systematically, and automatically graphs the results. By request, I added [RustyBGP](https://github.com/osrg/RustyBGP) and [OpenBGPD](http://www.openbgpd.org/). I've only added rudimentary support for these just to get started testing the number of prefixes and neighbors. RustyBGP isn't yet a fully formed BGP stack; I don't think it has much support for any kind of policy yet. 
 
 In these tests I stopped testing GoBGP, even though bgperf still supports it. As you can see from the previous post, it uses a lot more resources and is much slower. It makes the graphs much harder to interpret. I also only test the single table version of bird, because it's the easier config and it's faster.
 
@@ -30,7 +30,7 @@ The first thing that jumps out is how much slower OpenBGPD is especially at 100,
 
 ![max cpu](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_10K_max_cpu.png)
 
-Rustybgp uses a lot more  CPU resources, even though it isn't any faster than FRR or BIRD.
+RustyBGP uses a lot more  CPU resources, even though it isn't any faster than FRR or BIRD.
 
 ![max mem](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_10K_max_mem.png)
 
@@ -48,7 +48,7 @@ The time to receive prefixes, all 10 per neighbor, doesn't matter in this test.
 
 ![max cpu](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_many_neighbors_10p_max_cpu.png)
 
-Interestingly, Rustybgp uses the smallest amount of CPU and OpenBGPD uses the most, by a lot. FRRouting 8 uses more  CPU at 1750 neighbors than 7.5.1. I don't know that is important since it's still not very much
+Interestingly, RustyBGP uses the smallest amount of CPU and OpenBGPD uses the most, by a lot. FRRouting 8 uses more  CPU at 1750 neighbors than 7.5.1. I don't know that is important since it's still not very much
 
 ![max mem](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_many_neighbors_10p_max_mem.png)
 
@@ -106,7 +106,7 @@ Zoom in without OpenBGPD again.
 
 ![max mem](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_prefix_growth-no-openbgp_max_mem.png)
 
-Not sure how to interpret this exactly. It looks like additional routes don't really matter for memory until 1000 ish. FRRouting 8 still uses more memory but looks like a fixed amount perf neighbor not a percentage, so probably not so concerning. Rustybgp is the lowest memory user still.
+Not sure how to interpret this exactly. It looks like additional routes don't really matter for memory until 1000 ish. FRRouting 8 still uses more memory but looks like a fixed amount perf neighbor not a percentage, so probably not so concerning. RustyBGP is the lowest memory user still.
 ### results table
 <script src="https://gist.github.com/jopietsch/918047845cc0e5f84890cd7b0c175125.js"></script>
 
@@ -125,7 +125,7 @@ FRR 8 is somewhat slower than 7.5.1 or BIRD. OpenBGPD looks good here.
 
 ![max mem](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_1M_max_mem.png)
 
-BIRD uses 1/3 the memory of FRRouting. Rustybgp also uses significantly less memory than FRRouting, but it's slower too.  OpenBGPD uses the most memory, as usual.
+BIRD uses 1/3 the memory of FRRouting. RustyBGP also uses significantly less memory than FRRouting, but it's slower too.  OpenBGPD uses the most memory, as usual.
 
 ### results table
 <script src="https://gist.github.com/jopietsch/191af811bd28b5b34546fb14377edac1.js"></script>
@@ -142,7 +142,7 @@ I ran the same test suites with some little changes. I won't go through all the 
 
 ![route reception time](/assets/images/2021-08-followup-bgp-stacks/ec2-m5.12xlarge/bgperf_10K_route_reception.png)
 
-Route Reception has a greater difference between both FRRs and BIRD/Rustybgp. Maybe it's that 3950 is a consumer device with higher speed cores?
+Route Reception has a greater difference between both FRRs and BIRD/RustyBGP. Maybe it's that 3950 is a consumer device with higher speed cores?
 
 
 ### results table
@@ -234,7 +234,7 @@ Nothing interestingly different here.
 
 ![route reception time](/assets/images/2021-08-followup-bgp-stacks/ec2-t3.2xlarge/bgperf_1M_route_reception.png)
 
-While the others are about the same, Rustybgp doubles it's time here.
+While the others are about the same, RustyBGP doubles it's time here.
 
 ![max cpu](/assets/images/2021-08-followup-bgp-stacks/ec2-t3.2xlarge/bgperf_1M_max_cpu.png)
 
@@ -245,7 +245,16 @@ Just a lot less CPU resources for RustyBGP to use.
 
 After doing those suite of tests across all three different hardware, I realized that in some cases it's still telling us more about how much resources the test suite uses than the limits of these stacks. These no longer test OpenBGPD (or GoBGP) because it is so much less performant than the other stacks. I can't use my own AMD machine because these tests run out of memory, so this is all EC2 hardware.
 
-## 100 Prefies, Many Many Neighbors
+## 10 Prefies, Many Many Neighbors
+
+![route reception time](/assets/images/2021-08-followup-bgp-stacks/ec2-stress/bgperf_many_many_neighbors_10p_route_reception.png)
+
+Ooop, right away, something interesting. above 3000 neighbors BIRD gets sad/mad.  We seem to have found a boundary in BIRD where it gets much worse
+
+![max cpu](/assets/images/2021-08-followup-bgp-stacks/ec2-stress/bgperf_many_many_neighbors_10p_max_cpu.png)
+
+
+![max mem](/assets/images/2021-08-followup-bgp-stacks/ec2-stress/bgperf_many_many_neighbors_10p_max_mem.png)
 
 ## 100 Prefixes, Many Neighbors
 
@@ -254,7 +263,7 @@ In the above tests, there was a test for 100 Prefixes up to 750 neighbors. Let's
 
 ![route reception time](/assets/images/2021-08-followup-bgp-stacks/ec2-stress/bgperf_many_neighbors_100p_route_reception.png)
 
-Ooop, right away, something interesting. above 1000 neighbors BIRD gets sad/mad. In the above tests we did over 1000 neighbors with BIRD, but with only 10 prefixes. 
+Above 1000 neighbors BIRD gets sad/mad. In the above tests we did over 1000 neighbors with BIRD, but with only 10 prefixes. 
 
 ![max cpu](/assets/images/2021-08-followup-bgp-stacks/ec2-stress/bgperf_many_neighbors_100p_max_cpu.png)
 
@@ -267,11 +276,11 @@ Ooop, right away, something interesting. above 1000 neighbors BIRD gets sad/mad.
 
 ![route reception time](/assets/images/2021-08-followup-bgp-stacks/ec2-stress/bgperf_1000p_route_reception.png)
 
-Once again, BIRD is mad. RustyBgp also is > an order of magnitude slower than FRRouting.
+Once again, BIRD is mad. RustyBGP also is > an order of magnitude slower than FRRouting.
 
 ![max cpu](/assets/images/2021-08-followup-bgp-stacks/ec2-stress/bgperf_1000p_max_cpu.png)
 
-RustyBgp is using lots of CPU here. It looks like FRRouting doesn't get to 100% CPU until there are 750 neighbors here.
+RustyBGP is using lots of CPU here. It looks like FRRouting doesn't get to 100% CPU until there are 750 neighbors here.
 
 
 ![max mem](/assets/images/2021-08-followup-bgp-stacks/ec2-stress/bgperf_1000p_max_mem.png)
@@ -282,15 +291,15 @@ Interestingly, BIRD uses the least amount of memory. RustyBGP uses a lot of memo
 
 ## 1M routes
 
-ExaBGP is not really made to do 1M routes well, but we are going to try anyway.
+Lots of 1M route neighbors is not what BGPerf does well, there's lot of pythong here. We are going to try anyway.
 
 # Observations
 These tests use quite a bit of hardware in CPU and memory. Most of those resources are going into ExaBGP sending the prefixes rather than in the targets. In some ways this is a test of the test system. I'm still figuring out how to best test the targets without the test system getting in the way.
 
 
-## Rustybgp
+## RustyBGP
 
-I've seen twitter claims that Rustybgp is significantly faster that FRRouting, but I can't reproduce that here. I'm sure I'm missing something. RustyBgp is still missing a lot of necessary BGP daemon features, I'm just not testing them.
+I've seen twitter claims that RustyBGP is significantly faster that FRRouting, but I can't reproduce that here. I'm sure I'm missing something. RustyBGP is still missing a lot of necessary BGP daemon features, I'm just not testing them.
 
 ## BIRD
 
