@@ -26,7 +26,7 @@ Route reception is the time from the first route received until all routes are r
 ![route reception time](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_10K_route_reception.png)
 
 
-The first thing that jumps out is how much slower OpenBGPD is especially at 100, and even 50, neighbors. While harder to see, bird and rusytbgp at 100 neighbors are considerably slower than the two FRRoutings, 18s compared to 9-10s.
+The first thing that jumps out is how much slower OpenBGPD is especially at 100, and even 50, neighbors. While harder to see, BIRD and RustyBGP at 100 neighbors are considerably slower than the two FRRoutings, 18s compared to 9-10s.
 
 ![max cpu](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_10K_max_cpu.png)
 
