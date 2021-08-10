@@ -113,6 +113,8 @@ Not sure how to interpret this exactly. It looks like additional routes don't re
 ## 1M routes.
  Since the internet is getting close to 1M routes, how do these stacks do with 1M routes and multiple neighbors?
 
+ **CAVEAT** As I've been thinking about this test I've realized it's not doing a good job of representing actually connecting to internet routes. It's 1M /32s that are all unique, so in the end, if you have 5 neighbors, you have 5 million routes. It's what I can do for now, I'll continue to work on improving this test.
+
 ![route reception time](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_1M_route_reception.png)
 
 This is the first time that RustyBGP is considerably slower than all the others.
