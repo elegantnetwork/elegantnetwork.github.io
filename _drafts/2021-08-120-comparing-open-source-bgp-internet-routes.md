@@ -49,11 +49,11 @@ These CPU graphs aren't really that interesting.
 
 ## GoBGP resource utilization
 
-![GoBGP max mem](/assets/images/2021-08-bgp-stacks-internet/bgperf_GoBGP-MRT-all_max_mem.png)
+![GoBGP max mem](/assets/images/2021-08-bgp-stacks-internet/bgperf_gobgp-mrt-all_max_mem.png)
 
 Pretty similar results to those from bgpdump2
 
-![GoBGP max cpu](/assets/images/2021-08-bgp-stacks-internet/bgperf_GoBGP-MRT-all_max_cpu.png)
+![GoBGP max cpu](/assets/images/2021-08-bgp-stacks-internet/bgperf_gobgp-mrt-all_max_cpu.png)
 
 Still not that interesting.
 
@@ -105,6 +105,8 @@ In these tests BIRD is the winner. That doesn't mean in all tests, just these. I
 
 
 There is a big mismatch between what I am seeing from RustyBGP and what Fujita is seeing. I'm not sure what that means.
+
+This post probably took the most time to get results even though there aren't that many. It's mostly because trying to figure out the issues of tests not finishing. bgperf isn't sophisticated enough to notice that a test will never finish and so it should just kill things.
 
 ## Questions
  I don't the impact of the monitor on these results. GoBGP is the slowest stack and it's being used as a monitor. If I change the monitor will that change results in an important way? I hope not because it is consistent, but I just don't know.
