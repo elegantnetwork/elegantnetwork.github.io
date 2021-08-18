@@ -31,7 +31,7 @@ Lots of things that might jump out fast. RustyBGP and GoBGP are the slowest, als
 
 ## GoBGP results
 
-![GoBGP elapsed time](/assets/images/2021-08-bgp-stacks-internet/bgperf_GoBGP-MRT-all_elapsed.png)
+![GoBGP elapsed time](/assets/images/2021-08-bgp-stacks-internet/bgperf_gobgp-mrt-all_elapsed.png)
 
 Using GoBGP as the MRT generator is clearly slower then bgpdump2. Maybe that makes it more realistic, I don't know. What's interesting is that for 5 and 10 neighbors, FRRouting 7.5.1, 8.0 and BIRD are exactly the same, which means that that they can't go any faster. However, OpenBGPD and RustyBGP are slower. It's also interesting that I could test > 20 neighbors for OpenBGPD, everything completed. BIRD is again the fastest with FRR 7.5.1 and 8.0 just a little bit behind. OpenBGPD is considerably slower with > 10 neighbors, 2-3 times slower. GoBGP is faster than RustyBGP, which is not expected.
 
