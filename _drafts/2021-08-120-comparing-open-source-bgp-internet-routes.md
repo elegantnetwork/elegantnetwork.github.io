@@ -27,13 +27,13 @@ I don't know how realistic it is to have 40-50 BGP peers with full BGP peers.
 First we'll look at bgpdump2. bgpdump2 is really fast, so it can overwhelm the target.
 ![bgpdump elapsed time](/assets/images/2021-08-bgp-stacks-internet/bgperf_bgpdump-all_elapsed.png)
 
-Lots of things that might jump out fast. RustyBGP and GoBGP are the slowest, also RustyBGP, GoBGP,  and Openbgpd don't have results for 30, 40, or 50 neighbors. BIRD is the fastest. FRR 8 is a bit faster than FRR 7.5.1. Why don't OpenBGP and RustyBGP have results over 20? Starting at 30 neighbors, for both OpenBGP and RustyBGP I could not get them to ever finish. I'll talk about that below. GoBGP was just so slow I stopped.
+Lots of things that might jump out fast. RustyBGP and GoBGP are the slowest, also RustyBGP, GoBGP,  and OpenBGPD don't have results for 30, 40, or 50 neighbors. BIRD is the fastest. FRR 8 is a bit faster than FRR 7.5.1. Why don't OpenBGPD and RustyBGP have results over 20? Starting at 30 neighbors, for both OpenBGPD and RustyBGP I could not get them to ever finish. I'll talk about that below. GoBGP was just so slow I stopped.
 
 ## GoBGP results
 
 ![GoBGP elapsed time](/assets/images/2021-08-bgp-stacks-internet/bgperf_GoBGP-MRT-all_elapsed.png)
 
-Using GoBGP as the MRT generator is clearly slower then bgpdump2. Maybe that makes it more realistic, I don't know. What's interesting is that for 5 and 10 neighbors, FRRouting 7.5.1, 8.0 and BIRD are exactly the same, which means that that they can't go any faster. However, OpenBGPD and RustyBGP are slower. It's also interesting that I could test > 20 neighbors for OpenBGPD, everything completed. BIRD is again the fastest with FRR 7.5.1 and 8.0 just a little bit behind. OpenBGP is considerably slower with > 10 neighbors, 2-3 times slower. GoBGP is faster than RustyBGP, which is not expected.
+Using GoBGP as the MRT generator is clearly slower then bgpdump2. Maybe that makes it more realistic, I don't know. What's interesting is that for 5 and 10 neighbors, FRRouting 7.5.1, 8.0 and BIRD are exactly the same, which means that that they can't go any faster. However, OpenBGPD and RustyBGP are slower. It's also interesting that I could test > 20 neighbors for OpenBGPD, everything completed. BIRD is again the fastest with FRR 7.5.1 and 8.0 just a little bit behind. OpenBGPD is considerably slower with > 10 neighbors, 2-3 times slower. GoBGP is faster than RustyBGP, which is not expected.
 
 ## bgpdump2 resource utilization
 
@@ -83,32 +83,28 @@ I did find some interesting things when getting bgpdump2 to play back. When I fi
 GoBGP uses a lot more resources which is why I ran it on the EC2 instance, so that the tests wouldn't run out of resources.
 
 # RustyBGP
-
-With bgpdump2, I got inconsistent results with 20 or more neighbors. Some neighbors never established connection. 
+There are seveveral issues with RustyBGP and these tests. First off, I couldn't get it to always finish. With bgpdump2, I got inconsistent results with 20 or more neighbors. Some neighbors never established connection. 
 
 RustyBGP also blocks a lot when trying to get the neighbor data, even if there is available CPU on the machine.  bgperf tries to get neighbor info every second, but also I sometimes run commands to get the data to see what is going on, and it will block for 10s of seconds.
 
+The other big issue is that my results are not at all the same as the results from the creator of RustyBGP. [https://twitter.com/brewaddict/status/1427781197191475208](https://twitter.com/brewaddict/status/1427781197191475208). ![RustyBGP results from FUJITA](https://pbs.twimg.com/media/E9B8klXVgAI049H?format=jpg&name=large) There's a lot that are different in our testing. I think the biggest is that bgperf requires all the prefixes sent to a monitor and it checks that all the prefixes have been received by the target. His test checker update-watcher checks to see that the number of messages has stopped changing. In the cases I've seen in which the prefixes never got sent, this would show very different results than what I see. He is also using multiple VMs, including separate VMs for the testers. However, I made sure that the tests had idle CPU so the advantage of more machines shouldn't have matters. He is using GoBGP as a tester, as are some of the bgperf tests here, however he is using a custom one to be more efficient as a tester. I tried that out and got the same results, though it did use a little bit less memory.
+
+Still, I don't know why my results are so very different.
 
 
-I don't know what to do about RustyBGP. It's hard for me to test and I'm not getting similar results (at all) to the creator. [https://twitter.com/brewaddict/status/1425607915080097800](https://twitter.com/brewaddict/status/1425607915080097800)
-
-
-Theres' a lot that are different in our testing.
-
-https://github.com/fujita/misc/tree/master/fullroute-bench/update-watcher
 
 # OpenBGPD
-With bgpdump2, Openbgpd would connect all 30 neighbors, run for a long time, get to where the target had received full prefixes (800k) from 29 of the 30 neighbors, and then the prefixes would drop to 0 for 2-3 neighbors and never increment. I ran this at least 3 times with the same results. I don't think the neighbors timed out. I do not know what was going on. Because bgpdump2 plays back so fast, I wonder how much this is artificial, but BIRD and FRR do fine with this. In the tests with GoBGP OpenBGPD doesn't have this problem.
+With bgpdump2, OpenBGPD would connect all 30 neighbors, run for a long time, get to where the target had received full prefixes (800k) from 29 of the 30 neighbors, and then the prefixes would drop to 0 for 2-3 neighbors and never increment. I ran this at least 3 times with the same results. I don't think the neighbors timed out. I do not know what was going on. Because bgpdump2 plays back so fast, I wonder how much this is artificial, but BIRD and FRR do fine with this. In the tests with GoBGP OpenBGPD doesn't have this problem.
 
 
 
 # Conclusions
 Is bgpdump2 or GoBGP MRT playback more realistic? Don't know, but the different results are interesting.
 
-I mentioned that these are more realistic than my previous tests. That is definitely true for internet routes. However, if you have a RouteServer with > 1000 neighbors, they might all have unique prefixes, and so those tests might be realistic for that scenario.
+In these tests BIRD is the winner. That doesn't mean in all tests, just these. I mentioned that these are more realistic than my previous tests. That is definitely true for internet routes. However, if you have a RouteServer with > 1000 neighbors, they might all have unique prefixes, and so those tests might be realistic for that scenario.
 
 
-There is a big mismatch between what I am seeing from RustyBGP and what Fujito is seeing.
+There is a big mismatch between what I am seeing from RustyBGP and what Fujita is seeing. I'm not sure what that means.
 
 ## Questions
- I don't the impact of the monitor on these results
+ I don't the impact of the monitor on these results. GoBGP is the slowest stack and it's being used as a monitor. If I change the monitor will that change results in an important way? I hope not because it is consistent, but I just don't know.
