@@ -7,6 +7,10 @@ excerpt: Open source BGP stacks are very important, but I don't think they get t
 description: "Compare some simple performance characteristics of three Open Source BGP stacks: BIRD, FRRouting, and Gobgp."
 ---
 
+- 2nd Post [Followup Measuring BGP Stacks Performance](https://elegantnetwork.github.io/posts/followup-measuring-BGP-stacks/)
+- 3rd Post [Comparing Open Source BGP stacks with internet routes](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-internet-routes)
+
+
 Open source BGP stacks are very important, but I don't think they get the love they deserve. There's lots going on in open source BGP stacks and I can't keep up. So I thought I'd like to **quantitatively compare them.** This is one, often tiny, aspect of evaluating a BGP stack. I did fairly simple testing. Very little policy, just the number of routes and/or number of neighbors are the independent variables.
 
 The stacks evaluated are [BIRD](https://bird.network.cz/), [FRRouting](https://frrouting.org/), [GoBGP](https://github.com/osrg/gobgp). These have different sets of features, for instance both FRR and BIRD have more full routing stacks that include other protocols. BIRD and FRRouting are single process/core stacks while gobgp can use multiple cores. One of the reasons I did these tests is that **I was hoping that we'd see the benefits of multiple cores.**

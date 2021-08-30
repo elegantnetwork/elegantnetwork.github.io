@@ -7,6 +7,10 @@ excerpt: After I published the post on measuring open source BGP stacks I was em
 description: Systematic performance measurement of Open Source BGP Stacks, adding RustyBGP and OpenBGPD
 ---
 
+- 1st Post [Comparing Open Source BGP Stacks](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-stacks/)
+- 3rd Post [Comparing Open Source BGP stacks with internet routes](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-internet-routes)
+
+
 After I published [the post on measuring open source BGP stacks](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-stacks/), I was embarrassed after I realized how haphazard the testing was. I was not very systematic about the way I tried different test parameters. So I hacked on [bgperf](https://github.com/jopietsch/bgperf), added some more reporting and created a new batch feature that iterates through parameters systematically, and automatically graphs the results. By request, I added [RustyBGP](https://github.com/osrg/RustyBGP) and [OpenBGPD](http://www.openbgpd.org/). I've only added rudimentary support for these just to get started testing the number of prefixes and neighbors. RustyBGP isn't yet a fully formed BGP stack; I don't think it has much support for any kind of policy yet. 
 
 In these tests I stopped testing GoBGP, even though bgperf still supports it. As you can see from the previous post, it uses a lot more resources and is much slower. It makes the graphs much harder to interpret. I also only test the single table version of bird, because it's the easier config and it's faster.
