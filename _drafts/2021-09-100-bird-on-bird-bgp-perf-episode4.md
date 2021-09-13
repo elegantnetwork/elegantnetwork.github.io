@@ -76,6 +76,13 @@ I did no debugging. Exa works with all the other BGP stacks just fine, and Rusty
 
 
 ## Exa generator, 1M prefixes
+
+![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_1M_exa_elapsed.png)
+![memory usage](/assets/images/2021-09-bgp-episode4/bgperf_1M_exa_max_mem.png)
+
+![max cpu](/assets/images/2021-09-bgp-episode4/bgperf_1M_exa_max_cpu.png)
+
+
 # MRT
 ## Bbgpdump2 again
 
