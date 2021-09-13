@@ -6,8 +6,7 @@ title: Network Design Tools
 excerpt: It's too hard to design, build, scale, and operate networks well.
 description: We need real networking design tools.
 ---
-
-IP Networking as an industry, discipline, and practice is broken, badly broken. It's critical to change how this industry works. My best idea about what is broken and what needs to change is that networks are too hard to understand. I think network design is all about understanding. As a network engineer, can I understand what I did 3 months ago, 3 years ago, etc.? Can somebody new understand what I did? Can I understand what will happen as the network changes? Do I understand if the network actually do what is required of it?
+If networking is an engineering discipline, where are it's design tools?
 
 Obviously, there is a lot that is working in networking, since you know, the Internet and networks rule the world. We need much much better than we have to [Get the network out of the way](https://elegantnetwork.github.io/posts/network-out-of-the-way/). There have been attempts, like SDN, that are much more solutions looking for a problem than they are actually solutions to real problems. "separate control plane from data plane" sure sounds like it means something important, but does it really? (I cannot tell you how many interviews I've donewhen I asked people what SDN means and gotten that answer. No hire if they can't dive in deeper than that.)
 
@@ -19,7 +18,7 @@ Why is design so important? We need to be able to do engineering and study trade
 
 ## Where did this idea come from?
 
-I've been pretty abstract so let me describe where I'm coming from. In 2009, we started trying to figure out how to use commodity ASICs in pizza boxes for our aggregation network. The devices we had were based on Broadcom Scorpion, a 10G x 48 device. With a three tier Clos, that's 2880 devices. I knew that in the future we'd have 64 port devices, which is a max of 5120. The Network OS that we had only had OSPF. Do you know how to get OSPF to work across 5K devices? Can it be done? How? I certainly didn't know how. As we worked it out on a whiteboard, I needed to see it running. What was available wasy Dynamips with Dynagen, which would run Cisco IOS device images in a virtual machine. I wrote software to build out these Clos Networks and see simple things like convergence and
+I've been pretty abstract so let me describe where I'm coming from. In 2009, we started trying to figure out how to use commodity ASICs in pizza boxes for our aggregation network. The devices we had were based on Broadcom Scorpion, a 10G x 48 device. With a three tier Clos, that's 2880 devices. I knew that in the future we'd have 64 port devices, which is a max of 5120. The Network OS that we had only had OSPF. Do you know how to get OSPF to work across 5K devices? Can it be done? How? I certainly didn't know how. As we worked it out on a whiteboard, I needed to see it running. What was available was Dynamips with Dynagen, which would run Cisco IOS device images in a virtual machine. I wrote software to build out these Clos Networks and see simple things like convergence and
 
 
 centralized view of configuration. it would be better to use intent, declarative, and be able to get all the assumptions out of our head.

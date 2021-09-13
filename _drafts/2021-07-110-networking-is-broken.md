@@ -2,7 +2,7 @@
 layout: post
 comments: true
 author: Justin Pietsch
-title: Understanding Networks
+title: Networking is Broken
 excerpt: It's too hard to design, build, scale, and operate networks well.
 description: Networking is broken. It's too hard to understand networks, which makes it too hard to design, build, scale, and operate networks the way that we need for today's business and society.
 ---
@@ -12,6 +12,23 @@ IP Networking as an industry, discipline, and practice is broken, badly broken. 
 I want it to be known that we can and should have a lot better. It's possible, but we need to do a lot of work to get there. We should demand better, and create better, much better.
 
 I want a radically different industry. Obviously, there is a lot that is working in networking, since you know, the Internet and networks rule the world. We need much much better than we have to [Get the network out of the way](https://elegantnetwork.github.io/posts/network-out-of-the-way/). There have been attempts, like SDN, that are much more solutions looking for a problem than they are actually solutions to real problems. "separate control plane from data plane" sure sounds like it means something important, but does it really? (I cannot tell you how many interviews I've done when I asked people what SDN means and gotten that answer. No hire if they can't dive in deeper than that.)
+
+
+## What's wrong
+* not very good engineering
+  * what can we do about it?
+* missing design tools
+* No design tools
+* missing tools
+  * workflow tools
+  * keeping track of running state
+* we think the devices are athoritative for the state of the network
+* Not enough monitoring
+* Not enough focus on gettting the network out of the way
+* Not engineering
+  * not systematic or system engineering
+* mis
+
 
 **It's too hard to design, build, scale, and operate networks well.** That is because we don't have the software systems in our field that are necessary, we don't think of what we do as engineering, and we don't look across the whole network systematically. I think the biggest missing piece is good design software and better design practices, but there are major missing pieces for all aspects of network engineering. It's too hard to really understand, to wrap your head around all the decisions that are made about a network, to observe and monitor everything it's doing, and then to turn that information into action and wisdom. How do we deal with the complexity that is networking? How do we make good design decisions that solve the problems for the business that the network supports, as well as then is operatable over time?
 
