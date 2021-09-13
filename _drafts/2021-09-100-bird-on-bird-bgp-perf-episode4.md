@@ -17,7 +17,7 @@ Maria Matejka <maria.matejka@nic.cz> added a BIRD generator instead of ExaBGP be
 
 These tests use the same versions of NOSes as before except for RustyBGP. It's using the latest as of 2021-09-11.
 
-So I tried using BIRD as a generator instead of Exa, and immediately found a surprise. BIRD as a generator most effects BIRD as the target in terms of performance. I still don't know why, but I can't get it not to. In the process I've added a little more sophistication to bgperf. Now if it sees the amount of prefixes received at the monitor and the number of neighbors complete hasn't changed for 30 intervals (seconds) it fails the test. Also if the number of prefixes received at the monitor drops for more than 5 intervals then it fails. 
+So I tried using BIRD as a generator instead of Exa. In the process I've added a little more sophistication to bgperf. Now if it sees the amount of prefixes received at the monitor and the number of neighbors complete hasn't changed for 30 intervals (seconds) it fails the test. Also if the number of prefixes received at the monitor drops for more than 5 intervals then it fails. 
 
 Last time I noticed that with Bgpdump2 as the tester, OpenBGPD as the target and 30 neighbors, OpenBGPD stalled and then dropped a neighbor. I still don't know why, but I've added a new errors column in the stats. For BIRD and Bgpdump2 as testers, it will grep the tester logs to see if there are errors and count them.
 
@@ -25,6 +25,7 @@ I'm starting to get to the place where I find weird things, maybe because of the
 
 Let's get to the data
 
+# Unique prefixes using BIRD and ExaBGP as terter
 ## BIRD as tester / generator with many many neighbors
 This is a test that is harder than I did with ExaBGP. I couldn't get Exa to do 1000 prefixes for this many neighbors. This might not be a realistic set of tests. I don't know if people have 1000 prefixes from 1500 neighbors. But as we'll see, it shows interesting results.
 
@@ -32,9 +33,9 @@ If there isn't an entry for a NOS, it's because the test failed for one of the r
 
 ![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_90hold_elapsed.png)
 
-OK. **Wow**. Not what I expected at all. BIRD is considerably worse than everything else. Looking back that [the second post](https://elegantnetwork.github.io/posts/followup-measuring-BGP-stacks/) in the section about extreme tests, BIRD does much worse than everybody else at 1000 neighbors, 10 prefixes, or 500+ neighbors, 1000 prefixes. That's what we are seeing here as well. I had just forgotten those results. It's just that with BIRD as a tester it's faster and easier to test these extremes.
+Not what I expected at all. BIRD is considerably worse than everything else, because I forgot about previous results. Looking back [the second post](https://elegantnetwork.github.io/posts/followup-measuring-BGP-stacks/) in the section about extreme tests, BIRD does much worse than everybody else at 1000 neighbors, 10 prefixes, or 500+ neighbors, 1000 prefixes. That's what we are seeing here as well. I had just forgotten those results. It's just that with BIRD as a tester it's faster and easier to test these extremes.
 
-Though it's hard to see in this graph because of BIRD's outsized times, but RustyBGP looks like it got better than it was before. It's still slower than FIRR, but not 10x slower.
+Though it's hard to see in this graph because of BIRD's outsized times, but RustyBGP looks like it got better than it was before. It's still slower than FRR, but not 10x slower.
 
 ![memory usage](/assets/images/2021-09-bgp-episode4/bgperf_90hold_max_mem.png)
 
@@ -50,7 +51,32 @@ This graphs shows the minimum free on the 64 GB machine I'm using for this test.
 <script src="https://gist.github.com/jopietsch/d3e6ad7d946229d2bb967613012529b6.js"></script>
 ### TODO many neighbors, 10 prefixes
 
+## ExaBGP many neighbors
 
+Just to make sure that the other changes made don't give us different results, also ran similar tests using exaBGP as the tester.
+
+### RustyBGP
+I cannot get RustyBGP to work with ExaBGP as the tester. I just get
+```
+$ more /tmp/bgperf/rustybgp/rustybgp.log
+Hello, RustyBGPd (32 cpus)!
+10.10.0.2: down std::io::Error
+10.10.0.3: notification 5 2
+```
+I think that means a BGP Error (Notification) code of 5,2, which would be FSM, Receive Unexpected Message in OpenConfirm State.
+
+I did no debugging. Exa works with all the other BGP stacks just fine, and RustyBGP works with the other testers, so I don't know what's going on.
+
+## Bird generator, 1M prefixes
+![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_1M_bird_elapsed.png)
+![memory usage](/assets/images/2021-09-bgp-episode4/bgperf_1M_bird_max_mem.png)
+
+![max cpu](/assets/images/2021-09-bgp-episode4/bgperf_1M_bird_max_cpu.png)
+
+
+
+## Exa generator, 1M prefixes
+# MRT
 ## Bbgpdump2 again
 
 TO see if RustyBGP can do better than it did before. These results might not be exactly the same as before because bgperf now checks to see if things are stalled or prefixes count is dropping.
@@ -85,7 +111,32 @@ openbgp,openbgp,OpenBGPD 7.1,50,800000,800000,878406,0,570,3,567,606.06,171,18.5
 
 <script src="https://gist.github.com/jopietsch/c4bff9381f5c93b68c20b3f794f43072.js"></script>
 
-## Hold Timers
+
+## GoBGP MRT
+![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_gobgp-mrt_elapsed.png)
+
+![memory usage](/assets/images/2021-09-bgp-episode4/bgperf_gobgp-mrt_max_mem.png)
+
+![free memory](/assets/images/2021-09-bgp-episode4/bgperf_gobgp-mrt_min_free.png)
+
+![max cpu](/assets/images/2021-09-bgp-episode4/bgperf_gobgp-mrt_max_cpu.png)
+
+
+```
+$ grep FAILED gobgp-mrt.csv
+frr,frr,FRRouting 7.5.1_git (6d71b511efd5).,20,800000,744000,796303,1,365,5,360,380.56,214,4.408,11,206.953,,2021-09-13,64,249.02GB,0,FAILE
+,FAILED: dropping received count 796303 neighbors_checked 19
+frr 8,frr_c,FRRouting 8.0-bgperf (136036a6020d).,20,800000,744000,796289,1,306,7,299,321.15,219,4.187,10,204.979,,2021-09-13,64,249.02GB,0,FAILED,FAILED: dropping received count 796289 neighbors_checked 14
+openbgp,openbgp,OpenBGPD 7.1,20,800000,744000,796306,0,1006,8,998,1020.5,212,16.343,2,178.892,,2021-09-13,64,249.02GB,0,FAILED,FAILED: stuck received count 796306 neighbors_checked 0
+rustybgp,rustybgp,rustybgpd,20,800000,744000,796719,7,330,7,323,351.75,651,12.371,7,200.624,,2021-09-13,64,249.02GB,0,FAILED,FAILED: stuck received count 796719 neighbors_checked 13
+frr,frr,FRRouting 7.5.1_git (afed60012ff9).,30,800000,744000,796304,0,571,5,566,590.93,214,6.467,4,190.913,,2021-09-13,64,249.02GB,0,FAILED
+FAILED: dropping received count 796304 neighbors_checked 12
+frr 8,frr_c,FRRouting 8.0-bgperf (df1d18a186e3).,30,800000,744000,796288,1,491,5,486,512.13,216,6.521,3,187.757,,2021-09-13,64,249.02GB,0,FAILED,FAILED: dropping received count 796288 neighbors_checked 13
+openbgp,openbgp,OpenBGPD 7.1,30,800000,744000,796305,0,1412,6,1406,1431.76,217,23.448,1,152.019,,2021-09-13,64,249.02GB,0,FAILED,FAILED: stuck received count 796305 neighbors_checked 0
+rustybgp,rustybgp,rustybgpd,30,800000,744000,245197,15,385,6,379,420.65,681,13.594,2,182.888,,2021-09-13,64,249.02GB,0,FAILED,FAILED: stuck received count 245197 neighbors_checked 7
+```
+
+# Hold Timers
 
 What should BGP Hold Timer be for a test like this? The default is 90 seconds, but if the test doesn't even take 90 seconds then we aren't testing if hold timers will work.
 
