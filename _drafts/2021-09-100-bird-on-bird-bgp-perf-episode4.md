@@ -26,16 +26,34 @@ I'm starting to get to the place where I find weird things, maybe because of the
 Let's get to the data
 
 # Unique prefixes using BIRD and ExaBGP as tester
+
+If there isn't an entry for a NOS, it's because the test failed for one of the reasons above: 30 seconds stuck at the same number of prefixes received at the monitor or the number of prefixes dropped for 5 seconds.
+
+BIRD
+
+![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_10_bird_elapsed.png)
+
+EXA
+
+![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_10_exa_elapsed.png)
+
+![route reception time](/assets/images/2021-09-bgp-episode4/bgperf_10_exa_route_reception.png)
+
+
+![elapsed time](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_many_neighbors_10p_route_reception.png)
 ## BIRD as tester / generator with many many neighbors
 This is a test that is harder than I did with ExaBGP. I couldn't get Exa to do 1000 prefixes for this many neighbors. This might not be a realistic set of tests. I don't know if people have 1000 prefixes from 1500 neighbors. But as we'll see, it shows interesting results.
 
-If there isn't an entry for a NOS, it's because the test failed for one of the reasons above: 30 seconds stuck at the same number of prefixes received at the monitor or the number of prefixes dropped for 5 seconds.
+
 
 ![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_90hold_elapsed.png)
 
 Not what I expected at all. BIRD is considerably worse than everything else, because I forgot about previous results. Looking back [the second post](https://elegantnetwork.github.io/posts/followup-measuring-BGP-stacks/) in the section about extreme tests, BIRD does much worse than everybody else at 1000 neighbors, 10 prefixes, or 500+ neighbors, 1000 prefixes. That's what we are seeing here as well. I had just forgotten those results. It's just that with BIRD as a tester it's faster and easier to test these extremes.
 
 Though it's hard to see in this graph because of BIRD's outsized times, but RustyBGP looks like it got better than it was before. It's still slower than FRR, but not 10x slower.
+
+
+OpenBGPD fails at 1000n_1000p because it runs out of memory on my 64 GB machine and is killed off by the linux kernel.
 
 ![memory usage](/assets/images/2021-09-bgp-episode4/bgperf_90hold_max_mem.png)
 
@@ -54,8 +72,6 @@ grep RMT /tmp/bgperf/tester/*.log | grep -v NEXT_HOP
 Usually these errors are hold timers expiring
 
 <script src="https://gist.github.com/jopietsch/d3e6ad7d946229d2bb967613012529b6.js"></script>
-### TODO many neighbors, 10 prefixes
-
 ## ExaBGP many neighbors
 
 Just to make sure that the other changes made don't give us different results, also ran similar tests using exaBGP as the tester.
@@ -160,14 +176,19 @@ BIRD as a tester is a tester that takes less resources, so I've made it the defa
 Did RustyBGP get better? Yes, much better. It's the fastest in the MRT playback tests. It's not as fast as FRR in the many neighbors tests, but those are less realistic.
 
 
+### OpenBGPD
+as noticed before it has some reset on bgpdump2 that I have tracked down
 
+it also uses more memory, and a lot more memory per neighbor. It's been noticed in previous comments that is because it has a separate ADJ-RIB-IN for every neighbor rather than a shared one with pointers. I think the implication is that it might be for safty. Whatever the reason, if you have lots of neighbors it will cost you. Possibly it doesn't matter, but it might.
 # Stuff
 [bgperf](github -- bgperf)
 
 
 
 # next tests
-* redo gobgp-mrt
+* I need to figure out elapsed vs route reception or something
+* exa vs bird on 10prefixes -- why are the bird on bird so high?
 * 5 second hold timer with bird as generator
 * 5 second with bgpdump as generator -- how do I do that
 * why does openbgp fail with bird and exa at 5n1Mp?
+* get logs on openbgp fail at 30n 800kP bgpdump
