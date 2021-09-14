@@ -25,7 +25,7 @@ I'm starting to get to the place where I find weird things, maybe because of the
 
 Let's get to the data
 
-# Unique prefixes using BIRD and ExaBGP as terter
+# Unique prefixes using BIRD and ExaBGP as tester
 ## BIRD as tester / generator with many many neighbors
 This is a test that is harder than I did with ExaBGP. I couldn't get Exa to do 1000 prefixes for this many neighbors. This might not be a realistic set of tests. I don't know if people have 1000 prefixes from 1500 neighbors. But as we'll see, it shows interesting results.
 
@@ -47,6 +47,11 @@ This graphs shows the minimum free on the 64 GB machine I'm using for this test.
 
 ![tester errors](/assets/images/2021-09-bgp-episode4/bgperf_90hold_tester_errors.png)
 
+These errors are counted based on grepping the BIRD tester logs.
+```
+grep RMT /tmp/bgperf/tester/*.log | grep -v NEXT_HOP
+```
+Usually these errors are hold timers expiring
 
 <script src="https://gist.github.com/jopietsch/d3e6ad7d946229d2bb967613012529b6.js"></script>
 ### TODO many neighbors, 10 prefixes
@@ -54,6 +59,8 @@ This graphs shows the minimum free on the 64 GB machine I'm using for this test.
 ## ExaBGP many neighbors
 
 Just to make sure that the other changes made don't give us different results, also ran similar tests using exaBGP as the tester.
+
+![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_lots_exa_elapsed.png)
 
 ### RustyBGP
 I cannot get RustyBGP to work with ExaBGP as the tester. I just get
@@ -67,21 +74,14 @@ I think that means a BGP Error (Notification) code of 5,2, which would be FSM, R
 
 I did no debugging. Exa works with all the other BGP stacks just fine, and RustyBGP works with the other testers, so I don't know what's going on.
 
-## Bird generator, 1M prefixes
+## 1M prefixes
+BIRD as tester
 ![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_1M_bird_elapsed.png)
-![memory usage](/assets/images/2021-09-bgp-episode4/bgperf_1M_bird_max_mem.png)
 
-![max cpu](/assets/images/2021-09-bgp-episode4/bgperf_1M_bird_max_cpu.png)
-
-
-
-## Exa generator, 1M prefixes
-
+ExaBGP as tester
 ![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_1M_exa_elapsed.png)
-![memory usage](/assets/images/2021-09-bgp-episode4/bgperf_1M_exa_max_mem.png)
 
-![max cpu](/assets/images/2021-09-bgp-episode4/bgperf_1M_exa_max_cpu.png)
-
+The Exa results as so much slower, so it mostly looks like the exa tests this large are really testing the tester.
 
 # MRT
 ## Bbgpdump2 again
@@ -147,15 +147,27 @@ rustybgp,rustybgp,rustybgpd,30,800000,744000,245197,15,385,6,379,420.65,681,13.5
 
 What should BGP Hold Timer be for a test like this? The default is 90 seconds, but if the test doesn't even take 90 seconds then we aren't testing if hold timers will work.
 
+what tests should I do for this?
+
 ### Hold Timers 5 on BIRD
 
 
 ## What did we learn
 I thought I'd learned about a BIRD performance issue, but it turns out I already knew that. Also, are the tests that BIRD did bad on realistic? Unlikely. It's finding an edge case in which BIRD performs badly, but you are unlikely to get to that place.
 
-BIRD as a tester is a tester that takes less resources, so I've made it the default tester now.
+BIRD as a tester is a tester that takes less resources, so I've made it the default tester now. it's more pleasant. But Exa had a problem with RustyBGP, so it might be good to use it as one more compatibility test.
 
-Did RustyBGP get better? Yes, much better. It's the fastests in the MRT playback tests. It's not as fast as FRR in the many neighbors tests, but those are less realistic.
+Did RustyBGP get better? Yes, much better. It's the fastest in the MRT playback tests. It's not as fast as FRR in the many neighbors tests, but those are less realistic.
+
+
 
 # Stuff
 [bgperf](github -- bgperf)
+
+
+
+# next tests
+* redo gobgp-mrt
+* 5 second hold timer with bird as generator
+* 5 second with bgpdump as generator -- how do I do that
+* why does openbgp fail with bird and exa at 5n1Mp?
