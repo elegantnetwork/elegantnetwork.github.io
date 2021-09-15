@@ -15,6 +15,8 @@ description: But as we'll see, it shows interesting results.
 After the last post, I thought the this post would be either adding interesting BGP policy. But that's tricky. It's going to take some rethinking about how bgperf measures when a test is done, figuring out what filter is useful is hard, and also I want a little bit of a multi-vendor approach because there are already 5 NOSes and I want to add more. In the meantime, 
 Maria Matejka <maria.matejka@nic.cz> added a BIRD generator instead of ExaBGP because BIRD is faster and uses less memory. Also, Fujita Tomonori updated RustyBGP based on the results I found and improved it's performance. In seeing the affect of each of these I discovered some things I'm surprised about.
 
+Remember, these posts are as much about me figuring out how to test BGP stacks as they are about actually measuring those stacks. This episode will talk about some of the changes that I've made and what they mean. The test infrastructure influences the results more than I might like. I think that's mostly okay because mostly the results are about comparing between stacks so the differences should still pop out. That's not always going to be true; sometimes differences will be masked.
+
 These tests use the same versions of NOSes as before except for RustyBGP. It's using the latest as of 2021-09-11.
 
 So I tried using BIRD as a generator instead of Exa. In the process I've added a little more sophistication to bgperf. Now if it sees the amount of prefixes received at the monitor and the number of neighbors complete hasn't changed for 30 intervals (seconds) it fails the test. Also if the number of prefixes received at the monitor drops for more than 5 intervals then it fails. 
