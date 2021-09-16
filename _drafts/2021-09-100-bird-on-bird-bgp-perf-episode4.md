@@ -62,6 +62,8 @@ So is this current method better? I think so. Good enough? I hope so. It would b
 So for now, the best bet is to use BIRD as generator and not use Exa
 
 
+**So does BIRD have a problem with many neighbors? Yes, and I didn't see that until BIRD was also the tester.**
+
 ## BIRD as tester / generator with many many neighbors
 This is a test that is harder than I did with ExaBGP. I couldn't get Exa to do 1000 prefixes for this many neighbors. This might not be a realistic set of tests. I don't know if people have 1000 prefixes from 1500 neighbors. But as we'll see, it shows interesting results.
 
