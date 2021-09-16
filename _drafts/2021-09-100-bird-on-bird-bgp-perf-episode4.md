@@ -31,18 +31,37 @@ Let's get to the data
 
 If there isn't an entry for a NOS, it's because the test failed for one of the reasons above: 30 seconds stuck at the same number of prefixes received at the monitor or the number of prefixes dropped for 5 seconds.
 
-BIRD
+I know that some aspects of the test mechanism shows
+
+## 10 prefixes
+
+### BIRD as tester
 
 ![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_10_bird_elapsed.png)
 
-EXA
+This isn't what I expected. I don't remember BIRD doing so poorly. Something is going on when BIRD has many neighbors.
+
+### EXA as tester
+
+Let's look at Exa as tester.
 
 ![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_10_exa_elapsed.png)
 
-![route reception time](/assets/images/2021-09-bgp-episode4/bgperf_10_exa_route_reception.png)
-
+These aren't the results I remember, let's atually look at what we saw before.
 
 ![elapsed time](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_many_neighbors_10p_route_reception.png)
+
+These are the results from the 2nd post. Why is it so different than the Exa results I create now? It's all about time and measuring. There are three things in bgperf: tester, monitor, target. Each has to start up, connect to the right neighbors, and then the tester needs to send all the traffic. Originaly bgperf started the tester, started the target, started the monitor, waite for the monitor to connect, then started the elapsed timer. This masks a bunch of data that the tester has already sent to the target. Also, bgpdump as tester doesn't work if you start the tester before the target. So I changed the order of things and now in the elapsed there is some amount of tester startup time, but during that time the tester is sending traffic to the target.
+
+So because of the way bgperf was trying to exclude the tester time we masked a problem with BIRD. bummer.
+
+Now bgperf includes tester time in it, so the faster the tester startup the better.
+
+So is this current method better? I think so. Good enough? I hope so. It would be better if we established all the BGP sessions and then just started all the sending at the same time. There might be a way to do that with using policy on the receiver, but that's more work and sophistication in bgperf I don't have. 
+
+So for now, the best bet is to use BIRD as generator and not use Exa
+
+
 ## BIRD as tester / generator with many many neighbors
 This is a test that is harder than I did with ExaBGP. I couldn't get Exa to do 1000 prefixes for this many neighbors. This might not be a realistic set of tests. I don't know if people have 1000 prefixes from 1500 neighbors. But as we'll see, it shows interesting results.
 
