@@ -3,8 +3,8 @@ layout: post
 comments: true
 author: Justin Pietsch
 title: Bird on Bird, Episode 4 of BGP Perf testing 
-excerpt: 
-description: But as we'll see, it shows interesting results.
+excerpt: these posts are as much about me figuring out how to test BGP stacks as they are about actually measuring those stacks
+description: This post dives into specific issues with using BIRD as a tester and testing RustyBGP improvements.
 ---
 
 - 1st Post [Comparing Open Source BGP Stacks](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-stacks/)
@@ -12,18 +12,16 @@ description: But as we'll see, it shows interesting results.
 - 3rd Post [Comparing Open Source BGP stacks with internet routes](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-internet-routes)
 - 4th Post [Bird on Bird, Episode 4 of BGP Perf testing ](https://elegantnetwork.github.io/posts/bird-on-bird-bgp-perf-episode4)
 
-After the last post, I thought the this post would be either adding interesting BGP policy. But that's tricky. It's going to take some rethinking about how bgperf measures when a test is done, figuring out what filter is useful is hard, and also I want a little bit of a multi-vendor approach because there are already 5 NOSes and I want to add more. In the meantime, 
-Maria Matejka <maria.matejka@nic.cz> added a BIRD generator instead of ExaBGP because BIRD is faster and uses less memory. Also, Fujita Tomonori updated RustyBGP based on the results I found and improved it's performance. In seeing the affect of each of these I discovered some things I'm surprised about.
+After the last post, I thought the this post would be either adding interesting BGP policy. But that's tricky. It's going to take some rethinking about how [bgperf](https://github.com/jopietsch/bgperf) measures when a test is done, figuring out what filter is useful is hard, and also I want a little bit of a multi-vendor approach because there are already 5 NOSes and I want to add more. In the meantime, Maria Matejka <maria.matejka@nic.cz> added a BIRD generator in place of ExaBGP because BIRD is faster and uses less memory. Also, Fujita Tomonori updated RustyBGP based on the results I found and improved it's performance. In seeing the affect of each of these I discovered some things I'm surprised about.
 
 Remember, these posts are as much about me figuring out how to test BGP stacks as they are about actually measuring those stacks. This episode will talk about some of the changes that I've made and what they mean. The test infrastructure influences the results more than I might like. I think that's mostly okay because mostly the results are about comparing between stacks so the differences should still pop out. That's not always going to be true; sometimes differences will be masked.
 
 These tests use the same versions of NOSes as before except for RustyBGP. It's using the latest as of 2021-09-11.
 
-So I tried using BIRD as a generator instead of Exa. In the process I've added a little more sophistication to bgperf. Now if it sees the amount of prefixes received at the monitor and the number of neighbors complete hasn't changed for 30 intervals (seconds) it fails the test. Also if the number of prefixes received at the monitor drops for more than 5 intervals then it fails. 
+I tried using BIRD as a generator instead of Exa. In the process I've added a little more sophistication to bgperf. Now if it sees the amount of prefixes received at the monitor and the number of neighbors complete hasn't changed for 30 intervals (seconds) it fails the test. Also if the number of prefixes received at the monitor drops for more than 5 intervals then it fails. 
 
-Last time I noticed that with Bgpdump2 as the tester, OpenBGPD as the target and 30 neighbors, OpenBGPD stalled and then dropped a neighbor. I still don't know why, but I've added a new errors column in the stats. For BIRD and Bgpdump2 as testers, it will grep the tester logs to see if there are errors and count them.
 
-I'm starting to get to the place where I find weird things, maybe because of the test infrasture, maybe because of specific NOS behavior, and adapting and figuring out what's going on takes extra time.
+I'm starting to get to the place where I find weird things, maybe because of the test infrastructure, maybe because of specific NOS behavior, and adapting and figuring out what's going on takes extra time.
 
 Let's get to the data
 
@@ -41,28 +39,27 @@ I know that some aspects of the test mechanism shows
 
 This isn't what I expected. I don't remember BIRD doing so poorly. Something is going on when BIRD has many neighbors.
 
-### EXA as tester
+### ExaBGP as tester
 
-Let's look at Exa as tester.
 
 ![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_10_exa_elapsed.png)
 
-These aren't the results I remember, let's atually look at what we saw before.
+These aren't the results I remember, let's actually look at what we saw before.
 
 ![elapsed time](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_many_neighbors_10p_route_reception.png)
 
-These are the results from the 2nd post. Why is it so different than the Exa results I create now? It's all about time and measuring. There are three things in bgperf: tester, monitor, target. Each has to start up, connect to the right neighbors, and then the tester needs to send all the traffic. Originaly bgperf started the tester, started the target, started the monitor, waite for the monitor to connect, then started the elapsed timer. This masks a bunch of data that the tester has already sent to the target. Also, bgpdump as tester doesn't work if you start the tester before the target. So I changed the order of things and now in the elapsed there is some amount of tester startup time, but during that time the tester is sending traffic to the target.
+These are the results from the 2nd post. Why is it so different than the Exa results bgperf creates now? It's about what to measure measuring and when things are started. There are three things in bgperf: tester, monitor, and target. Each has to start up, connect to the right neighbors, and then the tester needs to send all the traffic. Originally bgperf started the tester, started the target, started the monitor, waited for the monitor to connect, then started the elapsed timer. This masks a bunch of data that the tester has already sent to the target. Also, bgpdump2 as tester doesn't work if you start the tester before the target. So I changed the order of things and now in the elapsed there is some amount of tester startup time, but during that time the tester is sending traffic to the target.
 
-So because of the way bgperf was trying to exclude the tester time we masked a problem with BIRD. bummer.
+Because of the way bgperf was trying to exclude the tester time we masked a problem with BIRD. bummer.
 
-Now bgperf includes tester time in it, so the faster the tester startup the better.
+Now bgperf includes tester time in it, because the tester is sending traffic to the traffic. The faster the tester startup the better.
 
-So is this current method better? I think so. Good enough? I hope so. It would be better if we established all the BGP sessions and then just started all the sending at the same time. There might be a way to do that with using policy on the receiver, but that's more work and sophistication in bgperf I don't have. 
+Is this current method better? I think so. Good enough? I hope so. It would be better if we established all the BGP sessions and then just started all the sending at the same time. There might be a way to do that with using policy on the receiver, but that's more work and sophistication in bgperf I don't have. 
 
-So for now, the best bet is to use BIRD as generator and not use Exa
+For now, the best bet is to use BIRD as generator and not use Exa.
 
 
-**So does BIRD have a problem with many neighbors? Yes, and I didn't see that until BIRD was also the tester.**
+**So does BIRD have a problem with many neighbors? Yes**, and I didn't see that until BIRD was also the tester.
 
 ## BIRD as tester / generator with many many neighbors
 This is a test that is harder than I did with ExaBGP. I couldn't get Exa to do 1000 prefixes for this many neighbors. This might not be a realistic set of tests. I don't know if people have 1000 prefixes from 1500 neighbors. But as we'll see, it shows interesting results.
@@ -71,16 +68,16 @@ This is a test that is harder than I did with ExaBGP. I couldn't get Exa to do 1
 
 ![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_90hold_elapsed.png)
 
-Not what I expected at all. BIRD is considerably worse than everything else, because I forgot about previous results. Looking back [the second post](https://elegantnetwork.github.io/posts/followup-measuring-BGP-stacks/) in the section about extreme tests, BIRD does much worse than everybody else at 1000 neighbors, 10 prefixes, or 500+ neighbors, 1000 prefixes. That's what we are seeing here as well. I had just forgotten those results. It's just that with BIRD as a tester it's faster and easier to test these extremes.
+BIRD is considerably worse than everything else; I had forgotten about previous results. Looking back [the second post](https://elegantnetwork.github.io/posts/followup-measuring-BGP-stacks/) in the section about extreme tests, BIRD does much worse than everybody else at 1000 neighbors, 10 prefixes, or 500+ neighbors, 1000 prefixes. That's what we are seeing here as well. I had just forgotten those results. It's just that with BIRD as a tester it's faster and easier to test these extremes.
 
 Though it's hard to see in this graph because of BIRD's outsized times, but RustyBGP looks like it got better than it was before. It's still slower than FRR, but not 10x slower.
 
 
-OpenBGPD fails at 1000n_1000p because it runs out of memory on my 64 GB machine and is killed off by the linux kernel.
+OpenBGPD fails at 1000n_1000p because it runs out of memory on my 64 GB machine and is killed off by the Linux kernel.
 
 ![memory usage](/assets/images/2021-09-bgp-episode4/bgperf_90hold_max_mem.png)
 
-BIRD is using a lot more memory than we've see it. Actually, I think something weird is going on in the way bgperf is measuring memory in this case that I haven't seen before.
+BIRD is using a lot more memory than we've see it. Actually, I think something weird is going on in the way bgperf is measuring memory in this case that I haven't seen before. But I only see this for BIRD. 
 
 ![free memory](/assets/images/2021-09-bgp-episode4/bgperf_90hold_min_free.png)
 
@@ -88,11 +85,13 @@ This graphs shows the minimum free on the 64 GB machine I'm using for this test.
 
 ![tester errors](/assets/images/2021-09-bgp-episode4/bgperf_90hold_tester_errors.png)
 
-These errors are counted based on grepping the BIRD tester logs.
+These errors are counted based on grepping the BIRD tester logs. Actually, more tests have errors, but all these graphs only show tests that finish. So any test that FAILED might also have tester errors.
 ```
 grep RMT /tmp/bgperf/tester/*.log | grep -v NEXT_HOP
 ```
 Usually these errors are hold timers expiring
+
+### BIRD Tester data
 
 <script src="https://gist.github.com/jopietsch/d3e6ad7d946229d2bb967613012529b6.js"></script>
 ## ExaBGP many neighbors
@@ -101,8 +100,9 @@ Just to make sure that the other changes made don't give us different results, a
 
 ![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_lots_exa_elapsed.png)
 
-### RustyBGP
-I cannot get RustyBGP to work with ExaBGP as the tester. I just get
+ok, again, exa as tester is really masking what's going on.
+
+Except, I cannot get RustyBGP to work with ExaBGP as the tester. I just get
 ```
 $ more /tmp/bgperf/rustybgp/rustybgp.log
 Hello, RustyBGPd (32 cpus)!
@@ -113,25 +113,18 @@ I think that means a BGP Error (Notification) code of 5,2, which would be FSM, R
 
 I did no debugging. Exa works with all the other BGP stacks just fine, and RustyBGP works with the other testers, so I don't know what's going on.
 
-## 1M prefixes
-BIRD as tester
-![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_1M_bird_elapsed.png)
+# MRT Tests
 
-ExaBGP as tester
-![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_1M_exa_elapsed.png)
+These tests replay real internet routing tables. The specific MRT file used for these tests was [http://archive.routeviews.org/bgpdata/2021.08/RIBS/rib.20210801.0000.bz2](http://archive.routeviews.org/bgpdata/2021.08/RIBS/rib.20210801.0000.bz2)
+## Bgpdump2 again
 
-The Exa results as so much slower, so it mostly looks like the exa tests this large are really testing the tester.
-
-# MRT
-## Bbgpdump2 again
-
-TO see if RustyBGP can do better than it did before. These results might not be exactly the same as before because bgperf now checks to see if things are stalled or prefixes count is dropping.
+To see if RustyBGP can do better than it did before. These results might not be exactly the same as before because bgperf now checks to see if things are stalled or prefixes count is dropping.
 
 ![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_bgpdump_elapsed.png)
 
 Yep, RustyBGP is considerably better than before and now the fastest in this test. 
 
-Why do OpenBGP and BIRD have less results than before? It's because it has had test failures.
+Why do OpenBPGD and BIRD have less results than before? It's because they had test failures. The OpenBGPD failures are the issues I noted last time.
 
 ![memory usage](/assets/images/2021-09-bgp-episode4/bgperf_bgpdump_max_mem.png)
 
@@ -139,12 +132,12 @@ Why do OpenBGP and BIRD have less results than before? It's because it has had t
 
 ![max cpu](/assets/images/2021-09-bgp-episode4/bgperf_bgpdump_max_cpu.png)
 
-Finally we are seeing what I'd hoped to see when I started this, a BGP stack that used more CPU resources and was faster than other.woot woot.
+Finally we are seeing what I'd hoped to see when I started this, a BGP stack that used more CPU resources and was faster than the others. **woot woot**.
 
 
 ![tester errors](/assets/images/2021-09-bgp-episode4/bgperf_bgpdump_tester_error.png)
 
-Why aren't there any tester errors? That's because any test that FAILED, we don't put in graphs. But if we look at the data directly for all the FAILED, we can see that for all the openbgp fails, it did notice errors (which is the last column before the FAIL.)
+Why aren't there any tester errors? That's because any test that FAILED, we don't put in graphs. But if we look at the data directly for all the FAILED, we can see that for all the OpenBPGD fails, it did notice errors (which is the last column before the FAIL.)
 
 ```
 $ grep FAIL results/bgpdump.csv
@@ -154,9 +147,39 @@ bird,bird,v2.0.8-59-gf761be6b,50,800000,792000,871147,7,190,3,187,233.67,102,4.1
 openbgp,openbgp,OpenBGPD 7.1,50,800000,800000,878406,0,570,3,567,606.06,171,18.505,77,29.774,,2021-09-11,32,62.82GB,2,FAILED,FAILED: stuck received count 878406 neighbors_checked 49
 ```
 
+Why did these fail and is it important? 
+
+I don't know what's going on with BIRD here. Usually a drop in received counts is because neighbors connections are closed. I can't find any evidence of that here with BIRD. It doesn't drop by much, but it does drop for at least 10 seconds.
+
+
+### OpenBGPD vs bgpdump2
+
+Last time I noticed that with Bgpdump2 as the tester, OpenBGPD as the target and 30 neighbors, OpenBGPD stalled and then dropped a neighbor. I still don't know why, but I've added a new errors column in the stats. For BIRD and Bgpdump2 as testers, it will grep the tester logs to see if there are errors and count them. However, there is something going on. It appears bgpdump2 is sending all the data twice. It sends it, waits several seconds and sends it again. This seems to be happening with any and every target. This second time it sends it to openbgpd, for some reason on one of the testers is fails.
+
+The client has this in the log:
+```
+Sep 17 23:01:26.351754 Read notification message (3), length 21 from 10.10.255.254
+Sep 17 23:01:26.351764 Notification Error: UPDATE Message Error (3), Malformed AS_PATH (11)
+```
+I did finally get logging working for OpenBGPD and so it's logs have:
+```
+neighbor 10.10.0.32: bad path, starting with 64550, enforce neighbor-as enabled
+neighbor 10.10.0.32: sending notification: error in UPDATE message, AS-Path unacceptable
+neighbor 10.10.0.32: state change Established -> Idle, reason: Fatal error
+neighbor 10.10.0.32: state change Idle -> Active, reason: Start
+neighbor 10.10.0.32: state change Active -> OpenSent, reason: Connection opened
+neighbor 10.10.0.32: Received multi protocol capability:  unknown AFI 1, safi 4 pair
+neighbor 10.10.0.32: Received multi protocol capability:  unknown AFI 2, safi 4 pair
+neighbor 10.10.0.32: state change OpenSent -> OpenConfirm, reason: OPEN message received
+neighbor 10.10.0.32: state change OpenConfirm -> Established, reason: KEEPALIVE message received
+```
+
+I don't know what in that MRT through bgpdump2 makes OpenBGPD find this, where no other stack does and using GoBGP to playback also doesn't have the problem. Continued mystery.
+
+
+### bgpdump2 data
 
 <script src="https://gist.github.com/jopietsch/c4bff9381f5c93b68c20b3f794f43072.js"></script>
-
 
 ## GoBGP MRT
 ![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_gobgp-mrt_elapsed.png)
@@ -167,6 +190,8 @@ openbgp,openbgp,OpenBGPD 7.1,50,800000,800000,878406,0,570,3,567,606.06,171,18.5
 
 ![max cpu](/assets/images/2021-09-bgp-episode4/bgperf_gobgp-mrt_max_cpu.png)
 
+
+The failure of RustyBGP at 30 neighbors is because my 64 GB machine ran out of memory.
 
 ```
 $ grep FAILED gobgp-mrt.csv
@@ -184,34 +209,78 @@ rustybgp,rustybgp,rustybgpd,30,800000,744000,245197,15,385,6,379,420.65,681,13.5
 
 # Hold Timers
 
-What should BGP Hold Timer be for a test like this? The default is 90 seconds, but if the test doesn't even take 90 seconds then we aren't testing if hold timers will work.
+What should BGP Hold Timer be for a test like this? The default is 90 seconds, but if the test doesn't even take 90 seconds then we aren't testing if hold timers will work. Should we expect aggressive hold timers to be able to work? I don't know. I started some tests here, but am not sure what they mean yet. Probably the beginning of another investigation.
 
-what tests should I do for this?
+I've not been paying attention to Hold Timers before this. 
 
-### Hold Timers 5 on BIRD
+While not exactly the same data, let's compare how many tests failed with default timers vs 5 second hold timer.
+
+he columns that we are showing here are free memory in the machine, tester errors and if the test failed. What we are looking or is if memory gets really low. Other than the above time OpenBGP runs out of memory, running out of memory and being killed off is not the problem we see here.
+
+Default Timers:
+```
+$ awk 'BEGIN{FS=","};{print $1 "," $4 "," $5 "," $16 "," $21 "," $23}' lots_bird.csv|grep FAIL
+bird -s,500,1000,59.699,0,FAILED: stuck received count 495000 neighbors_checked 495
+bird -s,1000,100,60.039,2,FAILED: stuck received count 75400 neighbors_checked 754
+bird -s,1000,1000,58.138,11,FAILED: stuck received count 961000 neighbors_checked 961
+openbgp,1000,1000,0.012,1000,FAILED: dropping received count 0 neighbors_checked 1000
+bird -s,1500,100,58.64,0,FAILED: stuck received count 100000 neighbors_checked 1000
+```
+
+The BIRD failures are the ones are the results that we talked about at the beginning of this post and the OpeBGPD is because it ran out of memory. 
 
 
-## What did we learn
-I thought I'd learned about a BIRD performance issue, but it turns out I already knew that. Also, are the tests that BIRD did bad on realistic? Unlikely. It's finding an edge case in which BIRD performs badly, but you are unlikely to get to that place.
+
+5 second timers
+```
+$ awk 'BEGIN{FS=","};{print $1 "," $4 "," $5 "," $16 "," $21 "," $23}' birt_many_5.csv|grep FAIL
+bird -s,500,100,59.411,0,FAILED: stuck received count 47300 neighbors_checked 473
+rustybgp,500,1000,50.673,279,FAILED: dropping received count 221000 neighbors_checked 221
+bird -s,1000,100,58.536,13,FAILED: stuck received count 97700 neighbors_checked 977
+rustybgp,1000,100,55.833,324,FAILED: dropping received count 67600 neighbors_checked 676
+bird -s,1000,1000,56.837,13,FAILED: stuck received count 1000000 neighbors_checked 0
+frr,1000,1000,56.073,0,FAILED: stuck received count 1000000 neighbors_checked 728
+frr 8,1000,1000,56.035,0,FAILED: stuck received count 1000000 neighbors_checked 0
+openbgp,1000,1000,0.048,1000,FAILED: dropping received count 0 neighbors_checked 0
+rustybgp,1000,1000,2.922,1553,FAILED: dropping received count 631588 neighbors_checked 222
+bird -s,1500,10,59.528,1,FAILED: stuck received count 14020 neighbors_checked 1101
+rustybgp,1500,10,58.788,14,FAILED: dropping received count 14860 neighbors_checked 1486
+bird -s,1500,100,59.177,67,FAILED: stuck received count 150000 neighbors_checked 653
+frr 8,1500,100,58.367,0,FAILED: stuck received count 150000 neighbors_checked 0
+openbgp,1500,100,28.934,0,FAILED: stuck received count 150000 neighbors_checked 0
+rustybgp,1500,100,48.041,897,FAILED: dropping received count 138811 neighbors_checked 720
+```
+Many Many more failures here. I don't have a specific pattern here. You can see that every stack had some problems. I think RustyBGP has the most problems with the hold timer set to 5 seconds. BIRD doesn't really have more failures than before though it does have more hold timer experations than before.
+
+
+# What did we learn
+I thought I'd learned about a BIRD performance issue, but it turns out I already knew that, but this using BIRD to measure BIRD makes it more obvious. Also, are the tests that BIRD did bad on realistic? Unlikely. It's finding an edge case in which BIRD performs badly, but you are unlikely to get to that place.
 
 BIRD as a tester is a tester that takes less resources, so I've made it the default tester now. it's more pleasant. But Exa had a problem with RustyBGP, so it might be good to use it as one more compatibility test.
 
-Did RustyBGP get better? Yes, much better. It's the fastest in the MRT playback tests. It's not as fast as FRR in the many neighbors tests, but those are less realistic.
+I'm not yet sure what we learned about hold timers. Ideally 5 second hold timers for containers that are on the same computer shouldn't be a problem; maybe I'm being naive? 
+
+bgperf is a bit better every time.
+## RustyBGP
+
+Did RustyBGP get better? Yes, much better. It's the fastest in the MRT playback tests. It's not as fast as FRR in the many neighbors tests, but those are less realistic. We finally have a BGP stack that can take advantage of modern hardware. ( I mean, that I'm measuring. I know there are others that probably do also, but they are commercial and I just haven't gotten there yet.) However, it also has some weird problem with Exa as the tester that I have not tracked down. 
+
+I think it has a problem with hold timers. At least I can get a lot of hold timers to expire and I think that's bad, but am not sure.
 
 
-### OpenBGPD
-as noticed before it has some reset on bgpdump2 that I have tracked down
+## BIRD
 
-it also uses more memory, and a lot more memory per neighbor. It's been noticed in previous comments that is because it has a separate ADJ-RIB-IN for every neighbor rather than a shared one with pointers. I think the implication is that it might be for safty. Whatever the reason, if you have lots of neighbors it will cost you. Possibly it doesn't matter, but it might.
-# Stuff
-[bgperf](github -- bgperf)
+BIRD is much slower than expected when there are many neighbors (> 500) neighbors. At least it gets much worse than expected.
+## OpenBGPD
+
+As noticed before it has some reset on bgpdump2 that I have tracked down.
+
+It also uses more memory, and a lot more memory per neighbor. It's been noticed in previous comments that is because it has a separate ADJ-RIB-IN for every neighbor rather than a shared one with pointers. I think the implication is that it might be for safety. Whatever the reason, if you have lots of neighbors it will cost you. Possibly it doesn't matter, but it might.
+
+## Which stack to use
+
+I still don't know. If any of my previous conclusions made you think you should pick one over the other, I'm sorry. I'm just trying to measure and find differences. This post especially is just targeted to specific tests. If you have more than 500 neighbors with BIRD and they each have lots of routes then maybe you should be worried.
+
+I wouldn't use GoBGP if performance is an issue. RustyBGP is still immature but promising. 
 
 
-
-# next tests
-* I need to figure out elapsed vs route reception or something
-* exa vs bird on 10prefixes -- why are the bird on bird so high?
-* 5 second hold timer with bird as generator
-* 5 second with bgpdump as generator -- how do I do that
-* why does openbgp fail with bird and exa at 5n1Mp?
-* get logs on openbgp fail at 30n 800kP bgpdump
