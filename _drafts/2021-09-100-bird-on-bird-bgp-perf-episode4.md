@@ -21,13 +21,13 @@ These tests use the same versions of NOSes as before except for RustyBGP. It's u
 I tried using BIRD as a generator instead of Exa. In the process I've added a little more sophistication to bgperf. Now if it sees the amount of prefixes received at the monitor and the number of neighbors complete hasn't changed for 30 intervals (seconds) it fails the test. Also if the number of prefixes received at the monitor drops for more than 5 intervals then it fails. 
 
 
-I'm starting to get to the place where I find weird things, maybe because of the test infrastructure, maybe because of specific NOS behavior, and adapting and figuring out what's going on takes extra time.
+I'm starting to get to the place where I find weird things, maybe because of the test infrastructure, maybe because of specific BGP stack behavior, and adapting and figuring out what's going on takes extra time.
 
 Let's get to the data
 
 # Unique prefixes using BIRD and ExaBGP as tester
 
-If there isn't an entry for a NOS, it's because the test failed for one of the reasons above: 30 seconds stuck at the same number of prefixes received at the monitor or the number of prefixes dropped for 5 seconds.
+If there isn't an entry for a BGP stack, it's because the test failed for one of the reasons above: 30 seconds stuck at the same number of prefixes received at the monitor or the number of prefixes dropped for 5 seconds.
 
 I know that some aspects of the test mechanism shows
 
@@ -59,16 +59,14 @@ Is this current method better? I think so. Good enough? I hope so. It would be b
 For now, the best bet is to use BIRD as generator and not use Exa.
 
 
-**So does BIRD have a problem with many neighbors? Yes**, and I didn't see that until BIRD was also the tester.
+So does BIRD have a problem with many neighbors? **Yes**, and I didn't see that until BIRD was also the tester.
 
 ## BIRD as tester / generator with many many neighbors
-This is a test that is harder than I did with ExaBGP. I couldn't get Exa to do 1000 prefixes for this many neighbors. This might not be a realistic set of tests. I don't know if people have 1000 prefixes from 1500 neighbors. But as we'll see, it shows interesting results.
-
-
+This is a test that is harder than I did previously with ExaBGP. I couldn't get Exa to do 1000 prefixes for this many neighbors. This might not be a realistic set of tests. I don't know if people have 1000 prefixes from 1500 neighbors. But as we'll see, it shows interesting results.
 
 ![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_90hold_elapsed.png)
 
-BIRD is considerably worse than everything else; I had forgotten about previous results. Looking back [the second post](https://elegantnetwork.github.io/posts/followup-measuring-BGP-stacks/) in the section about extreme tests, BIRD does much worse than everybody else at 1000 neighbors, 10 prefixes, or 500+ neighbors, 1000 prefixes. That's what we are seeing here as well. I had just forgotten those results. It's just that with BIRD as a tester it's faster and easier to test these extremes.
+BIRD is considerably worse than everything else; I had forgotten about previous results. Looking back at [the second post](https://elegantnetwork.github.io/posts/followup-measuring-BGP-stacks/) in the section about extreme tests, BIRD does much worse than everybody else at 1000 neighbors, 10 prefixes, or 500+ neighbors, 1000 prefixes. That's what we are seeing here as well. I had just forgotten those results. It's just that with BIRD as a tester it's faster and easier to test these extremes.
 
 Though it's hard to see in this graph because of BIRD's outsized times, but RustyBGP looks like it got better than it was before. It's still slower than FRR, but not 10x slower.
 
@@ -96,11 +94,11 @@ Usually these errors are hold timers expiring
 <script src="https://gist.github.com/jopietsch/d3e6ad7d946229d2bb967613012529b6.js"></script>
 ## ExaBGP many neighbors
 
-Just to make sure that the other changes made don't give us different results, also ran similar tests using exaBGP as the tester.
+Just to make sure that the other changes made don't give us different results, also ran similar tests using ExaBGP as the tester.
 
 ![elapsed time](/assets/images/2021-09-bgp-episode4/bgperf_lots_exa_elapsed.png)
 
-ok, again, exa as tester is really masking what's going on.
+ok, again, Exa as tester is really masking what's going on.
 
 Except, I cannot get RustyBGP to work with ExaBGP as the tester. I just get
 ```
@@ -254,7 +252,7 @@ Many Many more failures here. I don't have a specific pattern here. You can see 
 
 
 # What did we learn
-I thought I'd learned about a BIRD performance issue, but it turns out I already knew that, but this using BIRD to measure BIRD makes it more obvious. Also, are the tests that BIRD did bad on realistic? Unlikely. It's finding an edge case in which BIRD performs badly, but you are unlikely to get to that place.
+I thought I'd learned about a BIRD performance issue, but it turns out I already knew that, but using BIRD to measure BIRD makes it more obvious. Also, are the tests that BIRD did bad on realistic? Unlikely. It's finding an edge case in which BIRD performs badly, but you are unlikely to get to that place.
 
 BIRD as a tester is a tester that takes less resources, so I've made it the default tester now. it's more pleasant. But Exa had a problem with RustyBGP, so it might be good to use it as one more compatibility test.
 
