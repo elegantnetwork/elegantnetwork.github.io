@@ -48,7 +48,7 @@ These aren't the results I remember, let's actually look at what we saw before.
 
 ![elapsed time](/assets/images/2021-08-followup-bgp-stacks/AMD-3950/bgperf_many_neighbors_10p_route_reception.png)
 
-These are the results from the 2nd post. Why is it so different than the Exa results bgperf creates now? It's about what to measure measuring and when things are started. There are three things in bgperf: tester, monitor, and target. Each has to start up, connect to the right neighbors, and then the tester needs to send all the traffic. Originally bgperf started the tester, started the target, started the monitor, waited for the monitor to connect, then started the elapsed timer. This masks a bunch of data that the tester has already sent to the target. Also, bgpdump2 as tester doesn't work if you start the tester before the target. So I changed the order of things and now in the elapsed there is some amount of tester startup time, but during that time the tester is sending traffic to the target.
+These are the results from the 2nd post. Why is it so different than the Exa results bgperf creates now? It's about what to measure measuring and when things are started. There are three things in bgperf: tester, monitor, and target. Each has to start up, connect to the right neighbors, and then the tester needs to send all the routing updates. Originally bgperf started the tester, started the target, started the monitor, waited for the monitor to connect, then started the elapsed timer. This masks a bunch of data that the tester has already sent to the target. Also, bgpdump2 as tester doesn't work if you start the tester before the target. So I changed the order of things and now in the elapsed there is some amount of tester startup time, but during that time the tester is sending traffic to the target.
 
 Because of the way bgperf was trying to exclude the tester time we masked a problem with BIRD. bummer.
 
@@ -215,7 +215,7 @@ I've not been paying attention to Hold Timers before this.
 
 While not exactly the same data, let's compare how many tests failed with default timers vs 5 second hold timer.
 
-he columns that we are showing here are free memory in the machine, tester errors and if the test failed. What we are looking or is if memory gets really low. Other than the above time OpenBGP runs out of memory, running out of memory and being killed off is not the problem we see here.
+he columns that we are showing here are free memory in the machine, tester errors and if the test failed. What we are looking or is if memory gets really low. Other than the above time OpenBGPD runs out of memory, running out of memory and being killed off is not the problem we see here.
 
 Default Timers:
 ```
@@ -281,6 +281,8 @@ It also uses more memory, and a lot more memory per neighbor. It's been noticed 
 
 I still don't know. If any of my previous conclusions made you think you should pick one over the other, I'm sorry. I'm just trying to measure and find differences. This post especially is just targeted to specific tests. If you have more than 500 neighbors with BIRD and they each have lots of routes then maybe you should be worried.
 
+FRRouting is a strong performer in all of these tests. It's interesting that for IXP style work BIRD and OpenBGPD seem to be the only open source option. I don't know if that is because several years ago Quagga/FRRouting was poor in performance here, that at least seems to have been the story. 
+
+Of course, there are still big pieces of BGP stack performance, especially routing policy and filtering, that I've not gotten to and are extremely important. 
+
 I wouldn't use GoBGP if performance is an issue. RustyBGP is still immature but promising. 
-
-
