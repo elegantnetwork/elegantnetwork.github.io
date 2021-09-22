@@ -9,6 +9,7 @@ description: 3rd episode performance testing BGP stacks, this time with internet
 
 - 1st Post [Comparing Open Source BGP Stacks](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-stacks/)
 - 2nd Post [Followup Measuring BGP Stacks Performance](https://elegantnetwork.github.io/posts/followup-measuring-BGP-stacks/)
+- 4th Post [Bird on Bird, Episode 4 of BGP Perf testing ](https://elegantnetwork.github.io/posts/bird-on-bird-bgp-perf-episode4)
 
 I hope it's clear by now that these posts are something of my lab notes as I explore how to test BGP stacks. I'm learning how to test as well as I'm learning how these perform. There are not yet comprehensive in any sense of the word; I'm still working on making the testing better. On the other hand, I couldn't find any useful performance results on the internet that already existed, so I wanted to at least get something out, as well as show my methodology (and publish my code) in the hopes if I got something wrong, I might be corrected or improved.
 
