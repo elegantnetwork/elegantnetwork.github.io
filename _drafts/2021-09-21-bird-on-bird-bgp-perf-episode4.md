@@ -166,8 +166,6 @@ To see if RustyBGP can do better than it did before. These results might not be 
 
 Yep, RustyBGP is considerably better than before and now the fastest in this test. 
 
-Why does BIRD have less results than before? It's because it had test failures. 
-
 ![memory usage](/assets/images/2021-09-bgp-episode4/bgperf_bgpdump_max_mem.png)
 
 ![free memory](/assets/images/2021-09-bgp-episode4/bgperf_bgpdump_min_free.png)
@@ -180,14 +178,6 @@ Finally we are seeing what I'd hoped to see when I started this, a BGP stack tha
 ![tester errors](/assets/images/2021-09-bgp-episode4/bgperf_bgpdump_tester_error.png)
 
 Why aren't there any tester errors? That's because any test that FAILED, we don't put in graphs. But if we look at the data directly for all the FAILED, we can see that for all the OpenBPGD fails, it did notice errors (which is the last column before the FAIL.)
-
-```
-$ grep FAIL bgpdump.csv
-bird,bird,v2.0.8-59-gf761be6b,50,800000,792000,872222,13,199,3,196,242.49,102,4.277,77,44.661,-s,2021-09-21,32,62.82GB,0,FAILED,FAILED: dropping received count 872222 neighbors_checked 17
-
-```
-
-Why did this fail and is it important? I don't know what's going on with BIRD here. Usually a drop in received counts is because neighbors connections are closed. I can't find any evidence of that here with BIRD. It doesn't drop by much, but it does drop for at least 10 seconds.
 
 
 
@@ -254,6 +244,81 @@ rustybgp,1500,100,48.041,897,FAILED: dropping received count 138811 neighbors_ch
 Many Many more failures here. I don't have a specific pattern here. You can see that every stack had some problems. I think RustyBGP has the most problems with the hold timer set to 5 seconds. BIRD doesn't really have more failures than before though it does have more hold timer expirations than before.
 
 I assume very few network designs rely on 5 second hold timers, but I wonder if that is just because it's never been reliable. I see things a little different. It's 2021 and for any other distributed database to not know it's neighbors were down in 5 seconds is a very long time. Maybe that's too ideological and not practical. I'm just measuring for now. If you want aggressive hold timers then you need to be careful and probably should at least monitor hold timer expirations and see if they are being impacted.
+
+
+## RustyBGP
+Something especially strange is going on with RustyBGP and 5 second hold timers.
+
+If I run a 1000 neighbor, 100 prefix test
+```
+$ python3 bgperf.py bench -n1000 -s -trustybgp -p100 -gbird
+```
+
+I get this output
+
+```
+elapsed: 15sec, cpu: 1544.60%, mem: 2.60GB, mon recved: 76822, neighbors: 461, %idle 44.67, free mem 57.27GB
+elapsed: 16sec, cpu: 899.67%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 76.98, free mem 57.27GB
+elapsed: 17sec, cpu: 18.02%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.84, free mem 57.28GB
+elapsed: 18sec, cpu: 17.98%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 99.06, free mem 57.28GB
+elapsed: 19sec, cpu: 17.65%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.56, free mem 57.28GB
+elapsed: 20sec, cpu: 9.64%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.59, free mem 57.28GB
+elapsed: 21sec, cpu: 17.24%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.34, free mem 57.28GB
+elapsed: 22sec, cpu: 18.13%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 99.03, free mem 57.27GB
+elapsed: 24sec, cpu: 18.13%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 99.12, free mem 57.28GB
+elapsed: 25sec, cpu: 17.47%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.53, free mem 57.28GB
+elapsed: 26sec, cpu: 18.56%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.53, free mem 57.28GB
+elapsed: 27sec, cpu: 18.09%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.9, free mem 57.28GB
+elapsed: 28sec, cpu: 18.94%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.84, free mem 57.28GB
+elapsed: 29sec, cpu: 17.82%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.94, free mem 57.28GB
+elapsed: 30sec, cpu: 9.70%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.59, free mem 57.28GB
+elapsed: 31sec, cpu: 17.87%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.53, free mem 57.28GB
+elapsed: 32sec, cpu: 18.46%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.5, free mem 57.28GB
+elapsed: 33sec, cpu: 17.12%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 99.15, free mem 57.28GB
+elapsed: 34sec, cpu: 17.47%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.87, free mem 57.27GB
+elapsed: 35sec, cpu: 17.15%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.78, free mem 57.27GB
+elapsed: 37sec, cpu: 17.49%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.74, free mem 57.27GB
+elapsed: 38sec, cpu: 17.35%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.38, free mem 57.28GB
+elapsed: 39sec, cpu: 13.76%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.59, free mem 57.28GB
+elapsed: 40sec, cpu: 14.40%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.71, free mem 57.28GB
+elapsed: 41sec, cpu: 17.91%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.34, free mem 57.27GB
+elapsed: 42sec, cpu: 18.72%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.16, free mem 57.28GB
+elapsed: 43sec, cpu: 18.58%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 99.53, free mem 57.28GB
+elapsed: 44sec, cpu: 18.32%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.81, free mem 57.27GB
+elapsed: 45sec, cpu: 16.95%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.75, free mem 57.28GB
+elapsed: 46sec, cpu: 17.83%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.74, free mem 57.28GB
+elapsed: 47sec, cpu: 17.97%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.5, free mem 57.28GB
+elapsed: 48sec, cpu: 17.58%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.47, free mem 57.28GB
+elapsed: 50sec, cpu: 9.58%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.93, free mem 57.28GB
+elapsed: 51sec, cpu: 18.82%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.68, free mem 57.28GB
+elapsed: 52sec, cpu: 18.04%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 97.64, free mem 57.28GB
+elapsed: 53sec, cpu: 18.17%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 98.97, free mem 57.28GB
+elapsed: 54sec, cpu: 17.44%, mem: 2.60GB, mon recved: 73200, neighbors: 732, %idle 99.0, free mem 57.27GB
+elapsed: 55sec, cpu: 56.28%, mem: 2.60GB, mon recved: 73700, neighbors: 733, %idle 97.5, free mem 57.27GB
+elapsed: 56sec, cpu: 762.16%, mem: 2.66GB, mon recved: 76200, neighbors: 746, %idle 91.11, free mem 57.25GB
+elapsed: 57sec, cpu: 964.33%, mem: 2.77GB, mon recved: 79600, neighbors: 776, %idle 57.28, free mem 57.04GB
+elapsed: 58sec, cpu: 782.17%, mem: 2.85GB, mon recved: 81300, neighbors: 801, %idle 75.38, free mem 56.98GB
+elapsed: 59sec, cpu: 897.75%, mem: 2.95GB, mon recved: 83300, neighbors: 826, %idle 69.76, free mem 56.89GB
+elapsed: 60sec, cpu: 677.62%, mem: 3.01GB, mon recved: 84800, neighbors: 840, %idle 72.8, free mem 56.84GB
+elapsed: 62sec, cpu: 671.89%, mem: 3.08GB, mon recved: 87100, neighbors: 863, %idle 63.75, free mem 56.75GB
+elapsed: 63sec, cpu: 724.63%, mem: 3.21GB, mon recved: 88800, neighbors: 884, %idle 72.86, free mem 56.68GB
+elapsed: 64sec, cpu: 741.47%, mem: 3.28GB, mon recved: 90500, neighbors: 902, %idle 71.88, free mem 56.61GB
+elapsed: 65sec, cpu: 729.52%, mem: 3.34GB, mon recved: 92300, neighbors: 919, %idle 78.9, free mem 56.56GB
+elapsed: 66sec, cpu: 577.34%, mem: 3.39GB, mon recved: 93700, neighbors: 932, %idle 71.59, free mem 56.50GB
+elapsed: 67sec, cpu: 743.86%, mem: 3.45GB, mon recved: 95700, neighbors: 952, %idle 74.8, free mem 56.44GB
+elapsed: 68sec, cpu: 1014.57%, mem: 3.53GB, mon recved: 97600, neighbors: 952, %idle 67.34, free mem 56.37GB
+elapsed: 69sec, cpu: 888.66%, mem: 3.61GB, mon recved: 99400, neighbors: 975, %idle 63.75, free mem 56.28GB
+elapsed: 70sec, cpu: 568.37%, mem: 3.65GB, mon recved: 100000, neighbors: 994, %idle 73.4, free mem 56.22GB
+elapsed: 71sec, cpu: 158.26%, mem: 3.66GB, mon recved: 100000, neighbors: 1000, %idle 98.81, free mem 56.20GB
+rustybgp: rustybgpd
+Max cpu: 1592.89, max mem: 3.66GB
+Min %idle 35.88, Min mem free 56.20GB
+Time since first received prefix: 70
+total time: 167.32s
+tester errors: 268
+```
+
+Notice that it gets stuck at 732 neighbors for 41 seconds, and also the CPU usage from RustyBGP is much lower during that time. I do not know what's going on here. There are 268 errors which are all Hold timer expired. I think this seems a problem, but I don't know. 
 
 
 # What did we learn?
