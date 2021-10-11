@@ -86,4 +86,4 @@ To maintain redundant paths of connectivity to access a device, an OOB network i
 
 * Ensure that the OOB network is working properly by treating it like the production network
 * Test the multiple paths to managing a device periodically
-* Ensure that the absence of a working redundant path to a device stops deployment of any change.
+* Ensure that the absence of a working redundant path to a device stops deployment of any change
