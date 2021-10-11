@@ -74,7 +74,7 @@ Console networks also suffer from having a single points of failure, and handlin
 
 So do we have three redundant networks now: the inband or the dataplane, the OOB and the console network? Often, there are only two, with the larger network operators relying on just the console network as the OOB network, while enterprises tend to not deploy console networks.
 
-Back to the Facebook incident: a possible compounding factor to what happened is that Facebook doesn’t have many remote sites, and so they probably didn’t plan on an cellular access. Most modern terminal servers come with LTE or cellular access option. It would be very interesting to know if a cellular modem connection to a terminal-server would have allowed remote access in this case, as .
+Back to the Facebook incident: a possible compounding factor to what happened is that Facebook doesn’t have many remote sites, and so they probably didn’t plan on an cellular access. Most modern terminal servers come with LTE or cellular access option. It would be very interesting to know if a cellular modem connection to a terminal-server would have allowed remote access in this case.
 
 Creating entirely redundant paths can be hard, especially in the presence of cascading failures as this one was. A mistake in the routing update cut off all external communication to FB, which caused DNS to fail, which caused any redundant path to also vanish as a consequence. 
 
