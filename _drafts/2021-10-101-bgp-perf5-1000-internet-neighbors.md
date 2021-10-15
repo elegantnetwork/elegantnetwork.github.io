@@ -36,29 +36,96 @@ Lets' look at the performance of the stacks. First, BIRD, FRRouting and RustyBGP
 
 As long as it doesn't run out of memory, each of these platforms can do reasonable tests. I tried FRR at 200 neighbors and the AMD ran out of memory.
 
-# FRR
- 
- I've added some graphs to show how things go over time with any give test. FRR at 100 neighbors.
+## Detailed Baseline Graphs
+ I've added some graphs to show how things go over time with any give test.
 
-The number of prefixes received at the monitor.
+### Prefixes received at the monitor
+
+FRR
 
 ![prefixes received at monitor](/assets/images/2021-10-bgp-5/frr_c_bgpdump2__800000_100_mon_received.png)
 
-This graph shows the number of neighbors that the target has received all it's prefixes:
+BIRD 
+
+![prefixes received at monitor](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_100_mon_received.png)
+
+RustyBGP
+
+![prefixes received at monitor](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_100_mon_received.png)
+
+RustyBGP curve looks a lot different. Don't know why.
+
+
+### Neighbors that have sent the full table
+
+FRRouting
 
 ![neighbors full received routes](/assets/images/2021-10-bgp-5/frr_c_bgpdump2__800000_100_neighbors.png)
 
-The CPU utilization of FRR
+BIRD
+
+![neighbors full received routes](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_100_neighbors.png)
+
+RusytBGP
+
+![neighbors full received routes](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_100_neighbors.png)
+
+
+RustyBGP looks different again. It's amazing that it can receive full routes for some neighbors within about 10 seconds. 
+
+
+### Target CPU Utilization
+
+FRR
 
 ![cpu](/assets/images/2021-10-bgp-5/frr_c_bgpdump2__800000_100_cpu.png)
 
+BIRD
 
-memory used by FRR
+![cpu](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_100_cpu.png)
+
+RustyBGP
+
+![cpu](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_100_cpu.png)
+
+
+
+### Memory used by target process
+
+FRR
+
 ![memory used](/assets/images/2021-10-bgp-5/frr_c_bgpdump2__800000_100_mem_used.png)
 
-The % idle of the machine. This shows that there are plenty of CPU resources available.
+BIRD
+
+![memory used](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_100_mem_used.png)
+RustyBGP
+
+![memory used](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_100_mem_used.png)
+
+Each of those looks different, don't know what it means.
+
+### % idle of the machine.
+
+FRR
 
 ![% idle of machine](/assets/images/2021-10-bgp-5/frr_c_bgpdump2__800000_100_machine_idle.png)
+
+BIRD
+
+![% idle of machine](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_100_machine_idle.png)
+
+RustyBGP
+
+![% idle of machine](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_100_machine_idle.png)
+
+Some things to explain here. Notice the flat line at the beginning of each of these. That's a consequence of the way that bgperf is currently monitoring the host information. So we only have the last data point right before all the testers (bgpdump2) are fully running. It's a bug in the tester. Anyway, it does show, though, that when bgpdump first starts up it uses a lot of CPU resources, but after inital loading it barely uses anything. Even on the host with the least resources (AMD), there is plenty of CPU available on the host for the majority of the test. Except for RustyBGP, which uses most of the CPU.
+
+
+
+# 1000 neighbors ?
+## FRR
+
 
 
 At 150 neighbors, FRR does not finish ever. Several problems. Some of the neighbors never send any prefixes successfully and the total prefixes received by the monitor doesn't seem to ever get to the amount required. I ran one test for over 6 hours and it never finished.
@@ -99,26 +166,29 @@ The % idle of the machine. This shows that there are plenty of CPU resources ava
 
 ![% idle of machine](/assets/images/2021-10-bgp-5/frr_c_bgpdump2_800000_150_machine_idle.png)
 
-# RustyBGP
 
-RustyBGP finishes 200 neighbors just fine, but fails at 250. bgperf, every second, gets received prefix counts from the target. For rustybgp with 200 neighbors it stops returning that responding to the data request, and then bgperf just goes forever because it needs that data to know if anything has finished. I'm not sure what's going on with rustybgp, but I noticed this in previous posts that I can make it so that it doesn't respond to the management requestss.
+# BIRD
+BIRD succeeds at 200 neighbors, and fails by 225.  It does something similar to what FRR does in which it doesn't accept prefixes for every 
 
-![prefixes received at monitor](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_200_mon_received.png)
 
-The number of neighbors that the target has received all it's prefixes:
 
-![neighbors full received routes](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_200_neighbors.png)
+## RustyBGP
 
-The CPU utilization of the target
 
-![cpu](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_200_cpu.png)
 
 
 memory used by target
-![memory used](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_200_mem_used.png)
+![memory used](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_100_mem_used.png)
 
 The % idle of the machine. This shows that there are plenty of CPU resources available.
 
-![% idle of machine](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_200_machine_idle.png)
-# BIRD
-BIRD succeeds at 200 neighbors, and fails by 225.  It does something similar to what FRR does in which it doesn't accept prefixes for every 
+![% idle of machine](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_100_machine_idle.png)
+
+
+
+# Conclusion
+Yes, it's possible to measure these stacks with BGPerf at 1000 neighbors of internet routes. However, only RustyBGP can can near that level. And it requires a lot of memory.
+
+FRR breaks first, at about 150 neighbors. Next is BIRD at between 200 and 250 neighbors.
+
+We also added new graphs to see what these stacks are doing 
