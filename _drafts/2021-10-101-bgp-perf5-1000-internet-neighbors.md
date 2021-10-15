@@ -3,20 +3,17 @@ layout: post
 comments: true
 author: Justin Pietsch
 title: BGPerf 5 -- 1000 full internet neighbors
-excerpt:
-description: To test to the limit of how many neighbors these BGP stacks can have with full internet routes
+excerpt: What happens if we try to get 1000 Neighbors with full internet routes? Is that realistic? I don't know
+description: Testing to the limit of how many neighbors these BGP stacks can have with full internet routes
 ---
 
 
 - 1st Post [Comparing Open Source BGP Stacks](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-stacks/)
-- 2nd Post [Followup Measuring BGP Stacks Performance](https://elegantnetwork.github.io/posts/followup-measuring-BGP-stacks/)
+- 2nd Post [Follow-up Measuring BGP Stacks Performance](https://elegantnetwork.github.io/posts/followup-measuring-BGP-stacks/)
 - 3rd Post [Comparing Open Source BGP stacks with internet routes](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-internet-routes)
 - 4th Post [Bird on Bird, Episode 4 of BGP Perf testing ](https://elegantnetwork.github.io/posts/bird-on-bird-bgp-perf-episode4)
 
-In the 3rd Post we compared full internet stacks with up to 50 neighbors. What happens if we try to get 1000 Neighbors? Is that realistic? I don't know. I have heard of people with 1M L3VPN routes that want hundreds of neighbors.
-
-I didn't think it would be useful, but then I started running experiments and found that I could break the stacks in interesting ways so I figured I should write up a blog post.
-
+In the 3rd Post we compared full internet stacks with up to 50 neighbors. What happens if we try to get 1000 Neighbors with full internet routes? Is that realistic? I don't know. I have heard of people with 1M L3VPN routes that want hundreds of neighbors. I didn't think it would be useful, but then I started running experiments and found that I could break the stacks in interesting ways so I figured I should write up a blog post.
 
 
 # Test setup
@@ -28,7 +25,7 @@ The baseline is 100 neighbors with 800K prefixes each.
 
 There's only data for FRR for the AMD because I was too lazy to run the other tests.
 
-So this shows several things. I'll talk about the test system first. Each of these 3 platforms performed ok. for BIRD, the AMD is the fastest, then the M5z, then the M5, but not by that much. That makes sense, home CPU have faster single core performance, then the M5z, then the M5. I assume FRR would look the same if I had run all the tests. For rustybgp, it's the reverse, which is what we'd hope since it can take advantage of more cores
+So this shows several things. I'll talk about the test system first. Each of these 3 platforms performed ok. for BIRD, the AMD is the fastest, then the M5z, then the M5, but not by that much. That makes sense, home CPU have faster single core performance, then the M5z, then the M5. I assume FRR would look the same if I had run all the tests. For RustyBGP, it's the reverse, which is what we'd hope since it can take advantage of more cores
 
 Lets' look at the performance of the stacks. First, BIRD, FRRouting and RustyBGP can all handle this load. Second, rustybgp is > 5 times faster. That's pretty amazing. FRR is a little bit faster than BIRD.
 
@@ -99,6 +96,7 @@ FRR
 BIRD
 
 ![memory used](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_100_mem_used.png)
+
 RustyBGP
 
 ![memory used](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_100_mem_used.png)
@@ -148,6 +146,7 @@ So that's 40 neighbors that will never successfully send a prefix. I don't know 
 
 This would be better if bgperf tracked the neighbors that have successfully sent any prefixes, but that's going to take more work.
 
+
 ![prefixes received at monitor](/assets/images/2021-10-bgp-5/frr_c_bgpdump2_800000_150_mon_received.png)
 
 The number of neighbors that the target has received all it's prefixes:
@@ -166,28 +165,54 @@ The % idle of the machine. This shows that there are plenty of CPU resources ava
 
 ![% idle of machine](/assets/images/2021-10-bgp-5/frr_c_bgpdump2_800000_150_machine_idle.png)
 
-
+I don't see anything interesting in these graphs.
 # BIRD
-BIRD succeeds at 200 neighbors, and fails by 225.  It does something similar to what FRR does in which it doesn't accept prefixes for every 
+BIRD succeeds at 200 neighbors, and fails at 300.  It gets to the place in which it does not increment either more prefixes at the monitor nor more neighbors finished for 120 seconds. So it just gets stuck, right around 215 neighbors.
 
+```bash
+bird,bird,v2.0.8-59-gf761be6b,300,800000,792000,878273,0,6975,3,6972,7148.89,102,27.503,85,91.046,-s,2021-10-08,48,184.71GB,0,FAILED,FAILED: stuck received count 878273 neighbors_checked 216
+```
 
+Can we see anything interesting in the benchmark graphs?
+
+![prefixes received at monitor](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_300_mon_received.png)
+
+![neighbors full received routes](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_300_neighbors.png)
+
+![cpu](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_300_cpu.png)
+
+![memory used](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_300_mem_used.png)
+
+![% idle of machine](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_300_machine_idle.png)
 
 ## RustyBGP
 
+Some of the tests I ran into a problem I mentioned in the previous blog post: every second bgperf collects information from the target about how many prefixes have been received by each neighbor. After a while, in some of the tests rustybgp stops responding to that data, which completely freaks out bgperf and it fails. I can't completely quantify when and why this happens, but it does and is a problem at least for testing.
 
+
+monitor 
+
+![prefixes received at monitor](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_500_mon_received.png)
+
+
+neighbors
+
+![neighbors full received routes](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_500_neighbors.png)
 
 
 memory used by target
-![memory used](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_100_mem_used.png)
+![memory used](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_500_mem_used.png)
 
 The % idle of the machine. This shows that there are plenty of CPU resources available.
 
-![% idle of machine](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_100_machine_idle.png)
+![% idle of machine](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_500_machine_idle.png)
 
 
 
 # Conclusion
-Yes, it's possible to measure these stacks with BGPerf at 1000 neighbors of internet routes. However, only RustyBGP can can near that level. And it requires a lot of memory.
+Probably, it's possible to measure these stacks with BGPerf at 1000 neighbors of internet routes. I ran out of memory at 384 GB. There are instances available with more memory than that. 
+
+However, only RustyBGP can can near that level. And it requires a lot of memory. Both for RustyBGP and for the testers
 
 FRR breaks first, at about 150 neighbors. Next is BIRD at between 200 and 250 neighbors.
 
