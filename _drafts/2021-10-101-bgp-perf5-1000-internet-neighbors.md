@@ -46,6 +46,10 @@ BIRD
 
 ![prefixes received at monitor](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_100_mon_received.png)
 
+OpenBGPD
+
+![prefixes received at monitor](/assets/images/2021-10-bgp-5/openbgp_bgpdump2_800000_100_mon_received.png)
+
 RustyBGP
 
 ![prefixes received at monitor](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_100_mon_received.png)
@@ -63,10 +67,16 @@ BIRD
 
 ![neighbors full received routes](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_100_neighbors.png)
 
+OpenBGPD
+
+![neighbors full received routes](/assets/images/2021-10-bgp-5/openbgp_bgpdump2_800000_100_neighbors.png)
+
 RusytBGP
 
 ![neighbors full received routes](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_100_neighbors.png)
 
+
+It's interesting how OpenBGP looks compared to BIRD and FRR. None of it's neighbors don't complete until almost at the end
 
 RustyBGP looks different again. It's amazing that it can receive full routes for some neighbors within about 10 seconds. 
 
@@ -80,6 +90,10 @@ FRR
 BIRD
 
 ![cpu](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_100_cpu.png)
+
+OpenBGPD
+
+![cpu](/assets/images/2021-10-bgp-5/openbgp_bgpdump2_800000_100_cpu.png)
 
 RustyBGP
 
@@ -97,6 +111,10 @@ BIRD
 
 ![memory used](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_100_mem_used.png)
 
+OpenBGPD
+
+![memory used](/assets/images/2021-10-bgp-5/openbgp_bgpdump2_800000_100_mem_used.png)
+
 RustyBGP
 
 ![memory used](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_100_mem_used.png)
@@ -112,6 +130,10 @@ FRR
 BIRD
 
 ![% idle of machine](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_100_machine_idle.png)
+
+OpenBGPD
+
+![% idle of machine](/assets/images/2021-10-bgp-5/openbgp_bgpdump2_800000_100_machine_idle.png)
 
 RustyBGP
 
@@ -166,14 +188,8 @@ The % idle of the machine. This shows that there are plenty of CPU resources ava
 ![% idle of machine](/assets/images/2021-10-bgp-5/frr_c_bgpdump2_800000_150_machine_idle.png)
 
 I don't see anything interesting in these graphs.
-# BIRD
-BIRD succeeds at 200 neighbors, and fails at 300.  It gets to the place in which it does not increment either more prefixes at the monitor nor more neighbors finished for 120 seconds. So it just gets stuck, right around 215 neighbors.
-
-```bash
-bird,bird,v2.0.8-59-gf761be6b,300,800000,792000,878273,0,6975,3,6972,7148.89,102,27.503,85,91.046,-s,2021-10-08,48,184.71GB,0,FAILED,FAILED: stuck received count 878273 neighbors_checked 216
-```
-
-Can we see anything interesting in the benchmark graphs?
+## BIRD
+BIRD succeeds at 200 neighbors, and fails at 300.  Well, it gets stuck not incrementing either the prefixes received at the monitor or the number of neighbors completed. I usually have a 120s timeout, but I changed it to one hour. As you can see on the graphs, it got stuck for almost an hour at about 225 neighbors. I don't know what it was doing at that point in time. The total time was 15781s, more than 4 hours. That doesn't really count as success.
 
 ![prefixes received at monitor](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_300_mon_received.png)
 
@@ -185,10 +201,18 @@ Can we see anything interesting in the benchmark graphs?
 
 ![% idle of machine](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_300_machine_idle.png)
 
+Other than the neighbor graph showing it getting stuck for almost an hour, nothing much interesting going on here.
+
+
+## BIRD separate table per neighbor
+
+
+## OpenBGPD
 ## RustyBGP
 
-Some of the tests I ran into a problem I mentioned in the previous blog post: every second bgperf collects information from the target about how many prefixes have been received by each neighbor. After a while, in some of the tests rustybgp stops responding to that data, which completely freaks out bgperf and it fails. I can't completely quantify when and why this happens, but it does and is a problem at least for testing.
+I successfully tested RustyBGP with 500 neighbors on the M5.xlarge24 which has 96 cores and 384 GB of RAM. More neighbors than that ran into a problem I mentioned in the previous blog post: every second bgperf collects information from the target about how many prefixes have been received by each neighbor. After a while, in some of the tests rustybgp stops responding to that data, which completely freaks out bgperf and it fails. I don't know if the problem is that there isn't enough CPU resources or something else. In other words, if rustyBGP had it's own dedicated resource and bgpdump2 it's own dedicated resources would this break? I can't be sure but I kind of think so since bgpdump2 does it's greatest work at the beginning when it's starting up.
 
+at 500, it finishes in about 1700 seconds, which is not that much longer than the other three took to do 100 neighbors.
 
 monitor 
 
@@ -210,9 +234,9 @@ The % idle of the machine. This shows that there are plenty of CPU resources ava
 
 
 # Conclusion
-Probably, it's possible to measure these stacks with BGPerf at 1000 neighbors of internet routes. I ran out of memory at 384 GB. There are instances available with more memory than that. 
+Possibly, though I didn't get past 500 neighbors. Likely that 1000 neighbors would have needed more memory, and that is available on other EC2 instances. I'm not sure that there are other instances that have more CPU. At some point it would be necessary to figure out mutli-host bgperf.
 
-However, only RustyBGP can can near that level. And it requires a lot of memory. Both for RustyBGP and for the testers
+However, only RustyBGP can get near that level. And it requires a lot of memory. Both for RustyBGP and for the testers
 
 FRR breaks first, at about 150 neighbors. Next is BIRD at between 200 and 250 neighbors.
 
