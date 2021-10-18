@@ -64,7 +64,7 @@ OpenBGPD
 
 RustyBGP
 
-![prefixes received at monitor](/assets/images/2021-10-bgp-5/RustyBGP_bgpdump2_800000_100_mon_received.png)
+![prefixes received at monitor](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_100_mon_received.png)
 
 RustyBGP curve looks a lot different. Don't know why. On the other hand, RustyBGP completes in 160 seconds, while OpenBGPD completes in 1407s, almost 9 times faster.
 
@@ -85,7 +85,7 @@ OpenBGPD
 
 RusytBGP
 
-![neighbors full received routes](/assets/images/2021-10-bgp-5/RustyBGP_bgpdump2_800000_100_neighbors.png)
+![neighbors full received routes](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_100_neighbors.png)
 
 
 It's interesting how OpenBGP looks compared to BIRD and FRR. None of it's neighbors complete until almost at the end, while FRRouting and BIRD start completing much sooner. While the others show either neighbors completing before the monitor gets to 800K, or the monitor gets to 800K before the neighbors, OpenBGPD has them pretty close to in sync.
@@ -109,7 +109,7 @@ OpenBGPD
 
 RustyBGP
 
-![cpu](/assets/images/2021-10-bgp-5/RustyBGP_bgpdump2_800000_100_cpu.png)
+![cpu](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_100_cpu.png)
 
 
 These are pretty much as expected since the first three can only take advantage of the single core. Not sure what RustyBGP does at about 60 seconds that makes the utilization go up even more. Oh, wait, if we look below at the memory allocation, that lines up with when RustyBGP dramatically slows down it's allocation of memory. Oh, if we look at the percent idle, that's also when all the bgpdump2s are finished launching. Interesting. I'm not sure what it means, but there is some correlation there.
@@ -130,7 +130,7 @@ OpenBGPD
 
 RustyBGP
 
-![memory used](/assets/images/2021-10-bgp-5/RustyBGP_bgpdump2_800000_100_mem_used.png)
+![memory used](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_100_mem_used.png)
 
 Each of those looks different, don't know what it means, especially in comparing between the stacks. They do allocate differently.
 
@@ -280,19 +280,19 @@ at 500, it finishes in about 1700 seconds, which is not that much longer than th
 
 prefixes received at the monitor:
 
-![prefixes received at monitor](/assets/images/2021-10-bgp-5/RustyBGP_bgpdump2_800000_500_mon_received.png)
+![prefixes received at monitor](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_500_mon_received.png)
 
 number of neighbors that the target has received all it's prefixes:
 
-![neighbors full received routes](/assets/images/2021-10-bgp-5/RustyBGP_bgpdump2_800000_500_neighbors.png)
+![neighbors full received routes](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_500_neighbors.png)
 
 
 memory used by target
-![memory used](/assets/images/2021-10-bgp-5/RustyBGP_bgpdump2_800000_500_mem_used.png)
+![memory used](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_500_mem_used.png)
 
 The % idle of the machine.
 
-![% idle of machine](/assets/images/2021-10-bgp-5/RustyBGP_bgpdump2_800000_500_machine_idle.png)
+![% idle of machine](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_500_machine_idle.png)
 
 
 
