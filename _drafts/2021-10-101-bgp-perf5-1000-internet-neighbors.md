@@ -150,7 +150,7 @@ OpenBGPD
 
 RustyBGP
 
-![% idle of machine](/assets/images/2021-10-bgp-5/RustyBGP_bgpdump2_800000_100_machine_idle.png)
+![% idle of machine](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_100_machine_idle.png)
 
 Some things to explain here. Notice the flat line at the beginning of each of these. That's a consequence of the way that bgperf is currently monitoring the host information. So we only have the last data point right before all the testers (bgpdump2) are fully running. It's a bug in the tester. Anyway, it does show, though, that when bgpdump first starts up it uses a lot of CPU resources, but after inital loading it barely uses anything. Even on the host with the least resources (AMD), there is plenty of CPU available on the host for the majority of the test. Except for RustyBGP, which uses most of the CPU.
 
@@ -301,7 +301,7 @@ Is it reasonable to test 1000 neighbors with full internet routes using bgperf? 
 
 However, only RustyBGP can get near that level. And it requires a lot of memory. Both for RustyBGP and for the testers
 
-FRRouting breaks first, at about 150 neighbors. Next is BIRD at between 200 and 250 neighbors, let's say 225. OpenBGPD completes at 300 neighbors but it takes so long I don't think it's practical.
+FRRouting breaks first, at about 150 neighbors. OpenBGPD completes at 300 neighbors but it takes so long I don't think it's practical. Next is BIRD at between 200 and 250 neighbors, let's say 225. 
 
 We also added new graphs to see what these stacks are doing 
 
