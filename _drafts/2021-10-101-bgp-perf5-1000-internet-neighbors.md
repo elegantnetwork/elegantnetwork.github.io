@@ -64,7 +64,7 @@ OpenBGPD
 
 RustyBGP
 
-![prefixes received at monitor](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_100_mon_received.png)
+![prefixes received at monitor](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_100_mon_received.png)
 
 RustyBGP curve looks a lot different. Don't know why. On the other hand, RustyBGP completes in 160 seconds, while OpenBGPD completes in 1407s, almost 9 times faster.
 
@@ -85,7 +85,7 @@ OpenBGPD
 
 RusytBGP
 
-![neighbors full received routes](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_100_neighbors.png)
+![neighbors full received routes](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_100_neighbors.png)
 
 
 It's interesting how OpenBGP looks compared to BIRD and FRR. None of it's neighbors complete until almost at the end, while FRRouting and BIRD start completing much sooner. While the others show either neighbors completing before the monitor gets to 800K, or the monitor gets to 800K before the neighbors, OpenBGPD has them pretty close to in sync.
