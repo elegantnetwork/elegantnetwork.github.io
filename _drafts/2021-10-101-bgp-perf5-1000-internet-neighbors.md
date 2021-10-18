@@ -109,7 +109,7 @@ OpenBGPD
 
 RustyBGP
 
-![cpu](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_100_cpu.png)
+![cpu](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_100_cpu.png)
 
 
 These are pretty much as expected since the first three can only take advantage of the single core. Not sure what RustyBGP does at about 60 seconds that makes the utilization go up even more. Oh, wait, if we look below at the memory allocation, that lines up with when RustyBGP dramatically slows down it's allocation of memory. Oh, if we look at the percent idle, that's also when all the bgpdump2s are finished launching. Interesting. I'm not sure what it means, but there is some correlation there.
@@ -130,7 +130,7 @@ OpenBGPD
 
 RustyBGP
 
-![memory used](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_100_mem_used.png)
+![memory used](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_100_mem_used.png)
 
 Each of those looks different, don't know what it means, especially in comparing between the stacks. They do allocate differently.
 
@@ -150,7 +150,7 @@ OpenBGPD
 
 RustyBGP
 
-![% idle of machine](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_100_machine_idle.png)
+![% idle of machine](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_100_machine_idle.png)
 
 Some things to explain here. Notice the flat line at the beginning of each of these. That's a consequence of the way that bgperf is currently monitoring the host information. So we only have the last data point right before all the testers (bgpdump2) are fully running. It's a bug in the tester. Anyway, it does show, though, that when bgpdump first starts up it uses a lot of CPU resources, but after inital loading it barely uses anything. Even on the host with the least resources (AMD), there is plenty of CPU available on the host for the majority of the test. Except for RustyBGP, which uses most of the CPU.
 
@@ -280,19 +280,19 @@ at 500, it finishes in about 1700 seconds, which is not that much longer than th
 
 prefixes received at the monitor:
 
-![prefixes received at monitor](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_500_mon_received.png)
+![prefixes received at monitor](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_500_mon_received.png)
 
 number of neighbors that the target has received all it's prefixes:
 
-![neighbors full received routes](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_500_neighbors.png)
+![neighbors full received routes](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_500_neighbors.png)
 
 
 memory used by target
-![memory used](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_500_mem_used.png)
+![memory used](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_500_mem_used.png)
 
 The % idle of the machine.
 
-![% idle of machine](/assets/images/2021-10-bgp-5/rustyBGP_bgpdump2_800000_500_machine_idle.png)
+![% idle of machine](/assets/images/2021-10-bgp-5/rustybgp_bgpdump2_800000_500_machine_idle.png)
 
 
 
