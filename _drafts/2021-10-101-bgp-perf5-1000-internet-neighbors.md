@@ -2,8 +2,8 @@
 layout: post
 comments: true
 author: Justin Pietsch
-title: BGPerf 5 -- 1000 full internet neighbors
-excerpt: What happens if we try to get 1000 Neighbors with full internet routes? Is that realistic? I don't know
+title: BGP Performance 5 -- 1000 full internet neighbors
+excerpt: What happens if we try to test with 1000 Neighbors with full internet routes to open source BGP stacks?
 description: Testing to the limit of how many neighbors these BGP stacks can have with full internet routes
 ---
 
@@ -190,8 +190,8 @@ CPU utilization of the target:
 
 ![cpu](/assets/images/2021-10-bgp-5/frr_c_bgpdump2_800000_150_cpu.png)
 
+memory used by target:
 
-memory used by target
 ![memory used](/assets/images/2021-10-bgp-5/frr_c_bgpdump2_800000_150_mem_used.png)
 
 % idle of the machine. This shows that there are plenty of CPU resources available.
@@ -214,11 +214,11 @@ CPU utilization of the target:
 
 ![cpu](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_300_cpu.png)
 
-memory used by target
+memory used by target:
 
 ![memory used](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_300_mem_used.png)
 
-% idle of the machine.
+% idle of the machine:
 
 ![% idle of machine](/assets/images/2021-10-bgp-5/bird_bgpdump2_800000_300_machine_idle.png)
 
@@ -239,11 +239,11 @@ CPU utilization of the target:
 
 ![cpu](/assets/images/2021-10-bgp-5/bird-no-s_bgpdump2_800000_100_cpu.png)
 
-memory used by target
+memory used by target:
 
 ![memory used](/assets/images/2021-10-bgp-5/bird-no-s_bgpdump2_800000_100_mem_used.png)
 
-% idle of the machine.
+% idle of the machine:
 
 ![% idle of machine](/assets/images/2021-10-bgp-5/bird-no-s_bgpdump2_800000_100_machine_idle.png)
 ## OpenBGPD
@@ -263,11 +263,11 @@ CPU utilization of the target:
 
 ![memory used](/assets/images/2021-10-bgp-5/openbgp_bgpdump2_800000_300_mem_used.png)
 
-memory used by target
+memory used by target:
 
 ![machine free mem](/assets/images/2021-10-bgp-5/openbgp_bgpdump2_800000_300_free_mem.png)
 
-% idle of the machine.
+% idle of the machine:
 
 ![% idle of machine](/assets/images/2021-10-bgp-5/openbgp_bgpdump2_800000_300_machine_idle.png)
 
