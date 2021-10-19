@@ -44,6 +44,10 @@ Let's see how each of these scales as they go from 50 to 200 neighbors.
 
 ![elapsed time](/assets/images/2021-10-bgp-5/bgperf_M5z_elapsed.png)
 
+On these tests, BIRD and FRR are about the same, thought FRR cannot finish the 150 neighbor test, as discussed below. OpenBGPD is the slowest. RustyBGP is the fastest by a lot. None of them scale linearly, which is interesting, at least from 100 to 150. 
+
+
+
 ![memory usage](/assets/images/2021-10-bgp-5/bgperf_M5z_max_mem.png)
 ## Detailed Baseline Graphs on the M5z
  I've added some graphs to show how things go over time with any give test. For each individual test, bgperf now produces graphs. I'm not sure of the use of these graphs, but we'll try them out here.
@@ -276,7 +280,15 @@ I don't see anything interesting in these other than in comparing to the other s
 
 I successfully tested RustyBGP with 500 neighbors on the M5.24xlarge which has 96 cores and 384 GB of RAM. More neighbors than that ran into a problem I mentioned in the previous blog post: every second bgperf collects information from the target about how many prefixes have been received by each neighbor. After a while, in some of the tests RustyBGP stops responding to that data, which completely freaks out bgperf and it fails. I don't know if the problem is that there isn't enough CPU resources or something else. In other words, if RustyBGP had it's own dedicated resource and bgpdump2 it's own dedicated resources would this break? I can't be sure but I kind of think so since bgpdump2 does it's greatest work at the beginning when it's starting up.
 
-at 500, it finishes in about 1700 seconds, which is not that much longer than the other three took to do 100 neighbors.
+At 500, it finishes in about 1700 seconds, which is not that much longer than the other three took to do 100 neighbors.
+
+Because RustyBGP can handle so much more load, it's more interesting to see how it scales.
+
+![elapsed time](/assets/images/2021-10-bgp-5/bgperf_rusty_elapsed.png)
+
+Well, that scales very well. Pretty cool!
+
+### Let's look at the benchmark stats like the other stacks:
 
 prefixes received at the monitor:
 
@@ -301,7 +313,7 @@ Is it reasonable to test 1000 neighbors with full internet routes using bgperf? 
 
 However, only RustyBGP can get near that level. And it requires a lot of memory. Both for RustyBGP and for the testers
 
-FRRouting breaks first, at about 150 neighbors. OpenBGPD completes at 300 neighbors but it takes so long I don't think it's practical. Next is BIRD at between 200 and 250 neighbors, let's say 225. 
+FRRouting breaks first, before 150 neighbors. OpenBGPD completes at 300 neighbors but it takes so long I don't think it's practical. It struggles even at 150. Next is BIRD at between 200 and 250 neighbors, let's say 225. 
 
 We also added new graphs to see what these stacks are doing 
 
