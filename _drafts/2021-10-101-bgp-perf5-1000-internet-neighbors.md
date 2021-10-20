@@ -13,7 +13,9 @@ description: Testing to the limit of how many neighbors these BGP stacks can hav
 - 3rd Post [Comparing Open Source BGP stacks with internet routes](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-internet-routes)
 - 4th Post [Bird on Bird, Episode 4 of BGP Perf testing ](https://elegantnetwork.github.io/posts/bird-on-bird-bgp-perf-episode4)
 
-In the 3rd Post we compared these open source BGP stacks with neighbors that had full internet stacks with up to 50 neighbors. What happens if we try to get 1000 Neighbors with full internet routes? Is that realistic? I don't know. I have heard of people with 1M L3VPN routes that want hundreds of neighbors. I had not thought this sort of testing would be useful, but then I started running experiments and found that I could break the stacks in interesting ways so I figured I should write up a blog post.
+In the 3rd Post we compared these open source BGP stacks with up to 50 neighbors that had full internet stacks. What happens if we try to get 1000 Neighbors with full internet routes? Is that realistic? I don't know. It's not important for more people using BGP stacks of any sort, but it's probably interesting so somebody. I have heard of people with 1M L3VPN prefixes that want hundreds of neighbors. I was asked if it's possible to test 1000 neighbors. I don't have a good way to test 1M L3VPN prefixes right now (I think all I'd need is an MRT file with that data, but I don't have that now.) So for now the best I can do is to do the same testing I've done in the last two posts, but make it a lot more neighbors. It won't be the same exactly, but it should be representative.
+
+I had not thought this sort of testing would be useful because of the unlikeliness of needing 100s of neighbors with full internet table but then I started running experiments and found that I could break the stacks in interesting ways so I figured I should write up a blog post.
 
 # Test setup
 A major question is if it's reasonable to be able to test 1000 neighbors with full internet tables (800K prefixes). I wasn't sure, but [bgperf](https://github.com/jopietsch/bgperf) has support for playing back mrt files using [bgpdump2](https://github.com/rtbrick/bgpdump2) which is very efficient. As always in these blog posts, I'm testing multiple things. The first is if bgperf on the hardware I have available usefully perform this test. The second is how well these stacks do with this many prefixes and neighbors. For the first I'm using different hardware: home computer with 64 GB RAM, EC2 M5.xlarge 24 with 96 cores and 384 GB RAM, and EC2 M5z with 48 cores and 184 GB RAM. I want to be able to take advantage of the cheapest hardware available for any test. It turns out the most important thing is not running out of memory.
@@ -278,7 +280,7 @@ memory used by target:
 I don't see anything interesting in these other than in comparing to the other stacks, which we did above.
 ## RustyBGP
 
-I successfully tested RustyBGP with 500 neighbors on the M5.24xlarge which has 96 cores and 384 GB of RAM. More neighbors than that ran into a problem I mentioned in the previous blog post: every second bgperf collects information from the target about how many prefixes have been received by each neighbor. After a while, in some of the tests RustyBGP stops responding to that data, which completely freaks out bgperf and it fails. I don't know if the problem is that there isn't enough CPU resources or something else. In other words, if RustyBGP had it's own dedicated resource and bgpdump2 it's own dedicated resources would this break? I can't be sure but I kind of think so since bgpdump2 does it's greatest work at the beginning when it's starting up.
+I successfully tested RustyBGP with 500 neighbors on the M5.24xlarge which has 96 cores and 384 GB of RAM. More neighbors than that ran into a problem I mentioned in the previous blog post. Every second bgperf collects information from the target about how many prefixes have been received by each neighbor. After a while, in some of the tests RustyBGP stops responding to that data, which completely freaks out bgperf and it fails. I don't know if the problem is that there isn't enough CPU resources or something else. In other words, if RustyBGP had it's own dedicated resource and bgpdump2 it's own dedicated resources would this break? I can't be sure but I kind of think it would still fail since bgpdump2 does it's greatest work at the beginning when it's starting up which means that there shouldn't be contention from the rest of the system.
 
 At 500, it finishes in about 1700 seconds, which is not that much longer than the other three took to do 100 neighbors.
 
@@ -309,13 +311,12 @@ The % idle of the machine.
 
 
 # Conclusion
+Is it important to test 1000 neighbors with full internet routes? Probably only for a small number of people. Can we learn something anyway? One of my hopes in all of these BGP performance posts is that more people realize that it's possible to do performance testing and there are thigs to learn. Also, maybe there are things that haven't been possible in the past that could be done with very high performing BGP stacks.
+
 Is it reasonable to test 1000 neighbors with full internet routes using bgperf? Possibly, though I didn't get past 500 neighbors. It is likely that 1000 neighbors would have needed more memory, and that is available on other EC2 instances which I'm not sure that there are other instances that have more CPU. At some point it would be necessary to figure out mutli-host bgperf. So I think it would work, but I couldn't prove it here. Each of these host platforms performed fine and there isn't much difference in performance unless you run out of memory. 
 
-However, only RustyBGP can get near that level. And it requires a lot of memory. Both for RustyBGP and for the testers
+However, only RustyBGP can get near that level. And it requires a lot of memory. Both for RustyBGP and for the testers. If you require loads anywhere like this you need a BGP stack that can use multiple cores. However, I don't think RustyBGP is production ready, but it's promising.
 
 FRRouting breaks first, before 150 neighbors. OpenBGPD completes at 300 neighbors but it takes so long I don't think it's practical. It struggles even at 150. Next is BIRD at between 200 and 250 neighbors, let's say 225. 
 
-We also added new graphs to see what these stacks are doing 
-
-
-How did each of these scale
+We also added new graphs to see what these stacks are doing. I'm still trying to understand how they are useful. They are useful in showing things like when BIRD gets stuck for almost an hour. However, the fact that OpenBGPD has a different curve for neighbors than FRRouting, I don't know if that's important or not.
