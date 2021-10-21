@@ -230,28 +230,6 @@ memory used by target:
 
 Other than the neighbor graph showing it getting stuck for almost an hour, nothing much interesting going on here.
 
-## BIRD separate table per neighbor
-BIRD in which each neighbor has it's own table cannot even do 100 neighbors. It gets to 88 neighbors and then stops. The CPU utilization drops to 0. Not sure what is going on between BIRD and bgdpdump2.
-
-prefixes received at the monitor:
-
-![prefixes received at monitor](/assets/images/2021-10-bgp-5/bird-no-s_bgpdump2_800000_100_mon_received.png)
-
-number of neighbors that the target has received all it's prefixes:
-
-![neighbors full received routes](/assets/images/2021-10-bgp-5/bird-no-s_bgpdump2_800000_100_neighbors.png)
-
-CPU utilization of the target:
-
-![cpu](/assets/images/2021-10-bgp-5/bird-no-s_bgpdump2_800000_100_cpu.png)
-
-memory used by target:
-
-![memory used](/assets/images/2021-10-bgp-5/bird-no-s_bgpdump2_800000_100_mem_used.png)
-
-% idle of the machine:
-
-![% idle of machine](/assets/images/2021-10-bgp-5/bird-no-s_bgpdump2_800000_100_machine_idle.png)
 ## OpenBGPD
 OpenBGPD at 300 finishes, but takes so long that I'm not sure that should really count. Well, I didn't let it finish, it was going to ran out of memory on the machine I was using, it was past my bedtime and I didn't want to get charged for a machine over night.
 
