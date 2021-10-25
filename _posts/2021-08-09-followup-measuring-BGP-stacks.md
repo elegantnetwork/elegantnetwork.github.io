@@ -10,6 +10,7 @@ description: Systematic performance measurement of Open Source BGP Stacks, addin
 - 1st Post [Comparing Open Source BGP Stacks](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-stacks/)
 - 3rd Post [Comparing Open Source BGP stacks with internet routes](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-internet-routes)
 - 4th Post [Bird on Bird, Episode 4 of BGP Perf testing ](https://elegantnetwork.github.io/posts/bird-on-bird-bgp-perf-episode4)
+- 5th Post [BGP Performance 5 -- 1000 full internet neighbors](https://elegantnetwork.github.io/posts/bgp-perf5-1000-internet-neighbors/)
 
 
 After I published [the post on measuring open source BGP stacks](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-stacks/), I was embarrassed after I realized how haphazard the testing was. I was not very systematic about the way I tried different test parameters. So I hacked on [bgperf](https://github.com/jopietsch/bgperf), added some more reporting and created a new batch feature that iterates through parameters systematically, and automatically graphs the results. By request, I added [RustyBGP](https://github.com/osrg/RustyBGP) and [OpenBGPD](http://www.openbgpd.org/). I've only added rudimentary support for these just to get started testing the number of prefixes and neighbors. RustyBGP isn't yet a fully formed BGP stack; I don't think it has much support for any kind of policy yet. 

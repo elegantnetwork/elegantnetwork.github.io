@@ -168,7 +168,7 @@ $docker exec bgperf_frrouting_compiled_target vtysh -c 'sh ip bgp summ'|awk '{pr
     152     152     985
 ```
 
-152 is the right number. It's 150 tests + the monitor + 
+152 is the right number. It's 150 testers + the monitor + BIRD shows a Kernel neighbor which we don't care about. 
 
 But the interesting thing is that even hundreds of seconds into the test, many of the neighbors have still not sent prefixes successfully. Active state means the neighbor relationship is up and active, up there are no received prefixes
 ```bash

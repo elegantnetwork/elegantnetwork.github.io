@@ -10,6 +10,7 @@ description: "Compare some simple performance characteristics of three Open Sour
 - 2nd Post [Followup Measuring BGP Stacks Performance](https://elegantnetwork.github.io/posts/followup-measuring-BGP-stacks/)
 - 3rd Post [Comparing Open Source BGP stacks with internet routes](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-internet-routes)
 - 4th Post [Bird on Bird, Episode 4 of BGP Perf testing ](https://elegantnetwork.github.io/posts/bird-on-bird-bgp-perf-episode4)
+- 5th Post [BGP Performance 5 -- 1000 full internet neighbors](https://elegantnetwork.github.io/posts/bgp-perf5-1000-internet-neighbors/)
 
 
 Open source BGP stacks are very important, but I don't think they get the love they deserve. There's lots going on in open source BGP stacks and I can't keep up. So I thought I'd like to **quantitatively compare them.** This is one, often tiny, aspect of evaluating a BGP stack. I did fairly simple testing. Very little policy, just the number of routes and/or number of neighbors are the independent variables.
