@@ -29,7 +29,11 @@ We'll start with internet routes using bgpdump2 playing back mrt data from [Rout
 
 There are several things to notice, some we'll discuss later in this post. First off, for the most part, the "transit" filter takes more time than the non-filtered run. This is because it does go through the filters, but it doesn't filter many prefixes. Since these are from real internet peers, there are not a lot of prefixes that you'd want to filter. The "ixp" filter on the other hand does filter more prefixes out, so there is less total elapsed time because there are less prefixes being considered.
 
-I've added a new graph ![internet routes monitor](/assets/images/2021-11-bgp-6/bgperf_filter-bgpdump_monitor_prefixes.png) to show the amount of prefixes that end up at the monitor container. We'll discuss this below, but notice that for the same filters, different NOSes have different number of prefixes that get to the monitor.
+For now, ignore that rustybgp is missing data for the "ixp" filter. I'll address that below.
+
+I've added a new graph ![internet routes monitor](/assets/images/2021-11-bgp-6/bgperf_filter-bgpdump_monitor_prefixes.png) 
+
+This shows the amount of prefixes that end up at the monitor container. We'll discuss this below, but notice that for the same filters, different NOSes have different number of prefixes that get to the monitor.
 
 The other thing to notice is that the "transit" filter doesn't filter very much and the "ixp" filter does, which explains the elapsed time differences.
 
@@ -52,10 +56,10 @@ Of course, you have to match traffic with filters to see if they work.
 As far as I can tell, the filters for BIRD, FRRouting and OpenBGPD should be the same, so why are there different amounts of prefixes filtered? I have no idea. Please tell me if I'm dong something wrong.
 
 To look at the filters used:
-* [BIRD](https://github.com/jopietsch/bgperf/blob/4eeee0419bff086a39345d4f4b42eb7509351236/filters/bird.conf)
-* [FRRouting](https://github.com/jopietsch/bgperf/blob/4eeee0419bff086a39345d4f4b42eb7509351236/filters/frr.conf)
-* [OpenBGPD](https://github.com/jopietsch/bgperf/blob/4eeee0419bff086a39345d4f4b42eb7509351236/filters/openbgp.conf)
-* [RustyBGPD](https://github.com/jopietsch/bgperf/blob/4eeee0419bff086a39345d4f4b42eb7509351236/filters/rustybgpd.conf)
+* [BIRD](https://github.com/jopietsch/bgperf/blob/490452fe947c94f9eb87e4f45bb789514f6e11b1/filters/bird.conf)
+* [FRRouting](https://github.com/jopietsch/bgperf/blob/490452fe947c94f9eb87e4f45bb789514f6e11b1/filters/frr.conf)
+* [OpenBGPD](https://github.com/jopietsch/bgperf/blob/490452fe947c94f9eb87e4f45bb789514f6e11b1/filters/openbgp.conf)
+* [RustyBGPD](https://github.com/jopietsch/bgperf/blob/490452fe947c94f9eb87e4f45bb789514f6e11b1/filters/rustybgpd.conf)
 
 You might notice that I've commented out filtering of 0.0.0.0/8 and > /24 filtering. That is so that I could do the BIRD-generator tests with small number of prefixes. It generates prefixes in that range, so they'd all get removed which isn't interesting.
 
@@ -79,7 +83,7 @@ This is super helpful output that I wish all stacks would show: it comes from bi
       Export updates:          53161      53161          0        ---          0
       Export withdraws:            0        ---        ---        ---          0
 ```
-So what do I do about the stacks that don't have this information? I got a helpful type from Donald Sharp of FRRouting fame, FRRouting will show End-of-RIB in the log if you turn on debugging, so that's what I did for FRRouting. For OpenBGPD, it has an eor counter in it's output that I look for. For rustybgp it has a counter called accepted and received, but they show the same output, so I haven't figured out how to measure that. That's why rustybgp doesn't show data with IXP filters in the graphs above.
+So what do I do about the stacks that don't have this information? I got a helpful tip from Donald Sharp of FRRouting fame. FRRouting will show End-of-RIB in the log if you turn on debugging, so that's what I did for FRRouting. For OpenBGPD, it has an eor counter in it's output that BGPerf looks for. For rustybgp it has a counter called accepted and received, but they show the same output, so I haven't figured out how to measure that. That's why rustybgp doesn't show data with IXP filters in the graphs above; BGPerf has no way to know when the test has been finished successfully.
 
 Figuring out how to see that all the intended prefixes have been received at the target is a pain. 
 
@@ -89,5 +93,5 @@ lots of questions
 * what am I missing?
 If you have opinions about this, I'd rather see specific examples of filters than vague descriptions like what and IXP would use. 
 
-# 
+
 
