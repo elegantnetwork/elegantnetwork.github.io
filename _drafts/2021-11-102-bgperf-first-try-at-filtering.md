@@ -21,7 +21,7 @@ Obviously one of the problems is trying to create filtering that can be used acr
 
 Just to refresh how to read the key: "20n_800000p_transit" means 20 neighbors, 800000 prefixes per neighbor and it's using the transit filter.
 
-## Internet Routes
+# Internet Prefixes
 
 We'll start with internet routes using bgpdump2 playing back mrt data from [Routeviews](http://www.routeviews.org/routeviews/). 
 
@@ -33,25 +33,31 @@ For now, ignore that rustybgp is missing data for the "ixp" filter. I'll address
 
 I've added a new graph ![internet routes monitor](/assets/images/2021-11-bgp-6/bgperf_filter-bgpdump_monitor_prefixes.png) 
 
-This shows the amount of prefixes that end up at the monitor container. We'll discuss this below, but notice that for the same filters, different NOSes have different number of prefixes that get to the monitor.
+This shows the amount of prefixes that end up at the monitor container. We'll discuss this below, but notice that for the same filters, different BGP stacks have different number of prefixes that get to the monitor.
 
 The other thing to notice is that the "transit" filter doesn't filter very much and the "ixp" filter does, which explains the elapsed time differences.
 
-## Large number of neighbors, small number of prefixes
+# Large number of neighbors, small number of prefixes
+
+Now I want to show results from small number of prefixes, and many neighbors. 
+
 ![bird generator elapsed](/assets/images/2021-11-bgp-6/bgperf_filter-bird-1000_elapsed.png)
+
+The first thing is that it's weird that Both FRRs have higher elapsed time with 0 prefixes getting through. Do not know what that means. For BIRD and 
 
 ![bird routes monitor](/assets/images/2021-11-bgp-6/bgperf_filter-bird-1000_monitor_prefixes.png)
 
+Nothing interesting here; just confirming what was expected.
 
-##  The difficulty in testing filtering
+#  The difficulty in testing filtering
 As mentioned above, I've been asked for these tests and I've put them off. There have been some difficulties getting it to work. Number one is figuring out what is representative and that will work on all BGP stacks, including where we might go in the future. The big issue for me is that I now have to do a bunch of per BGP stack work to make this fair, and while I've done my best, let me know what I've missed.
 
-As discussed, I started with https://bgpfilterguide.nlnog.net and I've tried to make the filter for each NOS equivalent. If this doesn't match the kind of filtering you want to see let me know.
+As discussed, I started with https://bgpfilterguide.nlnog.net and I've tried to make the filter for each BGP stacks equivalent. If this doesn't match the kind of filtering you want to see let me know.
 
 
 Of course, you have to match traffic with filters to see if they work.
 
-### not all NOSes filter the same
+### not all BGP stacks filter the same
 
 As far as I can tell, the filters for BIRD, FRRouting and OpenBGPD should be the same, so why are there different amounts of prefixes filtered? I have no idea. Please tell me if I'm dong something wrong.
 
@@ -67,7 +73,7 @@ For the tests with the BIRD-generator, while the "ixp" filter still filtered out
 
 
 
-### how to count all received prefixes
+### How to count all received prefixes
 Ok, this is one of the trickiest pieces here, but we have to get to how BGPerf works and how it decides that a benchmark run is done. There are three main groups of containers: target, tester (which with bgpdump is more than one container), and monitor. The monitor sends no prefixes, it is used to measure prefixes being sent. 
 
 When I fork BGPerf, it decided a test done after the monitor had received the expected number of prefixes. Because different BGP stacks receive and send routes in different order, I changed it so that on the target it needed to have received the expected number of prefixes from each tester and still that it has received all the prefixes at the monitor.
@@ -87,11 +93,22 @@ So what do I do about the stacks that don't have this information? I got a helpf
 
 Figuring out how to see that all the intended prefixes have been received at the target is a pain. 
 
-## Conclusion
-lots of questions
-* Is this what you hoped to see?
-* what am I missing?
-If you have opinions about this, I'd rather see specific examples of filters than vague descriptions like what and IXP would use. 
+# Conclusion
+What did we learn? Not sure. I guess that it's possible to do some amount of testing, but it is tricky to know when a test has finished. 
 
+It's interesting that while the data with "transit" filtering does show more elapsed time, it's not a lot more. Because of this, I'm not sure that what I have so far for filtering is what people will see. From this data I don't know that we can really say that one BGP stack is better at filtering than the other. On the other hand, it's super weird that with what I think are the same filters, some stacks filter noticeably more than others. What's up with that?
+
+FRRouting 8 is better than 7.5.1.
+
+There are at least more questions that answers here
+* Is this what you hoped to see?
+* Are these filters representative enough?
+* Are the prefixes going to the data representative enough?
+* Why do some stacks filter noticeably more prefixes than others?
+* what am I missing?
+
+If you have opinions about this, I'd rather see specific examples of filters than vague descriptions like what an IXP would use. 
+
+Let me know how to make this better. Or send code? :)
 
 
