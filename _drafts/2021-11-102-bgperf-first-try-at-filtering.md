@@ -2,7 +2,7 @@
 layout: post
 comments: true
 author: Justin Pietsch
-title: BGPerf testing of filtering
+title: BGP Performance testing of filtering
 excerpt: The number one request I get for BGP Performance testing is to do filtering tests.
 description: First results of testing of filter with BGP stacks to get feedback.
 ---
