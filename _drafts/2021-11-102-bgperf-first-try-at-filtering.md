@@ -33,7 +33,7 @@ For now, ignore that rustybgp is missing data for the "ixp" filter. I'll address
 
 I've added a new graph ![internet routes monitor](/assets/images/2021-11-bgp-6/bgperf_filter-bgpdump_monitor_prefixes.png) 
 
-This shows the amount of prefixes that end up at the monitor container. We'll discuss this below, but notice that for the same filters, different BGP stacks have different number of prefixes that get to the monitor.
+This shows the amount of prefixes that end up at the monitor container. We'll discuss this below, but notice that for the same filters, different BGP stacks have slight differences in the number of prefixes that get to the monitor.
 
 The other thing to notice is that the "transit" filter doesn't filter very much and the "ixp" filter does, which explains the elapsed time differences.
 
@@ -43,11 +43,11 @@ Now I want to show results from small number of prefixes, and many neighbors.
 
 ![bird generator elapsed](/assets/images/2021-11-bgp-6/bgperf_filter-bird-1000_elapsed.png)
 
-The first thing is that it's weird that Both FRRs have higher elapsed time with 0 prefixes getting through. Do not know what that means. For BIRD and 
+The first thing is that it's weird that Both FRRs have higher elapsed time with 0 prefixes getting through. Do not know what that means. For BIRD and OpenBGPD, when it gets to 0 prefixes they are really fast.
 
 ![bird routes monitor](/assets/images/2021-11-bgp-6/bgperf_filter-bird-1000_monitor_prefixes.png)
 
-Nothing interesting here; just confirming what was expected.
+Nothing interesting here; just confirming what was expected: "transit" filter filers nothing and "ixp" filter lets nothing through.
 
 #  The difficulty in testing filtering
 As mentioned above, I've been asked for these tests and I've put them off. There have been some difficulties getting it to work. Number one is figuring out what is representative and that will work on all BGP stacks, including where we might go in the future. The big issue for me is that I now have to do a bunch of per BGP stack work to make this fair, and while I've done my best, let me know what I've missed.
@@ -63,7 +63,6 @@ Of course, you have to match traffic with filters to see if they work.
 To look at the filters used:
 * [BIRD](https://github.com/jopietsch/bgperf/blob/490452fe947c94f9eb87e4f45bb789514f6e11b1/filters/bird.conf)
 * [FRRouting](https://github.com/jopietsch/bgperf/blob/49dcf42868dc88cb65f95924c28d4b25cf8ba5b0/filters/frr.conf)
-
 * [OpenBGPD](https://github.com/jopietsch/bgperf/blob/490452fe947c94f9eb87e4f45bb789514f6e11b1/filters/openbgp.conf)
 * [RustyBGPD](https://github.com/jopietsch/bgperf/blob/6af19e343633c76e9c00f825d69fa91920d3a9b9/filters/rustybgpd.conf)
 
@@ -96,15 +95,14 @@ Figuring out how to see that all the intended prefixes have been received at the
 # Conclusion
 What did we learn? Not sure. I guess that it's possible to do some amount of testing, but it is tricky to know when a test has finished. 
 
-It's interesting that while the data with "transit" filtering does show more elapsed time, it's not a lot more. Because of this, I'm not sure that what I have so far for filtering is what people will see. From this data I don't know that we can really say that one BGP stack is better at filtering than the other. On the other hand, it's super weird that with what I think are the same filters, some stacks filter noticeably more than others. What's up with that?
+It's interesting that while the data with "transit" filtering does show more elapsed time, it's not a lot more. Because of this, I'm not sure that what I have so far for filtering is what people will see. From this data I don't know that we can really say that one BGP stack is better at filtering than the other. 
 
-FRRouting 8 is better than 7.5.1.
+FRRouting 8 is faster than 7.5.1.
 
 There are at least more questions that answers here
 * Is this what you hoped to see?
 * Are these filters representative enough?
 * Are the prefixes going to the data representative enough?
-* Why do some stacks filter noticeably more prefixes than others?
 * what am I missing?
 
 If you have opinions about this, I'd rather see specific examples of filters than vague descriptions like what an IXP would use. 
