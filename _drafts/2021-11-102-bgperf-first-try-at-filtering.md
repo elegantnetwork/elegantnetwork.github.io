@@ -2,9 +2,9 @@
 layout: post
 comments: true
 author: Justin Pietsch
-title: BGP Performance testing of filtering
+title: BGP Performance testing with filtering
 excerpt: The number one request I get for BGP Performance testing is to do filtering tests.
-description: First results of testing of filter with BGP stacks to get feedback.
+description: First results of testing of filtering with BGP stacks.
 ---
 
 - 1st Post [Comparing Open Source BGP Stacks](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-stacks/)
