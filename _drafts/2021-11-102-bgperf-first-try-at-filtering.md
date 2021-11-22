@@ -15,9 +15,9 @@ description: First results of testing of filter with BGP stacks to get feedback.
 
 The number one request I get for BGP Performance testing is to do filtering testing. There are several difficulties with this, and I'll discuss them below, but that is why I've put it off so long. I have some results and I'd like to see what the audience thinks about the testing methodology and if it provides the visibility that we are all hoping for.
 
-I need help. Is this the right way to represent filtering for these platforms?
+I'm not sure that what I've created tests filtering in the way that people want to see, so I'm producing results now in the hope of getting some feedback to make things better.
 
-Obviously one of the problems is trying to create filtering that can be used across all platforms and will be representative of what people are actually using. I started with https://bgpfilterguide.nlnog.net. I'm currently only using two filters that are mostly the same. The first, called "transit", is the filter that you would use if the peer was transit, and the other is called "ixp" if your peer was in your IXP. The difference between the two is that the ixp filter filters our transit ASNs. 
+Obviously one of the problems is trying to create filtering that can be used across all platforms and will be representative of what people are actually using. I started with https://bgpfilterguide.nlnog.net; below I have pointers to the specific filters I'm using. I'm currently only using two filters that are mostly the same. The first, called "transit", is the filter that you would use if the peer was transit, and the other is called "ixp" if your peer was in your IXP. The difference between the two is that the ixp filter filters our transit ASNs. 
 
 Just to refresh how to read the key: "20n_800000p_transit" means 20 neighbors, 800000 prefixes per neighbor and it's using the transit filter.
 
@@ -57,15 +57,15 @@ As discussed, I started with https://bgpfilterguide.nlnog.net and I've tried to 
 
 Of course, you have to match traffic with filters to see if they work.
 
-### not all BGP stacks filter the same
+### What filters am I using
 
-As far as I can tell, the filters for BIRD, FRRouting and OpenBGPD should be the same, so why are there different amounts of prefixes filtered? I have no idea. Please tell me if I'm dong something wrong.
 
 To look at the filters used:
 * [BIRD](https://github.com/jopietsch/bgperf/blob/490452fe947c94f9eb87e4f45bb789514f6e11b1/filters/bird.conf)
-* [FRRouting](https://github.com/jopietsch/bgperf/blob/490452fe947c94f9eb87e4f45bb789514f6e11b1/filters/frr.conf)
+* [FRRouting](https://github.com/jopietsch/bgperf/blob/49dcf42868dc88cb65f95924c28d4b25cf8ba5b0/filters/frr.conf)
+
 * [OpenBGPD](https://github.com/jopietsch/bgperf/blob/490452fe947c94f9eb87e4f45bb789514f6e11b1/filters/openbgp.conf)
-* [RustyBGPD](https://github.com/jopietsch/bgperf/blob/490452fe947c94f9eb87e4f45bb789514f6e11b1/filters/rustybgpd.conf)
+* [RustyBGPD](https://github.com/jopietsch/bgperf/blob/6af19e343633c76e9c00f825d69fa91920d3a9b9/filters/rustybgpd.conf)
 
 You might notice that I've commented out filtering of 0.0.0.0/8 and > /24 filtering. That is so that I could do the BIRD-generator tests with small number of prefixes. It generates prefixes in that range, so they'd all get removed which isn't interesting.
 
@@ -74,9 +74,9 @@ For the tests with the BIRD-generator, while the "ixp" filter still filtered out
 
 
 ### How to count all received prefixes
-Ok, this is one of the trickiest pieces here, but we have to get to how BGPerf works and how it decides that a benchmark run is done. There are three main groups of containers: target, tester (which with bgpdump is more than one container), and monitor. The monitor sends no prefixes, it is used to measure prefixes being sent. 
+This is one of the trickiest pieces here, but I need to explain how BGPerf works and how it decides that a benchmark test is done. There are three main groups of containers: target, tester (when using bgpdump it is more than one container), and monitor. The monitor sends no prefixes, it is used to measure prefixes being sent. 
 
-When I fork BGPerf, it decided a test done after the monitor had received the expected number of prefixes. Because different BGP stacks receive and send routes in different order, I changed it so that on the target it needed to have received the expected number of prefixes from each tester and still that it has received all the prefixes at the monitor.
+When I forked BGPerf, it decided a test was done after the monitor had received the expected number of prefixes. Because different BGP stacks receive and send routes in different order, I changed it so that on the target it needed to have received the expected number of prefixes from each tester and still that it has received all the prefixes at the monitor.
 
 Maybe you see the problem with filter testing: when filtering, we now don't know when all the prefixes that will be sent have been received because we don't know what will get filtered. So I needed to add a new counter that measures the amount of prefixes received at the target. However, this is tricky. While all BGP stacks will tell you how many prefixes it has received after filtering, few (I've only found BIRD so far), will also tell you how many were received before being filtered or rejected.
 
