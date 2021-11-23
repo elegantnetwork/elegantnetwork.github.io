@@ -90,7 +90,7 @@ This is super helpful output that I wish all stacks would show: it comes from bi
       Export withdraws:            0        ---        ---        ---          0
 ```
 
-(on the other hand, I also appreciate the stacks that have output in json. Let's stupid regex tricks.)
+(on the other hand, I also appreciate the stacks that have output in json. Less stupid regex tricks.)
 
 So what do I do about the stacks that don't have this information? I got a helpful tip from Donald Sharp of FRRouting fame. FRRouting will show End-of-RIB in the log if you turn on debugging, so that's what I did for FRRouting. For OpenBGPD, it has an eor counter in it's output that BGPerf looks for. 
 
