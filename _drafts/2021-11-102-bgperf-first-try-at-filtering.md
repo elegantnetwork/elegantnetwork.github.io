@@ -58,23 +58,21 @@ Of course, you have to match prefix-data with filters to see if they work. In ot
 
 ### What filters am I using
 
-
 To look at the filters used for each BGP stack:
 * [BIRD](https://github.com/jopietsch/bgperf/blob/490452fe947c94f9eb87e4f45bb789514f6e11b1/filters/bird.conf)
 * [FRRouting](https://github.com/jopietsch/bgperf/blob/49dcf42868dc88cb65f95924c28d4b25cf8ba5b0/filters/frr.conf)
 * [OpenBGPD](https://github.com/jopietsch/bgperf/blob/490452fe947c94f9eb87e4f45bb789514f6e11b1/filters/openbgp.conf)
 * [RustyBGPD](https://github.com/jopietsch/bgperf/blob/6af19e343633c76e9c00f825d69fa91920d3a9b9/filters/RustyBGPd.conf)
 
-In those filters, you might notice that I've commented out filtering of 0.0.0.0/8 and > /24 filtering. That is so that I could do the BIRD-generator tests with small number of prefixes. It generates prefixes in that range, so they'd all get removed which isn't interesting.
+In those filters, you might notice that I've commented out filtering of 0.0.0.0/8 and > /24 filtering. That is so that I could do the BIRD-generator tests with small number of prefixes. It generates prefixes in that range, so they'd all get removed which isn't interesting. remove those filters doesn't really do much to the overall filter count or performance.
 
 For the tests with the BIRD-generator, while the "ixp" filter still filtered out prefixes with transit ASNs, there are none in that data, so I've included /24 filtering for "ixp".
-
 
 ### How to count all received prefixes
 
 This is one of the trickiest pieces here, but I need to explain how BGPerf works and how it decides that a benchmark test is done. There are three main groups of containers: target, tester (when using bgpdump it is more than one container), and monitor. The monitor sends no prefixes, it is used to measure prefixes being sent. 
 
-When I first forked BGPerf, it decided a test was done after the monitor had received the expected number of prefixes. Because different BGP stacks receive and send prefixes in different order, I changed it so that on the target it needed to have received the expected number of prefixes from each tester and still that it has received all the prefixes at the monitor. In other words, if it is sending 800K prefixes from 10 different neighbors, it needs to both have sent the 800K prefixes to the monitor, and have received 800K prefixes from each neighbor. Some BGP stacks receive all the prefixes before they send anything, and some stacks might send from one neighbor all 800K prefixes before it reads from more than one. So to finish the test it must both send on all the necessary prefixes and have received them.
+When I first forked BGPerf, it decided a test was done after the monitor had received the expected number of prefixes. Because different BGP stacks receive and send prefixes in different order, I changed it so that on the target it needed to have received the expected number of prefixes from each tester and still that it has received all the prefixes at the monitor. In other words, if it is sending 800K internet prefixes from 10 different neighbors, it needs to both have sent the 800K prefixes to the monitor, and have received 800K prefixes from each neighbor.  Some BGP stacks receive all the prefixes before they send anything, and some stacks might send from one neighbor all 800K prefixes before it reads from more than one. So to finish the test it must both send on all the necessary prefixes and have received them.
 
 Maybe you see the problem with filter testing: when filtering, we now don't know when all the prefixes that will be sent have been received because we don't know what will get filtered. In other words, if we have 10 neighbors each sending 800K prefixes, and there is a lot of filtering, the monitor will never receive 800K prefixes. We don't know how many prefixes it should receive.
 
@@ -89,6 +87,9 @@ This is super helpful output that I wish all stacks would show: it comes from bi
       Export updates:          53161      53161          0        ---          0
       Export withdraws:            0        ---        ---        ---          0
 ```
+
+(on the other hand, I also appreciate the stacks that have output in json. Let's stupid regex tricks.)
+
 So what do I do about the stacks that don't have this information? I got a helpful tip from Donald Sharp of FRRouting fame. FRRouting will show End-of-RIB in the log if you turn on debugging, so that's what I did for FRRouting. For OpenBGPD, it has an eor counter in it's output that BGPerf looks for. 
 
 For RustyBGP it has a counter called accepted and received, but they show the same output, so I haven't figured out how to measure that. That's why RustyBGP doesn't show data with "ixp" filters in the graphs above; BGPerf has no way to know when the test has been finished successfully.
