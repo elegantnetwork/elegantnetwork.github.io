@@ -12,6 +12,7 @@ description: Testing to the limit of how many neighbors these BGP stacks can hav
 - 2nd Post [Follow-up Measuring BGP Stacks Performance](https://elegantnetwork.github.io/posts/followup-measuring-BGP-stacks/)
 - 3rd Post [Comparing Open Source BGP stacks with internet routes](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-internet-routes)
 - 4th Post [Bird on Bird, Episode 4 of BGP Perf testing ](https://elegantnetwork.github.io/posts/bird-on-bird-bgp-perf-episode4)
+- 6th Post [BGP Performance testing with filtering](https://elegantnetwork.github.io/posts/bgperf-first-try-at-filtering/)
 
 In the 3rd post I compared these open source BGP stacks with up to 50 neighbors that had full internet stacks. What happens if we try to get 1000 Neighbors with full internet routes? Is that realistic? I don't know, I don't have direct knowledge that anybody needs this. It's not important for most people using BGP stacks of any sort, but it's probably interesting so somebody. I have heard of people with 1M L3VPN prefixes that want hundreds of neighbors. I was asked if it's possible to test 1000 neighbors. I don't have a good way to test 1M L3VPN prefixes right now (I think all I'd need is an MRT file with that data, but I don't have that now.) So for now the best I can do is to do the same testing I've done in the last two posts, but make it a lot more neighbors. It won't be the same exactly, but it should be representative.
 
