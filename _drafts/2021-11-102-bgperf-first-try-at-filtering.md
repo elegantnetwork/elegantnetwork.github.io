@@ -45,6 +45,8 @@ Now I want to show results from small number of prefixes, and many neighbors.
 
 The first thing is that it's weird that Both FRRs have higher elapsed time with 0 prefixes getting through. Do not know what that means. For BIRD and OpenBGPD, when it gets to 0 prefixes they are really fast.
 
+As we learned in the 4th Episode, BIRD is much slower with lots of neighbors than FRR. So that part was expected. We didn't see quite as much in OpenBGPD as we do in this, and that's because those tests were 10 prefixes, and this is 1000. 
+
 ![bird routes monitor](/assets/images/2021-11-bgp-6/bgperf_filter-bird-1000_monitor_prefixes.png)
 
 Nothing interesting here; just confirming what was expected: "transit" filter filters nothing and "ixp" filter lets nothing through.
