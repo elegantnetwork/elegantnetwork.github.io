@@ -16,13 +16,19 @@ description: We've been focused on Open source, it's time to try out Commercial 
 
 [I did these experiments in the beginning of December 2021, it's taken some months to get to actually publishing this post.]
 
-So far in these posts it's been all open source because I wanted to understand the state of open source stacks, and because it's technically and legally easier. We've gotten to the place that it would be nice to see how some commercial stacks compare. I stared with the stacks that are containers: Juniper Junos cRDP and Arista EOS cEOS. I have finally gotten permission from Juniper to publish results; I do not have permission to publish Arista results.
+So far in these posts it's been all open source because I wanted to understand the state of open source stacks, and because it's technically and legally easier. We've gotten to the place that it would be nice to see how some commercial stacks compare. I stared with the stacks that are containers: Juniper Junos cRDP and Arista EOS cEOS. I have finally gotten permission from Juniper to publish results; Arista, like Juniper, forbids publishing without permission and I have not gotten permission (I haven't tried because I don't have a direct contact with Juniper.)
 
 ![Elapsed time](/assets/images/2021-12-bgp-7/bgperf_benchmark-mrt-publish_elapsed.png)
 
+This was tested on my AMD 3950 32 core, 64GB RAM machine. Junos is uni-threaded Juniper cRPD and rs-16 sets the thread count to 16 on multi-threaded cRPD. 
 
+Junos with uni-threading is better than FRR or BIRD. That's interesting and good to know.
 
-This was tested on my AMD 3950 32 core, 64GB RAM machine.
+As mentioned above so that we can see the results between uni-threading and multi-threading. Play around the number of threads: adding more threads doesn't mean that you will get better performance. I didn't see any difference in performance with 16 or 31 threads on my AMD. I didn't do less threads which would be  interesting.
+
+Juniper isn't faster than RustyBGP when using multi-threading. However, it does use less resources which most likely means that with less CPU it would be faster, but I didn't do that test. 
+
+![Max CPU](/assets/images/2021-12-bgp-7/bgperf_benchmark-mrt-publish_max_cpu.png)
 
 ## Testing Commercial BGP Software
 I started this project because I wanted to see how well BGP open source stacks performed, how well stacks in modern languages worked, and if I could come up with a test system that would be useful. After publishing the first post, I realized I had done an unsatisfactory job, and the rest of the posts have been working on better methods of testing and reporting. I've added some open source stacks, but the goal has been to do a good job before really expanding the pool of tested BGP software. Now that there is some filtering, it's time to move forward.
@@ -32,7 +38,7 @@ Just to back up, how important is this BGP perf testing? For the most part, BGP 
 
 It's much easier to test containers. Well, [bgperf2](https://github.com/netenglabs/bgperf2) was originally created to build BGP software, produce the containers, wire up the networking, and do performance testing. Adding pre-packed containers is a little more difficult than just a BGP daemon, but isn't too hard. 
 
-I don't have a company I am doing this for, so I had to create new accounts to get the software. Juniper did not allow me to get the software with no commercial relationship, however I do know somebody at Juniper who gave me software and a license. For Arista I created an account, and in the process of downloading the software I read the license agreement and ran into what I expected: they do not allow me to publish any performance data. 
+I don't have a company I am doing this for, so I had to create new accounts to get the software. Juniper did not allow me to get the software with no commercial relationship, however I do know somebody at Juniper who provided me software and a license. For Arista I created an account, and in the process of downloading the software I read the license agreement and ran into what I expected: they do not allow me to publish any performance data. 
 
 I can't publish all the results: I actually thought I wouldn't be able to publish any, but after waiting two months I got the okay from Juniper. I understand why, but it's deeply frustrating. How can we make good engineering decisions if we can't get good data to understand our decisions. **I can't publish all the results, but I did make bgperf2 so that you can do your own testing.** All the changes to bgperf2 to test these two stacks is published and works. I do not yet have filter support.
 
@@ -46,15 +52,7 @@ One interesting thing is that Juniper requires you to set the number of threads 
 
 [Instructions on testing commercial BGP stacks](https://github.com/netenglabs/bgperf2/blob/master/README.md#targets)
 
-## Juniper
 
-Junos with uni-threading is better than FRR or BIRD. That's interesting and good to know.
-
-As mentioned above, you have to explicitly setup multi-threading, so that we can see the results between uni-threading and multi-threading. Play around the number of threads: adding more threads doesn't mean that you will get better performance. I didn't see any difference in performance with 16 or 31 threads on my AMD. I didn't do less threads which might interesting.
-
-It's interesting that Juniper isn't faster than RustyBGP when using multi-threading. However, it does use less resources which most likely means that with less CPU it would be faster, but I didn't do that test. 
-
-![Max CPU](/assets/images/2021-12-bgp-7/bgperf_benchmark-mrt-publish_max_cpu.png)
 
 ## Arista
 
