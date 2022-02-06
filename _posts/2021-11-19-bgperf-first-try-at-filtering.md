@@ -12,6 +12,7 @@ description: First results of testing of filtering with BGP stacks.
 - 3rd Post [Comparing Open Source BGP stacks with internet routes](https://elegantnetwork.github.io/posts/comparing-open-source-bgp-internet-routes)
 - 4th Post [Bird on Bird, Episode 4 of BGP Perf testing ](https://elegantnetwork.github.io/posts/bird-on-bird-bgp-perf-episode4)
 - 5th Post [BGP Performance 5 -- 1000 full internet neighbors](https://elegantnetwork.github.io/posts/bgp-perf5-1000-internet-neighbors/)
+- 7th Post [Performance testing of Commercial BGP](https://elegantnetwork.github.io/posts/BGP-commercial-stacks/)
 
 The number one request I get for BGP Performance testing is to do filtering testing. There are several difficulties with this, and I'll discuss them below, but that is why I've put it off so long. I have some results and I'd like to see what the audience thinks about the testing methodology and if it provides the visibility that we are all hoping for.
 
